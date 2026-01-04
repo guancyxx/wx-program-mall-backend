@@ -14,54 +14,19 @@ from apps.membership.services import MembershipService
 User = get_user_model()
 
 
-class TestMembershipTierUpgradeProperties(TestCase):
+@pytest.mark.django_db
+class TestMembershipTierUpgradeProperties:
     """Property tests for membership tier upgrade functionality"""
 
-    def setUp(self):
+    @pytest.fixture(autouse=True)
+    def setup_method(self, membership_tiers):
         """Set up test data with all four tiers"""
-        # Create the four tiers with correct thresholds
-        self.bronze_tier = MembershipTier.objects.create(
-            name='bronze',
-            display_name='Bronze',
-            min_spending=Decimal('0'),
-            max_spending=Decimal('999.99'),
-            points_multiplier=Decimal('1.0'),
-            benefits={'free_shipping': False, 'early_access': False}
-        )
-        
-        self.silver_tier = MembershipTier.objects.create(
-            name='silver',
-            display_name='Silver',
-            min_spending=Decimal('1000'),
-            max_spending=Decimal('4999.99'),
-            points_multiplier=Decimal('1.2'),
-            benefits={'free_shipping': True, 'early_access': False}
-        )
-        
-        self.gold_tier = MembershipTier.objects.create(
-            name='gold',
-            display_name='Gold',
-            min_spending=Decimal('5000'),
-            max_spending=Decimal('19999.99'),
-            points_multiplier=Decimal('1.5'),
-            benefits={'free_shipping': True, 'early_access': True}
-        )
-        
-        self.platinum_tier = MembershipTier.objects.create(
-            name='platinum',
-            display_name='Platinum',
-            min_spending=Decimal('20000'),
-            max_spending=None,
-            points_multiplier=Decimal('2.0'),
-            benefits={'free_shipping': True, 'early_access': True, 'exclusive_products': True}
-        )
+        self.bronze_tier = membership_tiers['bronze']
+        self.silver_tier = membership_tiers['silver']
+        self.gold_tier = membership_tiers['gold']
+        self.platinum_tier = membership_tiers['platinum']
 
     @given(
-        username=st.text(
-            min_size=3, 
-            max_size=20, 
-            alphabet=st.characters(whitelist_categories=('Lu', 'Ll', 'Nd'))
-        ).filter(lambda x: x.isalnum()),
         initial_spending=st.decimals(
             min_value=0, 
             max_value=999, 
@@ -74,7 +39,7 @@ class TestMembershipTierUpgradeProperties(TestCase):
         )
     )
     @settings(max_examples=100, deadline=None)
-    def test_membership_tier_upgrade_automation(self, username, initial_spending, additional_spending):
+    def test_membership_tier_upgrade_automation(self, initial_spending, additional_spending):
         """
         Property 5: Membership Tier Upgrade Automation
         For any member whose total spending crosses tier thresholds, the system should 
@@ -82,71 +47,67 @@ class TestMembershipTierUpgradeProperties(TestCase):
         **Feature: django-mall-migration, Property 5: Membership Tier Upgrade Automation**
         **Validates: Requirements 2.3, 2.4, 2.6**
         """
-        # Ensure unique username
-        import time
-        timestamp = int(time.time() * 1000) % 100000
-        username = f"tier_test_{username[:10]}_{timestamp}"
+        # Generate truly unique username using UUID
+        import uuid
+        unique_id = str(uuid.uuid4()).replace('-', '')[:12]
+        username = f"tier_test_{unique_id}"
         
-        # Create a user
+        # Create a user with guaranteed unique username
         user = User.objects.create_user(
             username=username,
             email=f"{username}@example.com",
             password="testpass123"
         )
         
-        # Create membership status with initial spending (should be Bronze)
-        # Use get_or_create to handle case where signal already created membership
-        membership, created = MembershipStatus.objects.get_or_create(
+        # Create membership status directly (avoid get_or_create complexity)
+        membership = MembershipStatus.objects.create(
             user=user,
-            defaults={
-                'tier': self.bronze_tier,
-                'total_spending': initial_spending
-            }
+            tier=self.bronze_tier,
+            total_spending=initial_spending
         )
-        
-        if not created:
-            # If membership already exists, update the spending
-            membership.total_spending = initial_spending
-            membership.tier = self.bronze_tier
-            membership.save()
         
         # Record initial state
         initial_tier = membership.tier
         initial_total = membership.total_spending
         
-        # Update spending with additional amount
+        # Calculate expected final values
+        expected_total = initial_total + additional_spending
+        expected_tier = MembershipTier.get_tier_for_spending(expected_total)
+        
+        # Update spending - this should trigger tier upgrade if needed
         membership.update_spending(additional_spending)
         
-        # Refresh from database
+        # Refresh from database to get updated values
         membership.refresh_from_db()
         
         # Verify total spending was updated correctly
-        expected_total = initial_total + additional_spending
-        assert membership.total_spending == expected_total
-        
-        # Determine what tier should be based on total spending
-        expected_tier = MembershipTier.get_tier_for_spending(expected_total)
+        assert membership.total_spending == expected_total, \
+            f"Expected total spending {expected_total}, got {membership.total_spending}"
         
         # Verify tier was upgraded correctly
-        assert membership.tier == expected_tier
+        assert membership.tier == expected_tier, \
+            f"Expected tier {expected_tier.name}, got {membership.tier.name} for spending {expected_total}"
         
         # If tier changed, verify upgrade was logged
-        if initial_tier != expected_tier:
+        if initial_tier.id != expected_tier.id:
             upgrade_logs = TierUpgradeLog.objects.filter(
                 user=user,
                 from_tier=initial_tier,
                 to_tier=expected_tier
             )
-            assert upgrade_logs.exists()
+            assert upgrade_logs.exists(), \
+                f"Upgrade log should exist for tier change from {initial_tier.name} to {expected_tier.name}"
             
             # Verify log contains correct information
             log = upgrade_logs.first()
-            assert log.spending_amount == expected_total
-            assert "threshold reached" in log.reason.lower()
+            assert log.spending_amount == expected_total, \
+                f"Log spending amount should be {expected_total}, got {log.spending_amount}"
+            assert "threshold reached" in log.reason.lower(), \
+                f"Log reason should mention threshold reached, got: {log.reason}"
         
         # Verify tier benefits are accessible
         benefits = membership.get_tier_benefits()
-        assert isinstance(benefits, dict)
+        assert isinstance(benefits, dict), "Benefits should be a dictionary"
         
         # Verify tier-specific benefits based on final tier
         if expected_tier.name == 'bronze':
@@ -177,20 +138,23 @@ class TestMembershipTierUpgradeProperties(TestCase):
         For any sequence of spending updates, the final tier should match the tier 
         calculated from the total spending amount
         """
+        # Generate unique username using UUID
+        import uuid
+        unique_id = str(uuid.uuid4()).replace('-', '')[:12]
+        username = f"multi_test_{unique_id}"
+        
         # Create a user
         user = User.objects.create_user(
-            username=f"multi_test_{hash(str(spending_amounts)) % 100000}",
-            email=f"multi_{hash(str(spending_amounts)) % 100000}@example.com",
+            username=username,
+            email=f"{username}@example.com",
             password="testpass123"
         )
         
-        # Create membership status
-        membership, created = MembershipStatus.objects.get_or_create(
+        # Create membership status directly
+        membership = MembershipStatus.objects.create(
             user=user,
-            defaults={
-                'tier': self.bronze_tier,
-                'total_spending': Decimal('0')
-            }
+            tier=self.bronze_tier,
+            total_spending=Decimal('0')
         )
         
         # Apply spending updates sequentially
@@ -220,20 +184,23 @@ class TestMembershipTierUpgradeProperties(TestCase):
         For any manual tier upgrade, the system should log the change with 
         correct information and update the user's tier
         """
+        # Generate unique username using UUID
+        import uuid
+        unique_id = str(uuid.uuid4()).replace('-', '')[:12]
+        username = f"manual_test_{unique_id}"
+        
         # Create a user
         user = User.objects.create_user(
-            username=f"manual_test_{hash(tier_name + reason) % 100000}",
-            email=f"manual_{hash(tier_name + reason) % 100000}@example.com",
+            username=username,
+            email=f"{username}@example.com",
             password="testpass123"
         )
         
         # Create membership status with Bronze tier
-        membership, created = MembershipStatus.objects.get_or_create(
+        membership = MembershipStatus.objects.create(
             user=user,
-            defaults={
-                'tier': self.bronze_tier,
-                'total_spending': Decimal('0')
-            }
+            tier=self.bronze_tier,
+            total_spending=Decimal('0')
         )
         
         initial_tier = membership.tier
@@ -313,21 +280,23 @@ class TestMembershipTierUpgradeProperties(TestCase):
         users = []
         memberships = []
         
-        # Create multiple users
+        # Create multiple users with unique names
+        import uuid
         for i in range(user_count):
+            unique_id = str(uuid.uuid4()).replace('-', '')[:12]
+            username = f"concurrent_test_{i}_{unique_id}"
+            
             user = User.objects.create_user(
-                username=f"concurrent_test_{i}_{hash(str(spending_per_user)) % 10000}",
-                email=f"concurrent_{i}_{hash(str(spending_per_user)) % 10000}@example.com",
+                username=username,
+                email=f"{username}@example.com",
                 password="testpass123"
             )
             users.append(user)
             
-            membership, created = MembershipStatus.objects.get_or_create(
+            membership = MembershipStatus.objects.create(
                 user=user,
-                defaults={
-                    'tier': self.bronze_tier,
-                    'total_spending': Decimal('0')
-                }
+                tier=self.bronze_tier,
+                total_spending=Decimal('0')
             )
             memberships.append(membership)
         

@@ -1,0 +1,257 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrahead %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .report-section {
+        background: white;
+        margin: 20px 0;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .stat-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        border-left: 4px solid #007bff;
+    }
+    .stat-value {
+        font-size: 2em;
+        font-weight: bold;
+        color: #007bff;
+    }
+    .stat-label {
+        color: #6c757d;
+        margin-top: 5px;
+    }
+    .chart-container {
+        position: relative;
+        height: 400px;
+        margin: 20px 0;
+    }
+    .table-responsive {
+        overflow-x: auto;
+    }
+    .export-buttons {
+        margin: 20px 0;
+    }
+    .export-buttons a {
+        margin-right: 10px;
+        padding: 8px 16px;
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <h1>{{ title }}</h1>
+    
+    <!-- Date Range Filter -->
+    <div class="report-section">
+        <h2>Report Period</h2>
+        <form method="get" style="display: flex; gap: 15px; align-items: end;">
+            <div>
+                <label for="start_date">Start Date:</label>
+                <input type="date" id="start_date" name="start_date" value="{{ start_date|date:'Y-m-d' }}">
+            </div>
+            <div>
+                <label for="end_date">End Date:</label>
+                <input type="date" id="end_date" name="end_date" value="{{ end_date|date:'Y-m-d' }}">
+            </div>
+            <button type="submit" style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 4px;">
+                Update Report
+            </button>
+        </form>
+    </div>
+    
+    <!-- Sales Summary -->
+    <div class="report-section">
+        <h2>Sales Summary</h2>
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-value">{{ sales_summary.total_orders|default:0 }}</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #28a745;">
+                <div class="stat-value" style="color: #28a745;">${{ sales_summary.total_revenue|floatformat:2|default:0 }}</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #ffc107;">
+                <div class="stat-value" style="color: #ffc107;">${{ sales_summary.average_order_value|floatformat:2|default:0 }}</div>
+                <div class="stat-label">Average Order Value</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #17a2b8;">
+                <div class="stat-value" style="color: #17a2b8;">{{ sales_summary.conversion_rate|floatformat:1|default:0 }}%</div>
+                <div class="stat-label">Conversion Rate</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Daily Sales Chart -->
+    <div class="report-section">
+        <h2>Daily Sales Trend</h2>
+        <div class="chart-container">
+            <canvas id="dailySalesChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- Top Products -->
+    <div class="report-section">
+        <h2>Top Performing Products</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Product Name</th>
+                        <th>Revenue</th>
+                        <th>Quantity Sold</th>
+                        <th>Orders</th>
+                        <th>Current Price</th>
+                        <th>Inventory</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in top_products %}
+                    <tr>
+                        <td>{{ product.gid }}</td>
+                        <td>{{ product.product_name }}</td>
+                        <td>${{ product.total_revenue|floatformat:2 }}</td>
+                        <td>{{ product.total_quantity }}</td>
+                        <td>{{ product.order_count }}</td>
+                        <td>${{ product.product_price|floatformat:2 }}</td>
+                        <td>
+                            {% if product.current_inventory <= 0 %}
+                                <span style="color: red;">Out of Stock</span>
+                            {% elif product.current_inventory <= 10 %}
+                                <span style="color: orange;">{{ product.current_inventory }} (Low)</span>
+                            {% else %}
+                                {{ product.current_inventory }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7">No sales data available for this period.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Sales by Status -->
+    <div class="report-section">
+        <h2>Orders by Status</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Order Count</th>
+                        <th>Revenue</th>
+                        <th>Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for status in sales_by_status %}
+                    <tr>
+                        <td>{{ status.status_name }}</td>
+                        <td>{{ status.count }}</td>
+                        <td>${{ status.revenue|floatformat:2 }}</td>
+                        <td>
+                            {% widthratio status.count sales_summary.total_orders 100 %}%
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Export Options -->
+    <div class="report-section">
+        <h2>Export Report</h2>
+        <div class="export-buttons">
+            <a href="{% url 'admin:report_export' 'sales' 'csv' %}?days=30">Export to CSV</a>
+            <a href="{% url 'admin:report_export' 'sales' 'json' %}?days=30">Export to JSON</a>
+        </div>
+    </div>
+</div>
+
+<script>
+// Daily Sales Chart
+const dailySalesData = {{ daily_sales|safe }};
+const ctx = document.getElementById('dailySalesChart').getContext('2d');
+
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: dailySalesData.map(d => d.date),
+        datasets: [{
+            label: 'Revenue',
+            data: dailySalesData.map(d => d.revenue),
+            borderColor: '#007bff',
+            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+            tension: 0.1,
+            yAxisID: 'y'
+        }, {
+            label: 'Orders',
+            data: dailySalesData.map(d => d.orders),
+            borderColor: '#28a745',
+            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+            tension: 0.1,
+            yAxisID: 'y1'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                type: 'linear',
+                display: true,
+                position: 'left',
+                title: {
+                    display: true,
+                    text: 'Revenue ($)'
+                }
+            },
+            y1: {
+                type: 'linear',
+                display: true,
+                position: 'right',
+                title: {
+                    display: true,
+                    text: 'Orders'
+                },
+                grid: {
+                    drawOnChartArea: false,
+                }
+            }
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: 'Daily Sales Performance'
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

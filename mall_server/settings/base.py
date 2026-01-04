@@ -53,12 +53,16 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'apps.common.middleware.SecurityMiddleware',
+    'apps.common.middleware.ErrorHandlingMiddleware',
+    'apps.common.performance.PerformanceMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'apps.common.middleware.NodeJSCompatibilityMiddleware',
 ]
 
 ROOT_URLCONF = 'mall_server.urls'
@@ -93,7 +97,14 @@ DATABASES = {
         'OPTIONS': {
             'charset': 'utf8mb4',
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'autocommit': True,
+            # Connection pooling and performance options
+            'pool_size': 20,
+            'max_overflow': 30,
+            'pool_timeout': 30,
+            'pool_recycle': 3600,
         },
+        'CONN_MAX_AGE': 600,  # Keep connections alive for 10 minutes
     }
 }
 
@@ -107,6 +118,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -115,6 +129,40 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Password Hashers (bcrypt first for security)
+PASSWORD_HASHERS = [
+    'apps.common.password_utils.BCryptPasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+]
+
+# Security Settings
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_HSTS_SECONDS = 31536000 if not config('DEBUG', default=True, cast=bool) else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# CSRF Protection
+CSRF_COOKIE_SECURE = not config('DEBUG', default=True, cast=bool)
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Strict'
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='http://localhost:3000', cast=lambda v: [s.strip() for s in v.split(',')])
+
+# Session Security
+SESSION_COOKIE_SECURE = not config('DEBUG', default=True, cast=bool)
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Strict'
+SESSION_COOKIE_AGE = 3600  # 1 hour
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Rate Limiting Configuration
+RATELIMIT_ENABLE = True
+RATELIMIT_USE_CACHE = 'default'
 
 # Internationalization
 LANGUAGE_CODE = 'zh-hans'
@@ -186,6 +234,10 @@ LOGGING = {
             'format': '[{levelname}] {message}',
             'style': '{',
         },
+        'security': {
+            'format': '[SECURITY] {asctime} {levelname} {message} - User: {user} IP: {ip_address}',
+            'style': '{',
+        },
     },
     'handlers': {
         'file': {
@@ -199,6 +251,18 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
         },
+        'security_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'security.log',
+            'formatter': 'security',
+        },
+        'error_file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'errors.log',
+            'formatter': 'verbose',
+        },
     },
     'root': {
         'handlers': ['console', 'file'],
@@ -210,6 +274,21 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
+        'security': {
+            'handlers': ['security_file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'performance': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.security': {
+            'handlers': ['security_file', 'error_file'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
     },
 }
 
@@ -217,13 +296,28 @@ LOGGING = {
 WECHAT_APPID = config('WECHAT_APPID', default='')
 WECHAT_APPSECRET = config('WECHAT_APPSECRET', default='')
 WECHAT_MCHID = config('WECHAT_MCHID', default='')
+WECHAT_MCH_ID = config('WECHAT_MCH_ID', default=WECHAT_MCHID)  # Alias for consistency
 WECHAT_API_KEY = config('WECHAT_API_KEY', default='')
+WECHAT_NOTIFY_URL = config('WECHAT_NOTIFY_URL', default='http://localhost:8000/api/order/callback')
+WECHAT_CERT_PATH = config('WECHAT_CERT_PATH', default='')  # Path to WeChat Pay certificate
+WECHAT_KEY_PATH = config('WECHAT_KEY_PATH', default='')   # Path to WeChat Pay private key
 
 # Cache Configuration
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
         'LOCATION': config('REDIS_URL', default='redis://127.0.0.1:6379/1'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'CONNECTION_POOL_KWARGS': {
+                'max_connections': 50,
+                'retry_on_timeout': True,
+            },
+            'COMPRESSOR': 'django_redis.compressors.zlib.ZlibCompressor',
+            'SERIALIZER': 'django_redis.serializers.json.JSONSerializer',
+        },
+        'KEY_PREFIX': 'mall_server',
+        'TIMEOUT': 300,  # Default timeout: 5 minutes
     }
 }
 

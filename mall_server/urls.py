@@ -10,8 +10,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include('apps.users.urls')),
     path('api/membership/', include('apps.membership.urls')),
-    path('api/products/', include('apps.products.urls')),
-    path('api/orders/', include('apps.orders.urls')),
+    path('api/goods/', include('apps.products.urls')),  # Match Node.js /api/goods/ pattern
+    path('api/order/', include('apps.orders.urls')),  # Match Node.js /api/order/ pattern
     path('api/payments/', include('apps.payments.urls')),
     path('api/points/', include('apps.points.urls')),
 ]

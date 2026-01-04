@@ -11,8 +11,14 @@ python-decouple==3.8
 requests==2.31.0
 celery==5.3.4
 redis==5.0.1
-pytest==7.4.3
-pytest-django==4.7.0
+pytest==7.4.4
+pytest-django==4.8.0
 factory-boy==3.3.1
 hypothesis==6.92.1
+pytest-factoryboy==2.6.0
 coverage==7.3.2
+# Security packages
+django-ratelimit==4.1.0
+bcrypt==4.1.2
+django-security==0.17.0
+django-csp==3.7

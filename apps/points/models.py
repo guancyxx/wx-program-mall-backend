@@ -206,7 +206,7 @@ class PointsTransaction(models.Model):
     amount = models.IntegerField()  # Positive for earning, negative for spending/expiration
     balance_after = models.IntegerField()  # Account balance after this transaction
     description = models.CharField(max_length=200, blank=True)
-    reference_id = models.CharField(max_length=100, blank=True)  # Order ID, etc.
+    reference_id = models.CharField(max_length=100, blank=True, null=True)  # Order ID, etc.
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

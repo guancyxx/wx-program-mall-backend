@@ -14,20 +14,16 @@ from apps.users.models import User
 from apps.membership.models import MembershipTier, MembershipStatus
 
 
-class TestUserRegistrationProperties(TestCase):
+@pytest.mark.django_db
+class TestUserRegistrationProperties:
     """Property tests for user registration functionality"""
 
-    def setUp(self):
+    @pytest.fixture(autouse=True)
+    def setup_method(self, membership_tiers):
         """Set up test data"""
         self.client = Client()
-        # Create default membership tier (Bronze)
-        self.bronze_tier = MembershipTier.objects.create(
-            name='Bronze',
-            min_spending=0,
-            max_spending=999.99,
-            points_multiplier=1.0,
-            benefits={'description': 'Basic membership'}
-        )
+        # Use the bronze tier from the fixture
+        self.bronze_tier = membership_tiers['bronze']
 
     @given(
         username=st.text(
@@ -116,7 +112,7 @@ class TestUserRegistrationProperties(TestCase):
         # Verify default membership status (Bronze tier) - only if membership app is implemented
         try:
             membership_status = MembershipStatus.objects.get(user=user)
-            assert membership_status.tier.name == 'Bronze'
+            assert membership_status.tier.name == 'bronze'  # Updated to match fixture
             assert membership_status.tier.min_spending == 0
             assert membership_status.total_spending == 0
         except MembershipStatus.DoesNotExist:

@@ -118,6 +118,12 @@ class WeChatAPI:
         except (requests.RequestException, json.JSONDecodeError):
             return None
     
+    def get_user_info(self, encrypted_data, iv, session_key):
+        """
+        Get user info from WeChat encrypted data
+        """
+        return self.decrypt_data(encrypted_data, iv, session_key)
+    
     def decrypt_data(self, encrypted_data, iv, session_key):
         """
         Decrypt WeChat encrypted data (for user info, phone number, etc.)

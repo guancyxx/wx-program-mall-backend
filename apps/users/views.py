@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password, check_password
+from django.core.cache import cache
 from .models import User, Address
 from .serializers import UserSerializer, AddressSerializer, UserRegistrationSerializer
 from apps.common.utils import success_response, error_response
@@ -20,10 +21,15 @@ class RegisterView(APIView):
         if serializer.is_valid():
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
+            
+            # Cache user data for performance
+            user_data = UserSerializer(user, context={'request': request}).data
+            cache.set(f'user:{user.id}', user_data, 300)  # 5 minutes
+            
             return success_response({
                 'token': str(refresh.access_token),
                 'refresh': str(refresh),
-                'user': UserSerializer(user, context={'request': request}).data
+                'user': user_data
             }, 'Registration successful')
         return error_response('Registration failed', serializer.errors)
 
@@ -45,7 +51,7 @@ class PasswordLoginView(APIView):
         user = None
         if phone:
             try:
-                user = User.objects.get(phone=phone)
+                user = User.objects.select_related('membership_status__tier').get(phone=phone)
             except User.DoesNotExist:
                 pass
         elif username:
