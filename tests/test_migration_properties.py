@@ -94,9 +94,10 @@ class TestDataMigrationIntegrity(TransactionTestCase):
             # Create points account (as migration would do)
             points_account = PointsAccount.objects.create(
                 user=user,
-                balance=0,
-                total_earned=0,
-                total_spent=0
+                total_points=0,
+                available_points=0,
+                lifetime_earned=0,
+                lifetime_redeemed=0
             )
             
             # Migrate addresses
@@ -408,9 +409,10 @@ class TestDataMigrationIntegrity(TransactionTestCase):
                 
                 PointsAccount.objects.create(
                     user=user,
-                    balance=0,
-                    total_earned=0,
-                    total_spent=0
+                    total_points=0,
+                    available_points=0,
+                    lifetime_earned=0,
+                    lifetime_redeemed=0
                 )
                 
                 migrated_users.append(user)

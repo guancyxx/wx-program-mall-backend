@@ -174,7 +174,7 @@ class EndToEndIntegrationTests(TransactionTestCase):
             }
         }
         
-        response = self.client.post('/api/users/login/', wechat_data)
+        response = self.client.post('/api/users/login/', wechat_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
         # Verify user was created with WeChat info

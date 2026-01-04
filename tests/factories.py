@@ -180,7 +180,16 @@ def create_user_with_membership(tier_name='bronze', total_spending=0):
         membership.total_spending = Decimal(str(total_spending))
         membership.save()
     
-    # Create points account
-    PointsAccountFactory(user=user)
+    # Create points account - use get_or_create to avoid unique constraint issues
+    from apps.points.models import PointsAccount
+    points_account, created = PointsAccount.objects.get_or_create(
+        user=user,
+        defaults={
+            'total_points': 0,
+            'available_points': 0,
+            'lifetime_earned': 0,
+            'lifetime_redeemed': 0
+        }
+    )
     
     return user, membership
