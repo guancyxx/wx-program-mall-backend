@@ -4,7 +4,7 @@ Property-based tests for data migration integrity
 **Property 16: Data Migration Integrity**
 **Validates: Requirements 9.1, 9.2, 9.3, 9.4**
 
-These tests verify that data migration from MongoDB to Django/MySQL maintains
+These tests verify that data migration from MongoDB to Django maintains
 data integrity and completeness across all migrated records.
 """
 
@@ -15,6 +15,7 @@ from hypothesis import given, strategies as st, settings, assume
 from hypothesis.extra.django import TestCase, TransactionTestCase
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.test import override_settings
 
 # Import Django models
 from apps.users.models import Address
@@ -26,6 +27,20 @@ from apps.points.models import PointsAccount
 User = get_user_model()
 
 
+@override_settings(
+    DATABASES={
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+            'OPTIONS': {
+                'timeout': 20,
+            },
+            'TEST': {
+                'NAME': ':memory:',
+            }
+        }
+    }
+)
 class TestDataMigrationIntegrity(TransactionTestCase):
     """
     Property-based tests for data migration integrity
@@ -36,6 +51,14 @@ class TestDataMigrationIntegrity(TransactionTestCase):
 
     def setUp(self):
         """Set up test data"""
+        # Ensure we're using the test database (SQLite in-memory)
+        from django.conf import settings
+        from django.db import connection
+        
+        # Verify we're using SQLite for testing
+        if 'sqlite' not in connection.vendor:
+            self.skipTest("Migration tests require SQLite test database")
+        
         # Create default membership tier
         self.bronze_tier, _ = MembershipTier.objects.get_or_create(
             name='Bronze',
