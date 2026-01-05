@@ -16,6 +16,8 @@ from hypothesis.extra.django import TestCase, TransactionTestCase
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.test import override_settings
+from django.test.utils import override_settings
+from django.db.models.signals import post_save
 
 # Import Django models
 from apps.users.models import Address
@@ -41,7 +43,7 @@ User = get_user_model()
         }
     }
 )
-class TestDataMigrationIntegrity(TransactionTestCase):
+class TestDataMigrationIntegrity(TestCase):
     """
     Property-based tests for data migration integrity
     
@@ -59,16 +61,35 @@ class TestDataMigrationIntegrity(TransactionTestCase):
         if 'sqlite' not in connection.vendor:
             self.skipTest("Migration tests require SQLite test database")
         
-        # Create default membership tier
+        # Disconnect signals to prevent automatic creation during tests
+        from apps.membership.signals import create_user_membership, save_user_membership
+        from apps.points.signals import create_points_account_for_new_user
+        
+        post_save.disconnect(create_user_membership, sender=User)
+        post_save.disconnect(save_user_membership, sender=User)
+        post_save.disconnect(create_points_account_for_new_user, sender=User)
+        
+        # Create default membership tier with correct case
         self.bronze_tier, _ = MembershipTier.objects.get_or_create(
-            name='Bronze',
+            name='bronze',  # lowercase to match the model choices
             defaults={
+                'display_name': 'Bronze',
                 'min_spending': Decimal('0.00'),
                 'max_spending': Decimal('999.99'),
                 'points_multiplier': Decimal('1.0'),
                 'benefits': {}
             }
         )
+
+    def tearDown(self):
+        """Clean up after tests"""
+        # Reconnect signals after tests
+        from apps.membership.signals import create_user_membership, save_user_membership
+        from apps.points.signals import create_points_account_for_new_user
+        
+        post_save.connect(create_user_membership, sender=User)
+        post_save.connect(save_user_membership, sender=User)
+        post_save.connect(create_points_account_for_new_user, sender=User)
 
     @given(
         user_data=st.fixed_dictionaries({
@@ -94,87 +115,87 @@ class TestDataMigrationIntegrity(TransactionTestCase):
     @settings(max_examples=50, deadline=5000)
     def test_user_migration_integrity(self, user_data):
         """
-        Property: For any valid user data from MongoDB, migrating to Django should preserve
-        all core user information and create proper related records
+        Property: For any valid user data from MongoDB, simulating migration to Django 
+        should preserve all core user information and create proper related records
+        
+        This test simulates the migration process using the test database (SQLite)
+        to verify data integrity without requiring MySQL connection.
         
         **Validates: Requirements 9.1, 9.2**
         """
         # Simulate user migration
-        with transaction.atomic():
-            # Convert MongoDB user data to Django format
-            django_user_data = self._convert_mongodb_user_data(user_data)
-            
-            # Create user
-            user = User.objects.create(**django_user_data)
-            
-            # Create membership status (as migration would do)
-            membership_status = MembershipStatus.objects.create(
+        # Convert MongoDB user data to Django format
+        django_user_data = self._convert_mongodb_user_data(user_data)
+        
+        # Create user (signals are disconnected, so no automatic creation)
+        user = User.objects.create(**django_user_data)
+        
+        # Manually create membership status and points account (simulating migration)
+        membership_status = MembershipStatus.objects.create(
+            user=user,
+            tier=self.bronze_tier,
+            total_spending=Decimal('0.00')
+        )
+        
+        points_account = PointsAccount.objects.create(
+            user=user,
+            total_points=0,
+            available_points=0,
+            lifetime_earned=0,
+            lifetime_redeemed=0
+        )
+        # Migrate addresses
+        migrated_addresses = []
+        for i, addr_data in enumerate(user_data['address']):
+            address = Address.objects.create(
                 user=user,
-                tier=self.bronze_tier,
-                total_spending=Decimal('0.00')
+                name=addr_data['name'],
+                phone=addr_data['phone'],
+                address=addr_data['address'],
+                detail=addr_data['detail'],
+                address_type=addr_data['type'],
+                is_default=(i == 0)
             )
-            
-            # Create points account (as migration would do)
-            points_account = PointsAccount.objects.create(
-                user=user,
-                total_points=0,
-                available_points=0,
-                lifetime_earned=0,
-                lifetime_redeemed=0
-            )
-            
-            # Migrate addresses
-            migrated_addresses = []
-            for i, addr_data in enumerate(user_data['address']):
-                address = Address.objects.create(
-                    user=user,
-                    name=addr_data['name'],
-                    phone=addr_data['phone'],
-                    address=addr_data['address'],
-                    detail=addr_data['detail'],
-                    address_type=addr_data['type'],
-                    is_default=(i == 0)
-                )
-                migrated_addresses.append(address)
-            
-            # Verify data integrity
-            
-            # 1. User data integrity
-            assert user.username == (user_data['nickName'] or f"user_{user_data['uid']}")[:150]
-            assert user.wechat_openid == user_data['openId']
-            assert user.wechat_session_key == user_data['session_key']
-            assert user.is_staff == (user_data['roles'] == 0)
-            
-            # 2. Phone number handling
-            expected_phone = user_data['phone'].strip() if user_data['phone'] else None
-            if not expected_phone:
-                expected_phone = None
-            assert user.phone == expected_phone
-            
-            # 3. Membership status created
-            assert MembershipStatus.objects.filter(user=user).exists()
-            assert membership_status.tier == self.bronze_tier
-            assert membership_status.total_spending == Decimal('0.00')
-            
-            # 4. Points account created
-            assert PointsAccount.objects.filter(user=user).exists()
-            assert points_account.balance == 0
-            
-            # 5. Address migration integrity
-            assert Address.objects.filter(user=user).count() == len(user_data['address'])
-            
-            for original_addr, migrated_addr in zip(user_data['address'], migrated_addresses):
-                assert migrated_addr.name == original_addr['name']
-                assert migrated_addr.phone == original_addr['phone']
-                assert migrated_addr.address == original_addr['address']
-                assert migrated_addr.detail == original_addr['detail']
-                assert migrated_addr.address_type == original_addr['type']
-            
-            # 6. Default address handling
-            if user_data['address']:
-                default_addresses = Address.objects.filter(user=user, is_default=True)
-                assert default_addresses.count() == 1
-                assert default_addresses.first() == migrated_addresses[0]
+            migrated_addresses.append(address)
+        
+        # Verify data integrity
+        
+        # 1. User data integrity
+        assert user.username == (user_data['nickName'] or f"user_{user_data['uid']}")[:150]
+        assert user.wechat_openid == user_data['openId']
+        assert user.wechat_session_key == user_data['session_key']
+        assert user.is_staff == (user_data['roles'] == 0)
+        
+        # 2. Phone number handling
+        expected_phone = user_data['phone'].strip() if user_data['phone'] else None
+        if not expected_phone:
+            expected_phone = None
+        assert user.phone == expected_phone
+        
+        # 3. Membership status created manually (simulating migration)
+        assert MembershipStatus.objects.filter(user=user).exists()
+        assert membership_status.tier == self.bronze_tier
+        assert membership_status.total_spending == Decimal('0.00')
+        
+        # 4. Points account created manually (simulating migration)
+        assert PointsAccount.objects.filter(user=user).exists()
+        assert points_account.total_points == 0
+        
+        # 5. Address migration integrity
+        assert Address.objects.filter(user=user).count() == len(user_data['address'])
+        
+        for original_addr, migrated_addr in zip(user_data['address'], migrated_addresses):
+            assert migrated_addr.name == original_addr['name']
+            assert migrated_addr.phone == original_addr['phone']
+            assert migrated_addr.address == original_addr['address']
+            assert migrated_addr.detail == original_addr['detail']
+            assert migrated_addr.address_type == original_addr['type']
+        
+        # 6. Default address handling
+        if user_data['address']:
+            default_addresses = Address.objects.filter(user=user, is_default=True)
+            assert default_addresses.count() == 1
+            assert default_addresses.first() == migrated_addresses[0]
 
     @given(
         product_data=st.fixed_dictionaries({
@@ -197,8 +218,11 @@ class TestDataMigrationIntegrity(TransactionTestCase):
     @settings(max_examples=50, deadline=5000)
     def test_product_migration_integrity(self, product_data):
         """
-        Property: For any valid product data from MongoDB, migrating to Django should preserve
-        all product information including images and tags as separate related records
+        Property: For any valid product data from MongoDB, simulating migration to Django 
+        should preserve all product information including images and tags as separate related records
+        
+        This test simulates the migration process using the test database (SQLite)
+        to verify data integrity without requiring MySQL connection.
         
         **Validates: Requirements 9.1, 9.2**
         """
@@ -309,8 +333,11 @@ class TestDataMigrationIntegrity(TransactionTestCase):
     @settings(max_examples=30, deadline=5000)
     def test_order_migration_integrity(self, order_data):
         """
-        Property: For any valid order data from MongoDB, migrating to Django should preserve
-        all order information including order items as separate related records
+        Property: For any valid order data from MongoDB, simulating migration to Django 
+        should preserve all order information including order items as separate related records
+        
+        This test simulates the migration process using the test database (SQLite)
+        to verify data integrity without requiring MySQL connection.
         
         **Validates: Requirements 9.1, 9.3**
         """
@@ -405,6 +432,9 @@ class TestDataMigrationIntegrity(TransactionTestCase):
         Property: For any batch of migration data, all records should be migrated
         successfully with proper relationships and no data loss
         
+        This test simulates batch migration using the test database (SQLite)
+        to verify data integrity without requiring MySQL connection.
+        
         **Validates: Requirements 9.1, 9.2, 9.4**
         """
         # Ensure unique UIDs and GIDs within the batch
@@ -423,7 +453,7 @@ class TestDataMigrationIntegrity(TransactionTestCase):
                     wechat_openid=user_data['openId']
                 )
                 
-                # Create related records as migration would
+                # Manually create membership and points accounts (simulating migration)
                 MembershipStatus.objects.create(
                     user=user,
                     tier=self.bronze_tier,
@@ -458,11 +488,11 @@ class TestDataMigrationIntegrity(TransactionTestCase):
             # 2. All products migrated
             assert Product.objects.count() >= len(migration_batch['products'])
             
-            # 3. All users have membership status
+            # 3. All users have membership status (created manually)
             for user in migrated_users:
                 assert MembershipStatus.objects.filter(user=user).exists()
             
-            # 4. All users have points account
+            # 4. All users have points account (created manually)
             for user in migrated_users:
                 assert PointsAccount.objects.filter(user=user).exists()
             
