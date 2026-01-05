@@ -1,0 +1,112 @@
+version: '3.8'
+
+services:
+  # MySQL Database for Mall Server Development
+  mysql-mall:
+    image: mysql:8.0
+    container_name: mall-server-mysql-dev
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: dev_password
+      MYSQL_DATABASE: mall_server_dev
+      MYSQL_USER: mall_user
+      MYSQL_PASSWORD: mall_password
+    volumes:
+      - mysql_mall_data:/var/lib/mysql
+      - ./scripts/mysql-init:/docker-entrypoint-initdb.d
+    ports:
+      - "3307:3306"
+    networks:
+      - mall-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  # Redis for Mall Server Development
+  redis-mall:
+    image: redis:7-alpine
+    container_name: mall-server-redis-dev
+    restart: unless-stopped
+    command: redis-server --requirepass redis_dev_password
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_mall_data:/data
+    networks:
+      - mall-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "redis_dev_password", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Mall Server Django Application
+  mall-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: mall-server-django-dev
+    restart: unless-stopped
+    environment:
+      # Django Settings
+      DJANGO_SETTINGS_MODULE: mall_server.settings.development
+      DEBUG: "True"
+      
+      # Database Configuration
+      MYSQL_DATABASE: mall_server_dev
+      MYSQL_USER: root
+      MYSQL_PASSWORD: dev_password
+      MYSQL_HOST: mysql-mall
+      MYSQL_PORT: 3306
+      
+      # Redis Configuration
+      REDIS_HOST: redis-mall
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: redis_dev_password
+      
+      # WeChat Configuration
+      WECHAT_APPID: wx23fedab0e057b533
+      WECHAT_APPSECRET: 419de879d4809a83c7a07764e8c7ea7e
+      
+      # JWT Configuration
+      JWT_SECRET_KEY: tokenTp
+      JWT_ALGORITHM: HS256
+      JWT_ACCESS_TOKEN_EXPIRE_MINUTES: 1440
+      
+      # Admin Configuration
+      ADMIN_PHONE: 13800000000
+      ADMIN_PASSWORD: admin123456
+      ADMIN_NICKNAME: 系统管理员
+    volumes:
+      - .:/app
+      - mall_server_media:/app/media
+    ports:
+      - "8001:8000"
+    networks:
+      - mall-network
+    depends_on:
+      mysql-mall:
+        condition: service_healthy
+      redis-mall:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  mysql_mall_data:
+    driver: local
+  redis_mall_data:
+    driver: local
+  mall_server_media:
+    driver: local
+
+networks:
+  mall-network:
+    driver: bridge
