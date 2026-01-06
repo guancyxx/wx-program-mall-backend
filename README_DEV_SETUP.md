@@ -6,7 +6,6 @@ This guide will help you set up the Django mall server for local development.
 
 - Python 3.8+ 
 - MySQL/MariaDB 8.0+
-- Redis 6.0+
 - Git
 
 ## Quick Setup
@@ -72,37 +71,17 @@ sudo systemctl start mysql
 sudo systemctl start mariadb
 ```
 
-### 3. Redis Setup
+### 3. Database Cache Setup
 
-#### Install Redis
+The application now uses Django's database cache backend instead of Redis. The cache table will be created automatically during the setup process.
 
-**Windows:**
-- Download Redis from https://github.com/microsoftarchive/redis/releases
-- Or use WSL with Linux instructions
+#### Cache Table Creation
 
-**macOS:**
+The database cache table is created automatically when you run the setup script, but you can also create it manually:
+
 ```bash
-brew install redis
-```
-
-**Ubuntu/Debian:**
-```bash
-sudo apt update
-sudo apt install redis-server
-```
-
-#### Start Redis Service
-
-**Windows:** Run redis-server.exe
-
-**macOS:**
-```bash
-brew services start redis
-```
-
-**Ubuntu/Debian:**
-```bash
-sudo systemctl start redis-server
+# Create the cache table
+python manage.py createcachetable mall_server_cache
 ```
 
 ### 4. Environment Configuration
@@ -112,7 +91,7 @@ sudo systemctl start redis-server
 cp .env.development.example .env.development
 
 # Edit the configuration file
-# Update database credentials, Redis settings, etc.
+# Update database credentials and other settings
 ```
 
 ### 5. Automated Database Setup
@@ -125,6 +104,7 @@ python scripts/setup_dev_db.py
 This script will:
 - Create the development database
 - Run all migrations
+- Create the database cache table
 - Set up initial membership tiers and points rules
 - Create an admin superuser (admin/admin123)
 
@@ -176,6 +156,9 @@ FLUSH PRIVILEGES;
 # Apply database migrations
 python manage.py migrate --settings=mall_server.settings.development
 
+# Create database cache table
+python manage.py createcachetable mall_server_cache --settings=mall_server.settings.development
+
 # Set up initial data
 python manage.py setup_test_data --settings=mall_server.settings.development
 
@@ -194,11 +177,6 @@ MYSQL_USER=root
 MYSQL_PASSWORD=dev_password
 MYSQL_HOST=localhost
 MYSQL_PORT=3306
-
-# Redis
-REDIS_HOST=localhost
-REDIS_PORT=6379
-REDIS_PASSWORD=redis_password
 
 # Django
 DEBUG=True
@@ -269,14 +247,42 @@ After running the seed script, you can use these test accounts:
 
 ### Redis Connection Issues
 
-1. **Check Redis is running:**
+**Note:** Redis is no longer used in this application. If you see Redis-related errors, they may be from old configuration files or cached settings.
+
+1. **Clear old configuration:**
+   - Remove any Redis environment variables from `.env.development`
+   - Restart the Django server
+
+2. **Verify cache backend:**
    ```bash
-   redis-cli ping
-   # Should return: PONG
+   # Test cache functionality
+   python manage.py shell
+   >>> from django.core.cache import cache
+   >>> cache.set('test_key', 'test_value', 30)
+   >>> cache.get('test_key')
+   'test_value'
    ```
 
-2. **Check Redis configuration:**
-   - Verify host, port, and password in `.env.development`
+### Cache Performance Issues
+
+The application now uses database cache instead of Redis:
+
+1. **Monitor cache table size:**
+   ```sql
+   SELECT COUNT(*) FROM mall_server_cache;
+   ```
+
+2. **Clear cache if needed:**
+   ```bash
+   python manage.py shell
+   >>> from django.core.cache import cache
+   >>> cache.clear()
+   ```
+
+3. **Optimize cache table:**
+   ```sql
+   OPTIMIZE TABLE mall_server_cache;
+   ```
 
 ### Migration Issues
 
@@ -303,7 +309,7 @@ After running the seed script, you can use these test accounts:
 
 1. **Start services:**
    ```bash
-   # Start MySQL/MariaDB and Redis
+   # Start MySQL/MariaDB
    # Then start Django server
    python manage.py runserver
    ```
@@ -326,6 +332,58 @@ After running the seed script, you can use these test accounts:
    # Re-run seeding script
    python scripts/seed_dev_data.py
    ```
+
+## Docker Development Environment
+
+For containerized development, you can use Docker Compose:
+
+### Prerequisites
+
+- Docker
+- Docker Compose
+
+### Setup
+
+```bash
+# Start the development environment
+docker-compose -f docker-compose.dev.yml up -d
+
+# The services will be available at:
+# - Django app: http://localhost:8001
+# - MySQL: localhost:3307
+```
+
+### Services
+
+The Docker environment includes:
+
+- **mysql-mall**: MySQL 8.0 database server
+- **mall-server**: Django application server
+
+**Note:** Redis service has been removed from the Docker configuration as it's no longer needed.
+
+### Docker Commands
+
+```bash
+# Start services
+docker-compose -f docker-compose.dev.yml up -d
+
+# View logs
+docker-compose -f docker-compose.dev.yml logs -f
+
+# Stop services
+docker-compose -f docker-compose.dev.yml down
+
+# Rebuild and start
+docker-compose -f docker-compose.dev.yml up --build -d
+
+# Access Django container shell
+docker-compose -f docker-compose.dev.yml exec mall-server bash
+
+# Run Django commands in container
+docker-compose -f docker-compose.dev.yml exec mall-server python manage.py migrate
+docker-compose -f docker-compose.dev.yml exec mall-server python manage.py createcachetable mall_server_cache
+```
 
 ## Production Deployment
 

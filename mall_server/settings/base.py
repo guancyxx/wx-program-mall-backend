@@ -305,26 +305,14 @@ WECHAT_KEY_PATH = config('WECHAT_KEY_PATH', default='')   # Path to WeChat Pay p
 # Cache Configuration
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': config('REDIS_URL', default='redis://127.0.0.1:6379/1'),
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'mall_server_cache',
+        'TIMEOUT': 300,  # Default timeout: 5 minutes
         'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'CONNECTION_POOL_KWARGS': {
-                'max_connections': 50,
-                'retry_on_timeout': True,
-            },
-            'COMPRESSOR': 'django_redis.compressors.zlib.ZlibCompressor',
-            'SERIALIZER': 'django_redis.serializers.json.JSONSerializer',
+            'MAX_ENTRIES': 10000,
+            'CULL_FREQUENCY': 3,
         },
         'KEY_PREFIX': 'mall_server',
-        'TIMEOUT': 300,  # Default timeout: 5 minutes
     }
 }
 
-# Celery Configuration
-CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='redis://127.0.0.1:6379/0')
-CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND', default='redis://127.0.0.1:6379/0')
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = TIME_ZONE

@@ -17,7 +17,7 @@ DATABASES = {
         'USER': config('MYSQL_USER', default='root'),
         'PASSWORD': config('MYSQL_PASSWORD', default='dev_password'),
         'HOST': config('MYSQL_HOST', default='localhost'),
-        'PORT': config('MYSQL_PORT', default='3306'),
+        'PORT': config('MYSQL_PORT', default='3307'),
         'OPTIONS': {
             'charset': 'utf8mb4',
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -28,25 +28,22 @@ DATABASES = {
     }
 }
 
-# Redis Configuration for development
-REDIS_HOST = config('REDIS_HOST', default='localhost')
-REDIS_PORT = config('REDIS_PORT', default=6379, cast=int)
-REDIS_PASSWORD = config('REDIS_PASSWORD', default='redis_password')
-
-# Cache configuration using Redis
+# Cache configuration using Database Cache
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': f'redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/1',
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'mall_server_cache',
+        'TIMEOUT': 300,  # Default timeout: 5 minutes
         'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
+            'MAX_ENTRIES': 10000,
+            'CULL_FREQUENCY': 3,
+        },
+        'KEY_PREFIX': 'mall_server',
     }
 }
 
-# Session configuration using Redis
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS = 'default'
+# Session configuration using database sessions
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # Email backend for development
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')

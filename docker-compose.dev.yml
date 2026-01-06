@@ -25,24 +25,6 @@ services:
       retries: 5
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
-  # Redis for Mall Server Development
-  redis-mall:
-    image: redis:7-alpine
-    container_name: mall-server-redis-dev
-    restart: unless-stopped
-    command: redis-server --requirepass redis_dev_password
-    ports:
-      - "6380:6379"
-    volumes:
-      - redis_mall_data:/data
-    networks:
-      - mall-network
-    healthcheck:
-      test: ["CMD", "redis-cli", "-a", "redis_dev_password", "ping"]
-      interval: 10s
-      timeout: 3s
-      retries: 5
-
   # Mall Server Django Application
   mall-server:
     build:
@@ -61,11 +43,6 @@ services:
       MYSQL_PASSWORD: dev_password
       MYSQL_HOST: mysql-mall
       MYSQL_PORT: 3306
-      
-      # Redis Configuration
-      REDIS_HOST: redis-mall
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: redis_dev_password
       
       # WeChat Configuration
       WECHAT_APPID: wx23fedab0e057b533
@@ -90,8 +67,6 @@ services:
     depends_on:
       mysql-mall:
         condition: service_healthy
-      redis-mall:
-        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
       interval: 30s
@@ -101,8 +76,6 @@ services:
 
 volumes:
   mysql_mall_data:
-    driver: local
-  redis_mall_data:
     driver: local
   mall_server_media:
     driver: local

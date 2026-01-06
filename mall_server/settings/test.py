@@ -98,6 +98,3 @@ MEDIA_ROOT = '/tmp/test_media'
 # Static files for testing
 STATIC_ROOT = '/tmp/test_static'
 
-# Celery settings for testing
-CELERY_TASK_ALWAYS_EAGER = True
-CELERY_TASK_EAGER_PROPAGATES = True
