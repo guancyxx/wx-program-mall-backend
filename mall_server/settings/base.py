@@ -130,14 +130,38 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Password Hashers (bcrypt first for security)
+# Password Hashers (secure bcrypt first for enhanced security)
 PASSWORD_HASHERS = [
-    'apps.common.password_utils.BCryptPasswordHasher',
+    'apps.common.password_utils.SecurePasswordHasher',
+    'apps.common.password_utils.BCryptPasswordHasher',  # Fallback for existing hashes
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
     'django.contrib.auth.hashers.Argon2PasswordHasher',
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
 ]
+
+# Authentication Backends (secure backend first)
+AUTHENTICATION_BACKENDS = [
+    'apps.common.password_utils.SecureAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',  # Fallback for compatibility
+]
+
+# Password Security Configuration
+PASSWORD_SECURITY_CONFIG = {
+    'BCRYPT_ROUNDS': 12,
+    'MIN_PASSWORD_LENGTH': 8,
+    'MAX_PASSWORD_LENGTH': 128,
+    'REQUIRE_UPPERCASE': True,
+    'REQUIRE_LOWERCASE': True,
+    'REQUIRE_NUMBERS': True,
+    'REQUIRE_SPECIAL_CHARS': True,
+    'ENABLE_LEGACY_MIGRATION': True,
+    'LOG_SECURITY_EVENTS': True,
+    'BRUTE_FORCE_THRESHOLD': 5,
+    'BRUTE_FORCE_WINDOW_MINUTES': 15,
+    'AUTO_MIGRATE_ON_LOGIN': True,
+    'REQUIRE_PASSWORD_RESET_ON_CORRUPTION': True,
+}
 
 # Security Settings
 SECURE_BROWSER_XSS_FILTER = True
@@ -146,6 +170,19 @@ X_FRAME_OPTIONS = 'DENY'
 SECURE_HSTS_SECONDS = 31536000 if not config('DEBUG', default=True, cast=bool) else 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
+
+# Password Security Integration Settings
+PASSWORD_RESET_TIMEOUT = 3600  # 1 hour for password reset tokens
+PASSWORD_RESET_TIMEOUT_DAYS = 1  # Deprecated but kept for compatibility
+LOGIN_ATTEMPTS_LIMIT = 5  # Maximum login attempts before lockout
+LOGIN_ATTEMPTS_TIMEOUT = 900  # 15 minutes lockout duration
+ACCOUNT_LOCKOUT_ENABLED = True
+SECURITY_MONITORING_ENABLED = True
+
+# Admin Security Settings
+ADMIN_LOGIN_ATTEMPTS_LIMIT = 3  # Stricter limit for admin accounts
+ADMIN_SESSION_TIMEOUT = 1800  # 30 minutes for admin sessions
+ADMIN_REQUIRE_STRONG_PASSWORD = True
 
 # CSRF Protection
 CSRF_COOKIE_SECURE = not config('DEBUG', default=True, cast=bool)
@@ -235,8 +272,16 @@ LOGGING = {
             'style': '{',
         },
         'security': {
-            'format': '[SECURITY] {asctime} {levelname} {message} - User: {user} IP: {ip_address}',
-            'style': '{',
+            'format': '[SECURITY] %(asctime)s %(levelname)s %(message)s',
+            'style': '%',
+        },
+        'audit': {
+            'format': '[AUDIT] %(asctime)s %(levelname)s %(message)s',
+            'style': '%',
+        },
+        'json': {
+            'format': '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "logger": "%(name)s", "message": "%(message)s", "module": "%(module)s", "process": %(process)d, "thread": %(thread)d}',
+            'style': '%',
         },
     },
     'handlers': {
@@ -257,11 +302,23 @@ LOGGING = {
             'filename': BASE_DIR / 'logs' / 'security.log',
             'formatter': 'security',
         },
+        'audit_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'audit.log',
+            'formatter': 'audit',
+        },
         'error_file': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR / 'logs' / 'errors.log',
             'formatter': 'verbose',
+        },
+        'security_alerts': {
+            'level': 'CRITICAL',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'security_alerts.log',
+            'formatter': 'json',
         },
     },
     'root': {
@@ -277,6 +334,31 @@ LOGGING = {
         'security': {
             'handlers': ['security_file', 'console'],
             'level': 'INFO',
+            'propagate': False,
+        },
+        'security.controller': {
+            'handlers': ['security_file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'security.auth_backend': {
+            'handlers': ['security_file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'security.migration': {
+            'handlers': ['security_file', 'audit_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'security.audit': {
+            'handlers': ['audit_file', 'security_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'security.alerts': {
+            'handlers': ['security_alerts', 'security_file', 'console'],
+            'level': 'CRITICAL',
             'propagate': False,
         },
         'performance': {
