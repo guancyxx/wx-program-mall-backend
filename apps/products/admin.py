@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-from .models import Category, Product, ProductImage, ProductTag
+from .models import Category, Product, ProductImage, ProductTag, Banner
 
 
 class ProductImageInline(admin.TabularInline):
@@ -148,3 +148,30 @@ class ProductTagAdmin(admin.ModelAdmin):
     list_filter = ['tag', 'created_at']
     search_fields = ['product__name', 'product__gid', 'tag']
     ordering = ['tag']
+
+
+@admin.register(Banner)
+class BannerAdmin(admin.ModelAdmin):
+    list_display = ['id', 'title', 'type', 'order', 'is_active', 'created_at']
+    list_filter = ['type', 'is_active', 'created_at']
+    search_fields = ['title', 'cover']
+    ordering = ['order', 'created_at']
+    list_editable = ['order', 'is_active']
+    
+    fieldsets = (
+        ('Banner Information', {
+            'fields': ('cover', 'title', 'type')
+        }),
+        ('Display Settings', {
+            'fields': ('order', 'is_active')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    readonly_fields = ['created_at', 'updated_at']
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request)

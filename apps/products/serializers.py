@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Product, ProductImage, ProductTag
+from .models import Category, Product, ProductImage, ProductTag, Banner
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -156,3 +156,11 @@ class AdminProductListSerializer(serializers.ModelSerializer):
     def get_tags(self, obj):
         """Convert ProductTag objects to simple tag list like Node.js"""
         return [tag.tag for tag in obj.product_tags.all()]
+
+
+class BannerSerializer(serializers.ModelSerializer):
+    """Serializer for banner data - matches frontend expected format"""
+    
+    class Meta:
+        model = Banner
+        fields = ['id', 'cover', 'title', 'type']

@@ -6,10 +6,10 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from uuid import uuid4
 
-from .models import Product, ProductImage, ProductTag
+from .models import Product, ProductImage, ProductTag, Banner
 from .serializers import (
     ProductListSerializer, ProductDetailSerializer, 
-    ProductCreateUpdateSerializer, AdminProductListSerializer
+    ProductCreateUpdateSerializer, AdminProductListSerializer, BannerSerializer
 )
 from .services import ProductMemberService
 from apps.common.utils import success_response, error_response, paginated_response
@@ -307,3 +307,26 @@ def member_exclusive_products(request):
 
     except Exception as e:
         return error_response(f'获取会员专享商品失败: {str(e)}', status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class GetBannersView(APIView):
+    """Banner list endpoint - matches /api/goods/getBanners"""
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        try:
+            # Get active banners ordered by order field
+            banners = Banner.objects.filter(is_active=True).order_by('order', 'created_at')
+            
+            # Serialize banner data
+            serializer = BannerSerializer(banners, many=True)
+            
+            # Return in Node.js compatible format
+            response_data = {
+                'banner': serializer.data
+            }
+            
+            return success_response(response_data, 'ok')
+            
+        except Exception as e:
+            return error_response(f'获取轮播图失败: {str(e)}', status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -15,4 +15,7 @@ urlpatterns = [
     path('create/', views.ProductCreateView.as_view(), name='product-create'),
     path('updateGoods/', views.ProductUpdateView.as_view(), name='product-update'),
     path('adminGetGoodslist/', views.AdminProductListView.as_view(), name='admin-product-list'),
+    
+    # Banner endpoint
+    path('getBanners/', views.GetBannersView.as_view(), name='get-banners'),
 ]

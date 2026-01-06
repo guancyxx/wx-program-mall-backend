@@ -9,6 +9,8 @@ from .base import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
+ALLOWED_HOSTS = ['*']
+
 # Database - MySQL/MariaDB for development
 DATABASES = {
     'default': {
@@ -54,13 +56,13 @@ EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.conso
 # ]
 
 # Development middleware
-MIDDLEWARE += [
-    'django.middleware.common.BrokenLinkEmailsMiddleware',
-]
+# MIDDLEWARE += [
+#     'django.middleware.common.BrokenLinkEmailsMiddleware',
+# ]
 
 # Logging for development
-LOGGING['handlers']['console']['level'] = config('LOG_LEVEL', default='DEBUG')
-LOGGING['root']['level'] = config('LOG_LEVEL', default='DEBUG')
+# LOGGING['handlers']['console']['level'] = config('LOG_LEVEL', default='DEBUG')
+# LOGGING['root']['level'] = config('LOG_LEVEL', default='DEBUG')
 
 # WeChat Configuration
 WECHAT_APPID = config('WECHAT_APPID', default='')

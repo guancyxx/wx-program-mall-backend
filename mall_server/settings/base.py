@@ -53,16 +53,15 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'apps.common.middleware.SecurityMiddleware',
-    'apps.common.middleware.ErrorHandlingMiddleware',
-    'apps.common.performance.PerformanceMiddleware',
+    # 'apps.common.middleware.SecurityMiddleware',
+    # 'apps.common.middleware.ErrorHandlingMiddleware',
+    # 'apps.common.performance.PerformanceMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'apps.common.middleware.NodeJSCompatibilityMiddleware',
 ]
 
 ROOT_URLCONF = 'mall_server.urls'
@@ -259,120 +258,120 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # Logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '[{levelname}] {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '[{levelname}] {message}',
-            'style': '{',
-        },
-        'security': {
-            'format': '[SECURITY] %(asctime)s %(levelname)s %(message)s',
-            'style': '%',
-        },
-        'audit': {
-            'format': '[AUDIT] %(asctime)s %(levelname)s %(message)s',
-            'style': '%',
-        },
-        'json': {
-            'format': '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "logger": "%(name)s", "message": "%(message)s", "module": "%(module)s", "process": %(process)d, "thread": %(thread)d}',
-            'style': '%',
-        },
-    },
-    'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'django.log',
-            'formatter': 'verbose',
-        },
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-        },
-        'security_file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'security.log',
-            'formatter': 'security',
-        },
-        'audit_file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'audit.log',
-            'formatter': 'audit',
-        },
-        'error_file': {
-            'level': 'ERROR',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'errors.log',
-            'formatter': 'verbose',
-        },
-        'security_alerts': {
-            'level': 'CRITICAL',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'security_alerts.log',
-            'formatter': 'json',
-        },
-    },
-    'root': {
-        'handlers': ['console', 'file'],
-        'level': 'INFO',
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'security': {
-            'handlers': ['security_file', 'console'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'security.controller': {
-            'handlers': ['security_file', 'console'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'security.auth_backend': {
-            'handlers': ['security_file', 'console'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'security.migration': {
-            'handlers': ['security_file', 'audit_file'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'security.audit': {
-            'handlers': ['audit_file', 'security_file'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'security.alerts': {
-            'handlers': ['security_alerts', 'security_file', 'console'],
-            'level': 'CRITICAL',
-            'propagate': False,
-        },
-        'performance': {
-            'handlers': ['file', 'console'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'django.security': {
-            'handlers': ['security_file', 'error_file'],
-            'level': 'WARNING',
-            'propagate': False,
-        },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'verbose': {
+#             'format': '[{levelname}] {asctime} {module} {process:d} {thread:d} {message}',
+#             'style': '{',
+#         },
+#         'simple': {
+#             'format': '[{levelname}] {message}',
+#             'style': '{',
+#         },
+#         'security': {
+#             'format': '[SECURITY] %(asctime)s %(levelname)s %(message)s',
+#             'style': '%',
+#         },
+#         'audit': {
+#             'format': '[AUDIT] %(asctime)s %(levelname)s %(message)s',
+#             'style': '%',
+#         },
+#         'json': {
+#             'format': '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "logger": "%(name)s", "message": "%(message)s", "module": "%(module)s", "process": %(process)d, "thread": %(thread)d}',
+#             'style': '%',
+#         },
+#     },
+#     'handlers': {
+#         'file': {
+#             'level': 'INFO',
+#             'class': 'logging.FileHandler',
+#             'filename': BASE_DIR / 'logs' / 'django.log',
+#             'formatter': 'verbose',
+#         },
+#         'console': {
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'simple',
+#         },
+#         'security_file': {
+#             'level': 'INFO',
+#             'class': 'logging.FileHandler',
+#             'filename': BASE_DIR / 'logs' / 'security.log',
+#             'formatter': 'security',
+#         },
+#         'audit_file': {
+#             'level': 'INFO',
+#             'class': 'logging.FileHandler',
+#             'filename': BASE_DIR / 'logs' / 'audit.log',
+#             'formatter': 'audit',
+#         },
+#         'error_file': {
+#             'level': 'ERROR',
+#             'class': 'logging.FileHandler',
+#             'filename': BASE_DIR / 'logs' / 'errors.log',
+#             'formatter': 'verbose',
+#         },
+#         'security_alerts': {
+#             'level': 'CRITICAL',
+#             'class': 'logging.FileHandler',
+#             'filename': BASE_DIR / 'logs' / 'security_alerts.log',
+#             'formatter': 'json',
+#         },
+#     },
+#     'root': {
+#         'handlers': ['console', 'file'],
+#         'level': 'INFO',
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console', 'file'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#         'security': {
+#             'handlers': ['security_file', 'console'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#         'security.controller': {
+#             'handlers': ['security_file', 'console'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#         'security.auth_backend': {
+#             'handlers': ['security_file', 'console'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#         'security.migration': {
+#             'handlers': ['security_file', 'audit_file'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#         'security.audit': {
+#             'handlers': ['audit_file', 'security_file'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#         'security.alerts': {
+#             'handlers': ['security_alerts', 'security_file', 'console'],
+#             'level': 'CRITICAL',
+#             'propagate': False,
+#         },
+#         'performance': {
+#             'handlers': ['file', 'console'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#         'django.security': {
+#             'handlers': ['security_file', 'error_file'],
+#             'level': 'WARNING',
+#             'propagate': False,
+#         },
+#     },
+# }
 
 # WeChat Configuration
 WECHAT_APPID = config('WECHAT_APPID', default='')
