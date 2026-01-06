@@ -19,5 +19,5 @@ urlpatterns = [
     
     # API endpoints
     path('admin/api/dashboard/', dashboard_api, name='dashboard_api'),
-    path('admin/api/health/', system_health_check, name='health_check'),
+    path('health/', system_health_check, name='health_check'),
 ]

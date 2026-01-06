@@ -14,6 +14,7 @@ urlpatterns = [
     path('api/order/', include('apps.orders.urls')),  # Match Node.js /api/order/ pattern
     path('api/payments/', include('apps.payments.urls')),
     path('api/points/', include('apps.points.urls')),
+    path('', include('apps.common.urls')),
 ]
 
 # Serve media files in development
