@@ -31,11 +31,12 @@ class ProductAdmin(admin.ModelAdmin):
         'inventory_status', 'sold', 'views', 'has_top', 'has_recommend'
     ]
     list_filter = [
-        'status', 'has_top', 'has_recommend', 'is_member_exclusive', 
+        'status', 'has_top', 'has_recommend', 'is_member_exclusive',
         'min_tier_required', 'category', 'create_time'
     ]
     search_fields = ['gid', 'name', 'description']
-    readonly_fields = ['create_time', 'update_time', 'views', 'sold']
+    # 包含非模型字段/方法时需要在 readonly_fields 中声明，才能在 fieldsets 中使用
+    readonly_fields = ['create_time', 'update_time', 'views', 'sold', 'inventory_alerts']
     ordering = ['-create_time']
     
     fieldsets = (
