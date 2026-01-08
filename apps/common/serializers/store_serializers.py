@@ -25,12 +25,31 @@ class StoreSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'create_time']
     
     def to_representation(self, instance):
-        """Convert to camelCase format for frontend compatibility"""
+        """Convert to camelCase format and fix image URLs"""
         data = super().to_representation(instance)
+        
         # Remove duplicate underscore fields
         data.pop('start_time', None)
         data.pop('end_time', None)
         data.pop('create_time', None)
+        
+        # Convert relative image URL to absolute URL
+        if 'img' in data and data['img']:
+            img_url = data['img']
+            # If already a full URL, keep as-is
+            if not (img_url.startswith('http://') or img_url.startswith('https://')):
+                # Build absolute URL from relative path
+                request = self.context.get('request')
+                if request:
+                    data['img'] = request.build_absolute_uri(img_url)
+                else:
+                    # Fallback: try to construct URL from settings
+                    from django.conf import settings
+                    if hasattr(settings, 'MEDIA_URL') and img_url.startswith(settings.MEDIA_URL):
+                        base_url = getattr(settings, 'BASE_URL', '')
+                        if base_url:
+                            data['img'] = f"{base_url.rstrip('/')}{img_url}"
+        
         return data
     
     def to_internal_value(self, data):
@@ -84,7 +103,25 @@ class StoreListSerializer(serializers.ModelSerializer):
         return getattr(obj, '_distance', None)
     
     def to_representation(self, instance):
-        """Convert to camelCase format"""
+        """Convert to camelCase format and fix image URLs"""
         data = super().to_representation(instance)
+        
+        # Convert relative image URL to absolute URL
+        if 'img' in data and data['img']:
+            img_url = data['img']
+            # If already a full URL, keep as-is
+            if not (img_url.startswith('http://') or img_url.startswith('https://')):
+                # Build absolute URL from relative path
+                request = self.context.get('request')
+                if request:
+                    data['img'] = request.build_absolute_uri(img_url)
+                else:
+                    # Fallback: try to construct URL from settings
+                    from django.conf import settings
+                    if hasattr(settings, 'MEDIA_URL') and img_url.startswith(settings.MEDIA_URL):
+                        base_url = getattr(settings, 'BASE_URL', '')
+                        if base_url:
+                            data['img'] = f"{base_url.rstrip('/')}{img_url}"
+        
         return data
 

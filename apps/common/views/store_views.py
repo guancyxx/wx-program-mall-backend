@@ -47,7 +47,7 @@ class StoreListView(APIView):
             end_index = start_index + page_size
             page_stores = stores[start_index:end_index]
             
-            serializer = StoreListSerializer(page_stores, many=True)
+            serializer = StoreListSerializer(page_stores, many=True, context={'request': request})
             
             # Return data in format matching Node.js API
             response_data = {
@@ -76,10 +76,10 @@ class StoreListView(APIView):
                     'coordinates': [longitude, latitude]
                 }
             
-            serializer = StoreSerializer(data=data)
+            serializer = StoreSerializer(data=data, context={'request': request})
             if serializer.is_valid():
                 store = serializer.save()
-                return success_response(StoreSerializer(store).data, 'Store created successfully')
+                return success_response(StoreSerializer(store, context={'request': request}).data, 'Store created successfully')
             else:
                 return error_response('Validation failed', errors=serializer.errors, status_code=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
@@ -97,7 +97,7 @@ class StoreDetailView(APIView):
             if not store:
                 return error_response("Store not found", status_code=status.HTTP_404_NOT_FOUND)
             
-            serializer = StoreSerializer(store)
+            serializer = StoreSerializer(store, context={'request': request})
             return success_response(serializer.data, 'Store retrieved successfully')
         except Exception as e:
             return error_response(f"Server error: {str(e)}", status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -123,10 +123,10 @@ class StoreDetailView(APIView):
                     'coordinates': [longitude, latitude]
                 }
             
-            serializer = StoreSerializer(store, data=data, partial=True)
+            serializer = StoreSerializer(store, data=data, partial=True, context={'request': request})
             if serializer.is_valid():
                 serializer.save()
-                return success_response(StoreSerializer(store).data, 'Store updated successfully')
+                return success_response(StoreSerializer(store, context={'request': request}).data, 'Store updated successfully')
             else:
                 return error_response('Validation failed', errors=serializer.errors, status_code=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
