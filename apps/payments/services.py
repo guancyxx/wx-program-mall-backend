@@ -11,7 +11,7 @@ from typing import Dict, Optional, Tuple
 
 from .models import PaymentMethod, PaymentTransaction, RefundRequest, WeChatPayment
 from apps.orders.models import Order
-from apps.orders.services import OrderService
+from apps.orders.services import OrderPaymentService
 from apps.common.wechat import generate_wechat_signature, verify_wechat_signature
 
 logger = logging.getLogger(__name__)
@@ -96,7 +96,7 @@ class PaymentService:
             payment.save()
             
             # Update order status
-            success, message = OrderService.process_payment_success(payment.order_id)
+            success, message = OrderPaymentService.process_payment_success(payment.order_id)
             if not success:
                 logger.error(f"Failed to update order status for payment {transaction_id}: {message}")
                 # Don't fail the payment processing, just log the error

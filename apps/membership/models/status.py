@@ -5,57 +5,10 @@ from django.utils import timezone
 from decimal import Decimal
 
 
-class MembershipTier(models.Model):
-    """Membership tier definitions"""
-    TIER_CHOICES = [
-        ('bronze', 'Bronze'),
-        ('silver', 'Silver'),
-        ('gold', 'Gold'),
-        ('platinum', 'Platinum'),
-    ]
-
-    name = models.CharField(max_length=20, choices=TIER_CHOICES, unique=True)
-    display_name = models.CharField(max_length=50)
-    min_spending = models.DecimalField(max_digits=10, decimal_places=2)
-    max_spending = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    points_multiplier = models.DecimalField(max_digits=3, decimal_places=2, default=1.0)
-    benefits = models.JSONField(default=dict)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = 'membership_tiers'
-        ordering = ['min_spending']
-
-    def __str__(self):
-        return self.display_name
-
-    @classmethod
-    def get_tier_for_spending(cls, total_spending):
-        """Get the appropriate tier for a given spending amount"""
-        total_spending = Decimal(str(total_spending))
-        
-        # Find the highest tier that the spending qualifies for
-        tier = cls.objects.filter(
-            min_spending__lte=total_spending
-        ).order_by('-min_spending').first()
-        
-        if tier and (tier.max_spending is None or total_spending <= tier.max_spending):
-            return tier
-        
-        # Fallback to Bronze tier if no tier found
-        return cls.objects.filter(name='bronze').first()
-
-    @classmethod
-    def get_bronze_tier(cls):
-        """Get the default Bronze tier"""
-        return cls.objects.filter(name='bronze').first()
-
-
 class MembershipStatus(models.Model):
     """User's current membership status"""
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='membership')
-    tier = models.ForeignKey(MembershipTier, on_delete=models.CASCADE)
+    tier = models.ForeignKey('MembershipTier', on_delete=models.CASCADE)
     total_spending = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     tier_start_date = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -74,6 +27,7 @@ class MembershipStatus(models.Model):
             self.total_spending += Decimal(str(amount))
             
             # Check if tier upgrade is needed
+            from .tier import MembershipTier
             new_tier = MembershipTier.get_tier_for_spending(self.total_spending)
             
             if new_tier and new_tier.id != old_tier.id:
@@ -90,6 +44,7 @@ class MembershipStatus(models.Model):
         self.tier_start_date = timezone.now()
         
         # Log the upgrade
+        from .upgrade_log import TierUpgradeLog
         TierUpgradeLog.objects.create(
             user=self.user,
             from_tier=old_tier,
@@ -103,7 +58,7 @@ class MembershipStatus(models.Model):
 
     def _send_tier_upgrade_notification(self, old_tier, new_tier):
         """Send tier upgrade notification to user"""
-        from .services import TierNotificationService
+        from ..services import TierNotificationService
         TierNotificationService.send_upgrade_notification(self.user, old_tier, new_tier)
 
     def get_tier_benefits(self):
@@ -126,6 +81,7 @@ class MembershipStatus(models.Model):
     @classmethod
     def create_for_user(cls, user):
         """Create membership status for a new user with Bronze tier"""
+        from .tier import MembershipTier
         bronze_tier = MembershipTier.get_bronze_tier()
         if not bronze_tier:
             raise ValueError("Bronze tier not found. Please run setup_membership_tiers command.")
@@ -136,19 +92,3 @@ class MembershipStatus(models.Model):
             total_spending=0
         )
 
-
-class TierUpgradeLog(models.Model):
-    """History of tier changes"""
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    from_tier = models.ForeignKey(MembershipTier, on_delete=models.CASCADE, related_name='upgrades_from', null=True)
-    to_tier = models.ForeignKey(MembershipTier, on_delete=models.CASCADE, related_name='upgrades_to')
-    reason = models.CharField(max_length=200)
-    spending_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = 'tier_upgrade_logs'
-        ordering = ['-created_at']
-
-    def __str__(self):
-        return f"{self.user.username}: {self.from_tier} -> {self.to_tier}"

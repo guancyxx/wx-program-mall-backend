@@ -1,18 +1,15 @@
-from rest_framework import status, generics, viewsets
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
+"""
+User authentication views.
+"""
 from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import check_password
 from django.core.cache import cache
-from .models import User, Address
-from .serializers import (
-    UserListSerializer, UserDetailSerializer, UserUpdateSerializer,
-    UserRegistrationSerializer, AddressSerializer
-)
+
 from apps.common.utils import success_response, error_response
+from ..models import User
+from ..serializers import UserDetailSerializer, UserRegistrationSerializer
 
 
 class RegisterView(APIView):
@@ -153,97 +150,3 @@ class WeChatLoginView(APIView):
             'user': UserDetailSerializer(user, context={'request': request}).data
         }, 'WeChat login successful')
 
-
-class UserProfileView(APIView):
-    """User profile management matching Node.js API"""
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        """getUserInfo endpoint"""
-        serializer = UserDetailSerializer(request.user, context={'request': request})
-        return success_response(serializer.data, 'User info retrieved successfully')
-
-    def post(self, request):
-        """modifyInfo endpoint (using POST to match Node.js API)"""
-        serializer = UserUpdateSerializer(request.user, data=request.data, partial=True, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            # Return updated user data using detail serializer
-            updated_data = UserDetailSerializer(request.user, context={'request': request}).data
-            return success_response(updated_data, 'Profile updated successfully')
-        return error_response('Profile update failed', serializer.errors)
-
-    def put(self, request):
-        """Alternative modifyInfo endpoint (using PUT for REST compliance)"""
-        return self.post(request)
-
-
-class UploadAvatarView(APIView):
-    """Avatar upload endpoint matching Node.js API (uploaderImg)"""
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        if 'avatar' not in request.FILES and 'file' not in request.FILES:
-            return error_response('No avatar file provided')
-
-        # Support both 'avatar' and 'file' field names for compatibility
-        avatar_file = request.FILES.get('avatar') or request.FILES.get('file')
-        
-        request.user.avatar = avatar_file
-        request.user.save()
-
-        return success_response({
-            'avatar_url': request.user.avatar.url if request.user.avatar else None,
-            'url': request.user.avatar.url if request.user.avatar else None  # Alternative field name
-        }, 'Avatar uploaded successfully')
-
-
-class AddressViewSet(viewsets.ModelViewSet):
-    """Address management viewset"""
-    serializer_class = AddressSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Address.objects.filter(user=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-
-class AddAddressView(APIView):
-    """Add address endpoint matching Node.js API"""
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        serializer = AddressSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return success_response(serializer.data, 'Address added successfully')
-        return error_response('Failed to add address', serializer.errors)
-
-
-class DeleteAddressView(APIView):
-    """Delete address endpoint matching Node.js API"""
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        address_id = request.data.get('id')
-        if not address_id:
-            return error_response('Address ID is required')
-
-        try:
-            address = Address.objects.get(id=address_id, user=request.user)
-            address.delete()
-            return success_response(None, 'Address deleted successfully')
-        except Address.DoesNotExist:
-            return error_response('Address not found')
-
-
-class AddressListView(APIView):
-    """Get address list endpoint matching Node.js API"""
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        addresses = Address.objects.filter(user=request.user).order_by('-is_default', '-created_at')
-        serializer = AddressSerializer(addresses, many=True)
-        return success_response(serializer.data, 'Address list retrieved successfully')
