@@ -1,5 +1,8 @@
 #!/bin/bash
 set -e
+
+ls
+
 # Start gunicorn
 exec gunicorn mall_server.wsgi:application \
     --bind 0.0.0.0:80 \
