@@ -1,10 +1,13 @@
+"""
+User serializers for list, detail, registration, and update operations.
+"""
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from apps.common.validators import (
     validate_phone, validate_phone_unique, validate_email,
     validate_password_strength
 )
-from .models import User, Address
+from ..models import User
 
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -141,12 +144,3 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             return validate_phone_unique(value, exclude_user=self.instance)
         return value
 
-
-class AddressSerializer(serializers.ModelSerializer):
-    """Address serializer"""
-    
-    class Meta:
-        model = Address
-        fields = ['id', 'name', 'phone', 'address', 'detail', 'address_type', 
-                 'is_default', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at']

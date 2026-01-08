@@ -1,5 +1,8 @@
+"""
+Product serializers for list, detail, create, and update operations.
+"""
 from rest_framework import serializers
-from .models import Category, Product, ProductImage, ProductTag, Banner
+from ..models import Product, ProductImage, ProductTag, Category
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -89,12 +92,12 @@ class ProductCreateUpdateSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         """Create product using ProductService"""
-        from .services import ProductService
+        from ..services import ProductService
         return ProductService.create_product(validated_data)
     
     def update(self, instance, validated_data):
         """Update product using ProductService"""
-        from .services import ProductService
+        from ..services import ProductService
         return ProductService.update_product(instance, validated_data)
 
 
@@ -116,10 +119,3 @@ class AdminProductListSerializer(serializers.ModelSerializer):
         """Convert ProductTag objects to simple tag list like Node.js"""
         return [tag.tag for tag in obj.product_tags.all()]
 
-
-class BannerSerializer(serializers.ModelSerializer):
-    """Serializer for banner data - matches frontend expected format"""
-    
-    class Meta:
-        model = Banner
-        fields = ['id', 'cover', 'title', 'type']

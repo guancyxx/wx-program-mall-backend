@@ -1,6 +1,8 @@
+"""
+Order serializers for list, detail, and create operations.
+"""
 from rest_framework import serializers
-from .models import Order, OrderItem, ReturnOrder, OrderDiscount
-from apps.users.models import User
+from ..models import Order, OrderItem, OrderDiscount
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
@@ -57,6 +59,34 @@ class OrderSerializer(serializers.ModelSerializer):
         return goods
 
 
+class OrderListSerializer(serializers.ModelSerializer):
+    """Simplified serializer for order list matching Node.js getMyOrder API"""
+    
+    goods = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Order
+        fields = [
+            'roid', 'uid', 'create_time', 'pay_time', 'send_time',
+            'amount', 'status', 'refund_info', 'type', 'logistics',
+            'remark', 'address', 'lock_timeout', 'cancel_text', 'goods'
+        ]
+
+    def get_goods(self, obj):
+        """Get simplified goods list for order listing"""
+        goods = []
+        for item in obj.items.all():
+            goods.append({
+                'rrid': item.rrid,
+                'gid': item.gid,
+                'quantity': item.quantity,
+                'price': float(item.price),
+                'isReturn': item.is_return,
+                **item.product_info
+            })
+        return goods
+
+
 class OrderCreateSerializer(serializers.Serializer):
     """Serializer for creating orders matching Node.js createOrder API"""
     
@@ -94,68 +124,3 @@ class OrderCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError("Store ID (lid) is required for pickup orders")
         return data
 
-
-class OrderListSerializer(serializers.ModelSerializer):
-    """Simplified serializer for order list matching Node.js getMyOrder API"""
-    
-    goods = serializers.SerializerMethodField()
-    
-    class Meta:
-        model = Order
-        fields = [
-            'roid', 'uid', 'create_time', 'pay_time', 'send_time',
-            'amount', 'status', 'refund_info', 'type', 'logistics',
-            'remark', 'address', 'lock_timeout', 'cancel_text', 'goods'
-        ]
-
-    def get_goods(self, obj):
-        """Get simplified goods list for order listing"""
-        goods = []
-        for item in obj.items.all():
-            goods.append({
-                'rrid': item.rrid,
-                'gid': item.gid,
-                'quantity': item.quantity,
-                'price': float(item.price),
-                'isReturn': item.is_return,
-                **item.product_info
-            })
-        return goods
-
-
-class ReturnOrderSerializer(serializers.ModelSerializer):
-    """Serializer for return orders"""
-    
-    class Meta:
-        model = ReturnOrder
-        fields = [
-            'rrid', 'gid', 'uid', 'roid', 'amount', 'refund_amount',
-            'status', 'create_time', 'openid'
-        ]
-        read_only_fields = ['rrid', 'create_time']
-
-
-class OrderRefundSerializer(serializers.Serializer):
-    """Serializer for order refund requests"""
-    
-    roid = serializers.CharField(max_length=50)
-    reason = serializers.CharField(max_length=500)
-    rrid = serializers.CharField(max_length=50)
-
-    def validate_reason(self, value):
-        """Validate refund reason"""
-        if not value.strip():
-            raise serializers.ValidationError("Refund reason cannot be empty")
-        return value
-
-
-class OrderCancelSerializer(serializers.Serializer):
-    """Serializer for order cancellation"""
-    
-    roid = serializers.CharField(max_length=50)
-
-
-class OrderPaymentSerializer(serializers.Serializer):
-    """Serializer for payment-related operations"""
-    
-    roid = serializers.CharField(max_length=50)
