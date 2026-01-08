@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
-from decimal import Decimal
 
 
 class Order(models.Model):
@@ -95,96 +94,3 @@ class Order(models.Model):
         
         super().save(*args, **kwargs)
 
-
-class OrderItem(models.Model):
-    """Order line items - represents individual goods in an order"""
-    
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    rrid = models.CharField(max_length=50, unique=True, help_text="Return order ID")
-    gid = models.CharField(max_length=50, help_text="Product/Goods ID")
-    quantity = models.IntegerField(help_text="Quantity ordered")
-    price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Unit price")
-    amount = models.DecimalField(max_digits=10, decimal_places=2, help_text="Line total (quantity * price)")
-    is_return = models.BooleanField(default=False, help_text="Whether item has been returned")
-    
-    # Additional product info (stored as JSON to match Node.js flexibility)
-    product_info = models.JSONField(default=dict, help_text="Product details snapshot")
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = 'order_items'
-        indexes = [
-            models.Index(fields=['order']),
-            models.Index(fields=['gid']),
-            models.Index(fields=['rrid']),
-        ]
-
-    def __str__(self):
-        return f"OrderItem {self.rrid} - {self.gid}"
-
-    def save(self, *args, **kwargs):
-        # Calculate amount if not set
-        if not self.amount:
-            self.amount = self.quantity * self.price
-        super().save(*args, **kwargs)
-
-
-class ReturnOrder(models.Model):
-    """Return order model matching Node.js returnOrder schema"""
-    
-    rrid = models.CharField(max_length=50, unique=True, help_text="Return order ID")
-    gid = models.CharField(max_length=50, help_text="Product/Goods ID")
-    uid = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='uid')
-    roid = models.CharField(max_length=50, help_text="Original order ID")
-    
-    amount = models.DecimalField(max_digits=10, decimal_places=2, help_text="Return amount")
-    refund_amount = models.DecimalField(max_digits=10, decimal_places=2, help_text="Refundable amount")
-    
-    status = models.IntegerField(default=-1, help_text="Return status: -1=pending, 1=completed")
-    create_time = models.DateTimeField(default=timezone.now)
-    openid = models.CharField(max_length=100, help_text="WeChat OpenID for refunds")
-
-    class Meta:
-        db_table = 'return_orders'
-        indexes = [
-            models.Index(fields=['uid']),
-            models.Index(fields=['gid']),
-            models.Index(fields=['status']),
-            models.Index(fields=['roid']),
-            models.Index(fields=['rrid']),
-        ]
-
-    def __str__(self):
-        return f"ReturnOrder {self.rrid}"
-
-
-class OrderDiscount(models.Model):
-    """Order discounts and promotions for member benefits"""
-    
-    DISCOUNT_TYPE_CHOICES = [
-        ('tier_discount', 'Membership Tier Discount'),
-        ('points_redemption', 'Points Redemption'),
-        ('free_shipping', 'Free Shipping'),
-        ('promotion', 'Promotional Discount'),
-    ]
-    
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='discounts')
-    discount_type = models.CharField(max_length=20, choices=DISCOUNT_TYPE_CHOICES)
-    discount_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    description = models.CharField(max_length=200, help_text="Discount description")
-    
-    # Additional discount details (stored as JSON for flexibility)
-    discount_details = models.JSONField(default=dict, help_text="Additional discount information")
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = 'order_discounts'
-        indexes = [
-            models.Index(fields=['order']),
-            models.Index(fields=['discount_type']),
-        ]
-
-    def __str__(self):
-        return f"Discount {self.discount_type} - {self.discount_amount}"

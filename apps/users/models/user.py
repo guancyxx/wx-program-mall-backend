@@ -48,61 +48,46 @@ class User(AbstractUser):
             return True
         return False
     
-    def reset_failed_login_attempts(self):
+    def lock_account(self, duration_minutes=30):
         """
-        Reset failed login attempts counter
-        """
-        self.failed_login_attempts = 0
-        self.last_failed_login = None
-        self.account_locked_until = None
-        self.save(update_fields=['failed_login_attempts', 'last_failed_login', 'account_locked_until'])
-    
-    def increment_failed_login_attempts(self):
-        """
-        Increment failed login attempts and lock account if necessary
+        Lock account for specified duration
         """
         from django.utils import timezone
         from datetime import timedelta
         
+        self.account_locked_until = timezone.now() + timedelta(minutes=duration_minutes)
+        self.save(update_fields=['account_locked_until'])
+    
+    def unlock_account(self):
+        """
+        Unlock account and reset failed login attempts
+        """
+        self.account_locked_until = None
+        self.failed_login_attempts = 0
+        self.last_failed_login = None
+        self.save(update_fields=['account_locked_until', 'failed_login_attempts', 'last_failed_login'])
+    
+    def record_failed_login(self):
+        """
+        Record a failed login attempt and lock account if threshold reached
+        """
+        from django.utils import timezone
+        
         self.failed_login_attempts += 1
         self.last_failed_login = timezone.now()
         
-        # Lock account after 5 failed attempts for 15 minutes
+        # Lock account after 5 failed attempts
         if self.failed_login_attempts >= 5:
-            self.account_locked_until = timezone.now() + timedelta(minutes=15)
-        
-        self.save(update_fields=['failed_login_attempts', 'last_failed_login', 'account_locked_until'])
+            self.lock_account(duration_minutes=30)
+        else:
+            self.save(update_fields=['failed_login_attempts', 'last_failed_login'])
+    
+    def reset_failed_login_attempts(self):
+        """
+        Reset failed login attempts on successful login
+        """
+        if self.failed_login_attempts > 0:
+            self.failed_login_attempts = 0
+            self.last_failed_login = None
+            self.save(update_fields=['failed_login_attempts', 'last_failed_login'])
 
-
-class Address(models.Model):
-    """User shipping addresses"""
-    TYPE_CHOICES = [
-        (0, 'Home'),
-        (1, 'Company'),
-        (2, 'School'),
-        (3, 'Other'),
-    ]
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses')
-    name = models.CharField(max_length=100)  # Recipient name
-    phone = models.CharField(max_length=20)
-    address = models.CharField(max_length=200)  # General address
-    detail = models.CharField(max_length=200)  # Detailed address
-    address_type = models.IntegerField(choices=TYPE_CHOICES, default=0)
-    is_default = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = 'user_addresses'
-        verbose_name = 'Address'
-        verbose_name_plural = 'Addresses'
-
-    def __str__(self):
-        return f"{self.name} - {self.address}"
-
-    def save(self, *args, **kwargs):
-        # Ensure only one default address per user
-        if self.is_default:
-            Address.objects.filter(user=self.user, is_default=True).update(is_default=False)
-        super().save(*args, **kwargs)
