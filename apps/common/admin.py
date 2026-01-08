@@ -346,17 +346,17 @@ class StoreAdmin(EnhancedModelAdmin):
     """Admin interface for stores"""
     
     list_display = [
-        'lid', 'name', 'address', 'phone', 'status', 
+        'id', 'name', 'address', 'phone', 'status', 
         'start_time', 'end_time', 'create_time'
     ]
     list_filter = ['status', 'create_time']
-    search_fields = ['lid', 'name', 'address', 'phone']
+    search_fields = ['id', 'name', 'address', 'phone']
     ordering = ['-create_time']
-    readonly_fields = ['create_time', 'update_time']
+    readonly_fields = ['id', 'create_time', 'update_time']
     
     fieldsets = (
         ('Basic Information', {
-            'fields': ('lid', 'name', 'status')
+            'fields': ('id', 'name', 'status')
         }),
         ('Location', {
             'fields': ('address', 'detail', 'location')
@@ -375,10 +375,3 @@ class StoreAdmin(EnhancedModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
-    def get_readonly_fields(self, request, obj=None):
-        """Make lid readonly after creation"""
-        readonly = list(super().get_readonly_fields(request, obj))
-        if obj:  # Editing existing object
-            readonly.append('lid')
-        return readonly

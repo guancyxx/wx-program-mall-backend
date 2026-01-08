@@ -12,8 +12,8 @@ class Store(models.Model):
     Represents physical store locations for pickup orders.
     """
     
-    # Store ID (lid in Node.js)
-    lid = models.IntegerField(unique=True, help_text="Store ID (lid)")
+    # Store ID - using Django's default id field instead of custom lid
+    # lid field removed - use id instead
     
     # Location (GeoJSON Point format: [longitude, latitude])
     # Stored as JSON to match Node.js structure
@@ -61,7 +61,6 @@ class Store(models.Model):
         verbose_name = 'Store'
         verbose_name_plural = 'Stores'
         indexes = [
-            models.Index(fields=['lid']),
             models.Index(fields=['status']),
             models.Index(fields=['name']),
             models.Index(fields=['address']),
@@ -69,7 +68,7 @@ class Store(models.Model):
         ordering = ['-create_time']
     
     def __str__(self):
-        return f"{self.name} (lid: {self.lid})"
+        return f"{self.name} (id: {self.id})"
     
     @property
     def is_active(self):

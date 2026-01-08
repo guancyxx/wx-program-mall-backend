@@ -29,12 +29,11 @@ class StoreListView(APIView):
             
             # Apply keyword search
             if keyword:
+                from django.db.models import Q
                 stores = stores.filter(
-                    name__icontains=keyword
-                ) | stores.filter(
-                    address__icontains=keyword
-                ) | stores.filter(
-                    lid__icontains=keyword
+                    Q(name__icontains=keyword) |
+                    Q(address__icontains=keyword) |
+                    Q(id__icontains=keyword)
                 )
             
             # Order by create_time descending
@@ -65,6 +64,9 @@ class StoreListView(APIView):
         try:
             data = request.data.copy()
             
+            # Remove lid from data (use Django's default id instead)
+            data.pop('lid', None)
+            
             # Handle location from longitude/latitude
             if 'longitude' in data and 'latitude' in data:
                 longitude = float(data.pop('longitude'))
@@ -73,14 +75,6 @@ class StoreListView(APIView):
                     'type': 'Point',
                     'coordinates': [longitude, latitude]
                 }
-            
-            # Generate lid if not provided (auto-increment from max lid + 1)
-            if 'lid' not in data or not data.get('lid'):
-                max_lid = Store.objects.aggregate(max_lid=models.Max('lid'))['max_lid']
-                if max_lid is None:
-                    data['lid'] = 100001  # Start from 100001 like Node.js
-                else:
-                    data['lid'] = max_lid + 1
             
             serializer = StoreSerializer(data=data)
             if serializer.is_valid():
@@ -96,10 +90,10 @@ class StoreDetailView(APIView):
     """RESTful API for store detail, update, and delete"""
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, lid):
-        """Get store detail by lid"""
+    def get(self, request, pk):
+        """Get store detail by id"""
         try:
-            store = Store.objects.filter(lid=lid, status=1).first()
+            store = Store.objects.filter(id=pk, status=1).first()
             if not store:
                 return error_response("Store not found", status_code=status.HTTP_404_NOT_FOUND)
             
@@ -108,14 +102,17 @@ class StoreDetailView(APIView):
         except Exception as e:
             return error_response(f"Server error: {str(e)}", status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def put(self, request, lid):
-        """Update store by lid"""
+    def put(self, request, pk):
+        """Update store by id"""
         try:
-            store = Store.objects.filter(lid=lid).first()
+            store = Store.objects.filter(id=pk).first()
             if not store:
                 return error_response("Store not found", status_code=status.HTTP_404_NOT_FOUND)
             
             data = request.data.copy()
+            
+            # Remove id from update data (id should not be changed)
+            data.pop('id', None)
             
             # Handle location from longitude/latitude
             if 'longitude' in data and 'latitude' in data:
@@ -126,9 +123,6 @@ class StoreDetailView(APIView):
                     'coordinates': [longitude, latitude]
                 }
             
-            # Remove lid from update data (lid should not be changed)
-            data.pop('lid', None)
-            
             serializer = StoreSerializer(store, data=data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -138,14 +132,14 @@ class StoreDetailView(APIView):
         except Exception as e:
             return error_response(f"Server error: {str(e)}", status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def patch(self, request, lid):
-        """Partial update store by lid"""
-        return self.put(request, lid)
+    def patch(self, request, pk):
+        """Partial update store by id"""
+        return self.put(request, pk)
 
-    def delete(self, request, lid):
-        """Delete store by lid (soft delete: set status=2)"""
+    def delete(self, request, pk):
+        """Delete store by id (soft delete: set status=2)"""
         try:
-            store = Store.objects.filter(lid=lid).first()
+            store = Store.objects.filter(id=pk).first()
             if not store:
                 return error_response("Store not found", status_code=status.HTTP_404_NOT_FOUND)
             
