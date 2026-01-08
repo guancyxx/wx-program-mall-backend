@@ -109,6 +109,18 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         """Create user with hashed password"""
         validated_data.pop('confirm_password')
         validated_data['password'] = make_password(validated_data['password'])
+        
+        # Ensure first_name and last_name are never None (use empty string if not provided)
+        if 'first_name' not in validated_data:
+            validated_data['first_name'] = ''
+        elif validated_data.get('first_name') is None:
+            validated_data['first_name'] = ''
+        
+        if 'last_name' not in validated_data:
+            validated_data['last_name'] = ''
+        elif validated_data.get('last_name') is None:
+            validated_data['last_name'] = ''
+        
         return User.objects.create(**validated_data)
 
 
