@@ -31,8 +31,12 @@ class AdminProductListView(APIView):
             if keyword:
                 query &= Q(name__icontains=keyword) | Q(id__icontains=keyword)
 
-            if status_filter is not None:
-                query &= Q(status=int(status_filter))
+            # status filter: 1=上架, 0=下架
+            # None/null/empty = all products (no filter)
+            if status_filter is not None and status_filter != '':
+                status_value = int(status_filter)
+                # 1 = 上架, 0 = 下架
+                query &= Q(status=status_value)
 
             # Get products with prefetch for performance
             products = Product.objects.filter(query).prefetch_related(
