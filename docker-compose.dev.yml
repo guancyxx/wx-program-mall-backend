@@ -34,7 +34,8 @@ services:
     restart: unless-stopped
     environment:
       # Django Settings
-      DJANGO_SETTINGS_MODULE: mall_server.settings.development
+      DJANGO_SETTINGS_MODULE: mall_server.settings
+      ENVIRONMENT: development
       DEBUG: "True"
       
       # Database Configuration

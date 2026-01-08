@@ -11,7 +11,8 @@ from django.test import RequestFactory
 from django.http import HttpRequest
 
 # Set up Django with minimal settings
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mall_server.settings.test_sqlite')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mall_server.settings')
+os.environ.setdefault('ENVIRONMENT', 'test')
 django.setup()
 
 from apps.common.health_views import BasicHealthCheckView

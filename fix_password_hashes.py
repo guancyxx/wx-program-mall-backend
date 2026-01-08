@@ -9,7 +9,7 @@ import sys
 import django
 
 # Setup Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mall_server.settings.base')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mall_server.settings')
 django.setup()
 
 from apps.users.models import User

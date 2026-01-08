@@ -49,7 +49,7 @@ class ApplicationStartupTest(TestCase):
     def test_no_redis_imports_in_settings(self):
         """Test that no Redis imports exist in settings."""
         # Requirements: 1.2, 2.1
-        import mall_server.settings.base as base_settings
+        import mall_server.settings as base_settings
         
         # Check that Redis-related imports are not present
         settings_content = open(base_settings.__file__).read()

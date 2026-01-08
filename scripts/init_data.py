@@ -9,7 +9,8 @@ import django
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Setup Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mall_server.settings.development')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mall_server.settings')
+os.environ.setdefault('ENVIRONMENT', 'development')
 django.setup()
 
 from apps.membership.models import MembershipTier
@@ -88,24 +89,24 @@ def create_membership_tiers():
 def create_admin_user():
     """Create default admin user"""
     admin_data = {
-        'username': 'admin',
-        'email': 'admin@example.com',
-        'phone': '13800000000',
-        'password': make_password('admin123456'),
+        'username': 'root',
+        'email': 'root@dreambuilder.com',
+        'phone': '18280368041',
+        'password': make_password('DreamBuilder2026'),
         'is_staff': True,
         'is_superuser': True,
-        'first_name': 'Admin',
+        'first_name': 'Root',
         'last_name': 'User'
     }
 
     user, created = User.objects.get_or_create(
-        username='admin',
+        username='root',
         defaults=admin_data
     )
     if created:
-        print(f"Created admin user: {user.username}")
+        print(f"Created root user: {user.username}")
     else:
-        print(f"Admin user already exists: {user.username}")
+        print(f"Root user already exists: {user.username}")
 
 
 def main():

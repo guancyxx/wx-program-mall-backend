@@ -11,7 +11,8 @@ from decimal import Decimal
 
 def pytest_configure():
     """Configure Django settings for testing."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mall_server.settings.test')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mall_server.settings')
+    os.environ.setdefault('ENVIRONMENT', 'test')
     django.setup()
 
 

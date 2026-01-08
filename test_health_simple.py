@@ -10,7 +10,8 @@ from django.conf import settings
 from django.test import Client
 
 # Set up Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mall_server.settings.test_sqlite')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mall_server.settings')
+os.environ.setdefault('ENVIRONMENT', 'test')
 django.setup()
 
 def test_health_endpoint():

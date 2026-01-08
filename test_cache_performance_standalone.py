@@ -16,7 +16,8 @@ import queue
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # Set up Django environment
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mall_server.settings.test')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mall_server.settings')
+os.environ.setdefault('ENVIRONMENT', 'test')
 
 import django
 from django.conf import settings

@@ -68,7 +68,7 @@ class MembershipStatusAdmin(admin.ModelAdmin):
     list_filter = ['tier', 'tier_start_date', 'created_at']
     search_fields = ['user__username', 'user__email', 'user__phone']
     ordering = ['-total_spending']
-    readonly_fields = ['created_at', 'updated_at', 'spending_to_next_tier', 'tier_benefits']
+    readonly_fields = ['created_at', 'updated_at', 'spending_to_next_tier', 'tier_benefits', 'tier_start_date']
     
     fieldsets = (
         ('User Information', {

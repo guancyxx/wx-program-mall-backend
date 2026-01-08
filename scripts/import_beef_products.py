@@ -51,7 +51,8 @@ REPO_ROOT = PROJECT_ROOT.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mall_server.settings.development")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mall_server.settings")
+os.environ.setdefault('ENVIRONMENT', 'development')
 django.setup()
 
 from apps.products.models import Category, Product, ProductImage  # noqa: E402

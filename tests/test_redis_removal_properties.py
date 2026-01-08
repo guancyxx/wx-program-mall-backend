@@ -35,7 +35,7 @@ class TestRedisConfigurationRemoval(TestCase):
         # Test that Django settings can be imported without Redis dependencies
         try:
             # Import settings module
-            django_settings_module = 'mall_server.settings.base'
+            django_settings_module = 'mall_server.settings'
             settings_module = importlib.import_module(django_settings_module)
             
             # Verify no Redis-related configuration exists
