@@ -14,13 +14,13 @@ class WeChatPayment(models.Model):
     # WeChat Pay specific identifiers
     appid = models.CharField(max_length=100, help_text="WeChat App ID")
     mch_id = models.CharField(max_length=100, help_text="WeChat Merchant ID")
-    nonce_str = models.CharField(max_length=32, help_text="Random string for signature")
+    nonce_str = models.CharField(max_length=32, blank=True, default='', help_text="Random string for signature (V2 API)")
     
     # WeChat Pay order information
-    body = models.CharField(max_length=128, help_text="Product description")
+    body = models.CharField(max_length=128, blank=True, default='', help_text="Product description")
     out_trade_no = models.CharField(max_length=32, help_text="Merchant order number")
     total_fee = models.IntegerField(help_text="Total fee in cents (分)")
-    spbill_create_ip = models.GenericIPAddressField(help_text="Client IP address")
+    spbill_create_ip = models.GenericIPAddressField(null=True, blank=True, default='127.0.0.1', help_text="Client IP address (V2 API, optional for V3)")
     
     # WeChat Pay response data
     prepay_id = models.CharField(max_length=64, blank=True, help_text="WeChat prepay ID")

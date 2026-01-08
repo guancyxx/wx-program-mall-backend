@@ -238,7 +238,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Backend URL for building absolute URLs
-BACKEND_URL = config('BACKEND_URL', default='http://localhost:8000')
+BACKEND_URL = config('BACKEND_URL', default='http://localhost:8001')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -364,10 +364,12 @@ WECHAT_APPID = config('WECHAT_APPID', default='')
 WECHAT_APPSECRET = config('WECHAT_APPSECRET', default='')
 WECHAT_MCHID = config('WECHAT_MCHID', default='')
 WECHAT_MCH_ID = config('WECHAT_MCH_ID', default=WECHAT_MCHID)  # Alias for consistency
-WECHAT_API_KEY = config('WECHAT_API_KEY', default='')
 WECHAT_NOTIFY_URL = config('WECHAT_NOTIFY_URL', default='http://localhost:8000/api/order/callback')
-WECHAT_CERT_PATH = config('WECHAT_CERT_PATH', default='')
 WECHAT_KEY_PATH = config('WECHAT_KEY_PATH', default='')
+# WeChat Pay V3 API Configuration
+WECHAT_CERT_SERIAL_NO = config('WECHAT_CERT_SERIAL_NO', default='')
+WECHAT_APIV3_KEY = config('WECHAT_APIV3_KEY', default='')
+WECHAT_CERT_DIR = config('WECHAT_CERT_DIR', default='')
 
 # Test-specific settings
 TEST_RUNNER = config('TEST_RUNNER', default='django.test.runner.DiscoverRunner')

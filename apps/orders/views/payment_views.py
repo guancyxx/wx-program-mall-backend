@@ -28,11 +28,47 @@ def get_pay_status(request):
                 # Generate QR code logic would go here
                 pass
             
+            # Return status matching frontend expectation
             return success_response({
+                'status': 'paid',
                 'amount': float(order.amount)
             }, 'Order payment successful')
         else:
-            return error_response("Order not paid")
+            # Order is not paid, actively query payment status from WeChat Pay
+            try:
+                from apps.payments.services import WeChatPayService
+                import logging
+                logger = logging.getLogger(__name__)
+                
+                # Query payment status from WeChat Pay
+                payment_status = WeChatPayService.query_payment_status(order.roid)
+                
+                if payment_status.get('success') and payment_status.get('paid'):
+                    # Payment was successful, refresh order from database to get updated status
+                    order.refresh_from_db()
+                    
+                    # Return paid status
+                    return success_response({
+                        'status': 'paid',
+                        'amount': float(order.amount)
+                    }, 'Order payment successful')
+                else:
+                    # Still unpaid
+                    return success_response({
+                        'status': 'unpaid',
+                        'amount': float(order.amount)
+                    }, 'Order not paid')
+            except Exception as e:
+                # Log error but return unpaid status
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.warning(f"Failed to query payment status for order {roid}: {e}")
+                
+                # Return unpaid status if query fails
+                return success_response({
+                    'status': 'unpaid',
+                    'amount': float(order.amount)
+                }, 'Order not paid')
 
     except Exception as e:
         return error_response(f"Server error: {str(e)}")

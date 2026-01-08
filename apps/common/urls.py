@@ -3,6 +3,7 @@ from .admin_views import (
     SalesReportView, MembershipReportView, InventoryReportView, 
     SecurityDashboardView, ReportExportView, dashboard_api, system_health_check
 )
+from .views.store_views import StoreListView, StoreDetailView
 
 app_name = 'common'
 
@@ -20,4 +21,8 @@ urlpatterns = [
     # API endpoints
     path('admin/api/dashboard/', dashboard_api, name='dashboard_api'),
     path('health/', system_health_check, name='health_check'),
+    
+    # Store endpoints
+    path('api/stores/', StoreListView.as_view(), name='store_list'),
+    path('api/stores/<int:lid>/', StoreDetailView.as_view(), name='store_detail'),
 ]

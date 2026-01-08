@@ -45,7 +45,14 @@ class PaymentService:
             # Process payment based on method
             if payment_method == 'wechat_pay':
                 from .wechat_pay_service import WeChatPayService
-                result = WeChatPayService.create_payment(payment_transaction, order)
+                # Get client IP from request if available (for V2 API compatibility)
+                # Note: V3 API doesn't require client IP, but we store it for compatibility
+                result = WeChatPayService.create_payment(
+                    payment_transaction, 
+                    order, 
+                    notify_url=notify_url,
+                    client_ip=None  # V3 API doesn't require this, but we'll use default
+                )
                 if not result['success']:
                     payment_transaction.status = 'failed'
                     payment_transaction.error_message = result['message']
@@ -92,10 +99,10 @@ class PaymentService:
             
             payment.save()
             
-            # Update order status
+            # Update order status using order_id (roid)
             success, message = OrderPaymentService.process_payment_success(payment.order_id)
             if not success:
-                logger.error(f"Failed to update order status for payment {transaction_id}: {message}")
+                logger.error(f"Failed to update order status for payment {transaction_id} (order: {payment.order_id}): {message}")
                 # Don't fail the payment processing, just log the error
             
             return {'success': True, 'message': 'Payment processed successfully'}

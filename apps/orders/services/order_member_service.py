@@ -156,11 +156,24 @@ class OrderMemberService:
                 # For now, simulate some products being exclusive to higher tiers
                 gid = item.get('gid', '')
                 
-                # Mock exclusive product check
-                if gid.startswith('exclusive_gold_') and tier_name not in ['Gold', 'Platinum']:
-                    return False, f"Product {gid} requires Gold membership or higher"
-                elif gid.startswith('exclusive_platinum_') and tier_name != 'Platinum':
-                    return False, f"Product {gid} requires Platinum membership"
+                # Convert gid to string safely - handle all types (int, str, None, etc.)
+                try:
+                    if gid is None:
+                        gid_str = ''
+                    elif isinstance(gid, str):
+                        gid_str = gid
+                    else:
+                        gid_str = str(gid)
+                except Exception:
+                    gid_str = ''
+                
+                # Only check startswith if gid_str is a non-empty string
+                if gid_str and isinstance(gid_str, str):
+                    # Mock exclusive product check
+                    if gid_str.startswith('exclusive_gold_') and tier_name not in ['Gold', 'Platinum']:
+                        return False, f"Product {gid} requires Gold membership or higher"
+                    elif gid_str.startswith('exclusive_platinum_') and tier_name != 'Platinum':
+                        return False, f"Product {gid} requires Platinum membership"
             
             return True, ""
             

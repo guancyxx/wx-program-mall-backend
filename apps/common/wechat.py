@@ -3,8 +3,6 @@ WeChat API integration utilities
 """
 import requests
 import json
-import hashlib
-import time
 from django.conf import settings
 from django.core.cache import cache
 
@@ -149,26 +147,3 @@ class WeChatAPI:
             
         except Exception as e:
             return None, f"Decryption error: {str(e)}"
-
-
-def generate_wechat_signature(params, api_key):
-    """
-    Generate WeChat Pay signature
-    """
-    # Sort parameters
-    sorted_params = sorted(params.items())
-    
-    # Create query string
-    query_string = '&'.join([f"{k}={v}" for k, v in sorted_params if v])
-    query_string += f"&key={api_key}"
-    
-    # Generate MD5 hash
-    return hashlib.md5(query_string.encode('utf-8')).hexdigest().upper()
-
-
-def verify_wechat_signature(params, signature, api_key):
-    """
-    Verify WeChat Pay signature
-    """
-    expected_signature = generate_wechat_signature(params, api_key)
-    return signature == expected_signature
