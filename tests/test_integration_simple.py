@@ -102,7 +102,7 @@ class SimpleIntegrationTests(TestCase):
     
     def test_product_listing(self):
         """Test product listing endpoint."""
-        response = self.client.get('/api/goods/getGoodsList/')
+        response = self.client.get('/api/products/')
         
         # Should return products or appropriate error
         self.assertIn(response.status_code, [
@@ -119,7 +119,7 @@ class SimpleIntegrationTests(TestCase):
     
     def test_product_detail(self):
         """Test product detail endpoint."""
-        response = self.client.get('/api/goods/getGoodsDetail/', {'gid': self.product.gid})
+        response = self.client.get(f'/api/products/{self.product.gid}/')
         
         # Should return product details or appropriate error
         self.assertIn(response.status_code, [
@@ -213,7 +213,7 @@ class SimpleIntegrationTests(TestCase):
         """Test that key API endpoints exist and return appropriate responses."""
         endpoints = [
             '/api/users/register/',
-            '/api/goods/getGoodsList/',
+            '/api/products/',
             '/api/order/createOrder',
             '/api/membership/status/',
             '/api/points/balance/',

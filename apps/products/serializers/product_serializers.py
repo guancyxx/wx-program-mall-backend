@@ -24,7 +24,7 @@ class ProductTagSerializer(serializers.ModelSerializer):
 
 
 class ProductListSerializer(serializers.ModelSerializer):
-    """Serializer for product list view - matches Node.js getGoodsList response"""
+    """Serializer for product list view - GET /api/products/"""
     images = ProductImageSerializer(many=True, read_only=True)
     tags = serializers.SerializerMethodField()
     
@@ -43,7 +43,7 @@ class ProductListSerializer(serializers.ModelSerializer):
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
-    """Serializer for product detail view - matches Node.js getGoodsDetail response"""
+    """Serializer for product detail view - GET /api/products/{gid}/"""
     images = ProductImageSerializer(many=True, read_only=True)
     tags = serializers.SerializerMethodField()
     category_info = CategorySerializer(source='category', read_only=True)

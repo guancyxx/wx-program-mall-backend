@@ -2,7 +2,7 @@
 Product list and detail views.
 """
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.db.models import Q
 
@@ -13,8 +13,8 @@ from ..services import ProductMemberService
 
 
 class ProductListView(APIView):
-    """Product list endpoint - matches /api/goods/getGoodslist"""
-    permission_classes = [AllowAny]
+    """Product list endpoint - GET /api/products/"""
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         try:
@@ -86,20 +86,23 @@ class ProductListView(APIView):
 
 
 class ProductDetailView(APIView):
-    """Product detail endpoint - matches /api/goods/getGoodsDetail"""
-    permission_classes = [AllowAny]
+    """Product detail endpoint - GET /api/products/{gid}/"""
+    permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    def get(self, request, gid=None):
         try:
-            gid = request.GET.get('gid')
+            # RESTful API uses path parameter
             if not gid:
+                return error_response('商品ID不能为空', status_code=status.HTTP_400_BAD_REQUEST)
+            product_gid = gid
+            if not product_gid:
                 return error_response('商品ID不能为空', status_code=status.HTTP_400_BAD_REQUEST)
 
             # Find product by gid matching Node.js logic
             try:
                 product = Product.objects.prefetch_related(
                     'images', 'product_tags', 'category'
-                ).get(gid=gid)
+                ).get(gid=product_gid)
             except Product.DoesNotExist:
                 return error_response('商品不存在', status_code=status.HTTP_404_NOT_FOUND)
 

@@ -122,11 +122,11 @@ class ECommerceWorkflowTests(TransactionTestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         
         # Step 2: Product browsing
-        response = self.client.get('/api/goods/getGoodsList/')
+        response = self.client.get('/api/products/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
         # Verify products are returned
-        products_data = response.data['results']
+        products_data = response.data['data']['list']
         self.assertGreater(len(products_data), 0)
         
         # Test product search
@@ -135,7 +135,7 @@ class ECommerceWorkflowTests(TransactionTestCase):
         
         # Step 3: Product detail viewing
         iphone = self.products[0]
-        response = self.client.get('/api/goods/getGoodsDetail/', {'gid': iphone.id})
+        response = self.client.get(f'/api/products/{iphone.gid}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], iphone.name)
         
@@ -706,7 +706,7 @@ class DataMigrationIntegrationTests(TransactionTestCase):
         # In a real rollback, we'd verify data was restored to previous state
         # For this test, we'll just verify the system is still functional
         
-        response = self.client.get('/api/goods/getGoodsList/')
+        response = self.client.get('/api/products/')
         self.assertIn(response.status_code, [status.HTTP_200_OK, status.HTTP_401_UNAUTHORIZED])
     
     def test_migration_performance_workflow(self):
@@ -739,7 +739,7 @@ class DataMigrationIntegrationTests(TransactionTestCase):
         import time
         
         start_time = time.time()
-        response = self.client.get('/api/goods/getGoodsList/')
+        response = self.client.get('/api/products/')
         end_time = time.time()
         
         response_time = end_time - start_time
@@ -754,7 +754,7 @@ class DataMigrationIntegrationTests(TransactionTestCase):
         def make_api_request():
             """Helper function for concurrent API requests."""
             client = APIClient()
-            response = client.get('/api/goods/getGoodsList/')
+            response = client.get('/api/products/')
             return response.status_code
         
         # Test concurrent requests

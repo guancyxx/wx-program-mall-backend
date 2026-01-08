@@ -213,7 +213,7 @@ class ComprehensiveIntegrationTests(TestCase):
         - Membership tier upgrades
         """
         # Step 1: Product browsing (unauthenticated)
-        response = self.client.get('/api/goods/getGoodsList/')
+        response = self.client.get('/api/products/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
         # Verify products are returned in Node.js compatible format
@@ -224,7 +224,7 @@ class ComprehensiveIntegrationTests(TestCase):
         
         # Step 2: Product detail viewing
         iphone = self.products[0]
-        response = self.client.get('/api/goods/getGoodsDetail/', {'gid': iphone.gid})
+        response = self.client.get(f'/api/products/{iphone.gid}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
         # Handle Node.js compatible response format
@@ -324,7 +324,7 @@ class ComprehensiveIntegrationTests(TestCase):
         self.client.force_authenticate(user=silver_user)
         
         exclusive_product = self.products[2]  # Designer T-Shirt (Silver+ only)
-        response = self.client.get('/api/goods/getGoodsDetail/', {'gid': exclusive_product.gid})
+        response = self.client.get(f'/api/products/{exclusive_product.gid}/')
         
         if response.status_code == status.HTTP_200_OK:
             # Silver user can access the product
@@ -333,7 +333,7 @@ class ComprehensiveIntegrationTests(TestCase):
         
         # Bronze user should have limited access
         self.client.force_authenticate(user=bronze_user)
-        response = self.client.get('/api/goods/getGoodsDetail/', {'gid': exclusive_product.gid})
+        response = self.client.get(f'/api/products/{exclusive_product.gid}/')
         
         # Bronze user might see the product but with access restrictions
         if response.status_code == status.HTTP_200_OK:
@@ -515,7 +515,7 @@ class ComprehensiveIntegrationTests(TestCase):
         """
         # Test 1: API endpoints return Node.js compatible format
         endpoints_to_test = [
-            ('/api/goods/getGoodsList/', 'GET', {}),
+            ('/api/products/', 'GET', {}),
             ('/api/users/register/', 'POST', {
                 'username': 'api_test_user',
                 'email': 'apitest@example.com',
@@ -616,7 +616,7 @@ class ComprehensiveIntegrationTests(TestCase):
         
         # Test 1: API response times
         start_time = time.time()
-        response = self.client.get('/api/goods/getGoodsList/')
+        response = self.client.get('/api/products/')
         end_time = time.time()
         
         response_time = end_time - start_time
@@ -643,9 +643,9 @@ class ComprehensiveIntegrationTests(TestCase):
         # Test 3: System stability
         # Perform multiple operations in sequence
         operations = [
-            lambda: self.client.get('/api/goods/getGoodsList/'),
+            lambda: self.client.get('/api/products/'),
             lambda: self.client.get('/api/order/getMyOrder'),
-            lambda: self.client.get('/api/goods/getGoodsDetail/', {'gid': self.products[0].gid}),
+            lambda: self.client.get(f'/api/products/{self.products[0].gid}/'),
         ]
         
         for operation in operations:
@@ -670,7 +670,7 @@ class ComprehensiveIntegrationTests(TestCase):
         - System recovery
         """
         # Test 1: Invalid product access
-        response = self.client.get('/api/goods/getGoodsDetail/', {'gid': 'nonexistent_product'})
+        response = self.client.get('/api/products/999999/')
         
         # Should return appropriate error
         self.assertIn(response.status_code, [
@@ -704,5 +704,5 @@ class ComprehensiveIntegrationTests(TestCase):
         
         # Test 4: System should remain stable after errors
         # Perform a valid operation after errors
-        response = self.client.get('/api/goods/getGoodsList/')
+        response = self.client.get('/api/products/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
