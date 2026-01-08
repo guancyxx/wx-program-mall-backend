@@ -38,3 +38,4 @@ class PointsTransaction(models.Model):
         """Check if this is a spending transaction"""
         return self.amount < 0
 
+

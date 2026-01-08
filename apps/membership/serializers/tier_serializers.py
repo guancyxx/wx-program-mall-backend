@@ -16,3 +16,4 @@ class MembershipTierSerializer(serializers.ModelSerializer):
                  'points_multiplier', 'benefits']
         read_only_fields = fields
 
+

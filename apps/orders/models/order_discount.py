@@ -31,3 +31,4 @@ class OrderDiscount(models.Model):
     def __str__(self):
         return f"Discount {self.discount_type} - {self.discount_amount}"
 
+

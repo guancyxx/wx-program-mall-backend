@@ -44,3 +44,4 @@ class PaymentCallbackSerializer(serializers.Serializer):
         # This would be implemented based on specific payment method requirements
         return attrs
 
+

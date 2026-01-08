@@ -42,3 +42,4 @@ class PointsRedemptionValidationSerializer(serializers.Serializer):
     max_redeemable = serializers.IntegerField()
     discount_amount = serializers.DecimalField(max_digits=10, decimal_places=2)
 
+

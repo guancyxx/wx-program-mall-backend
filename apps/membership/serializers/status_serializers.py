@@ -32,3 +32,4 @@ class MembershipStatusSerializer(serializers.ModelSerializer):
         fields = ['tier', 'total_spending', 'tier_start_date', 'created_at']
         read_only_fields = fields
 
+

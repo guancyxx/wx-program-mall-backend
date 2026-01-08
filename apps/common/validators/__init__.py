@@ -22,3 +22,4 @@ __all__ = [
     'validate_discount_price',
 ]
 
+

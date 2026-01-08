@@ -2,12 +2,12 @@ from django.db import models
 
 
 class Product(models.Model):
-    """Product model matching Node.js goods schema exactly"""
-    # Core fields matching Node.js schema
-    gid = models.CharField(max_length=100, unique=True, help_text="Product ID from Node.js")
+    """Product model - uses Django primary key (id) instead of gid"""
+    # Core fields
     name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     dis_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Discount price (disPrice in Node.js)")
+    specification = models.DecimalField(max_digits=10, decimal_places=2, default=1.0, help_text="Product specification in kilograms (规格，单位：公斤)")
     description = models.TextField(blank=True, default='')
     content = models.TextField(blank=True, default='', help_text="Detailed product content")
     
@@ -40,14 +40,13 @@ class Product(models.Model):
     class Meta:
         db_table = 'products'
         indexes = [
-            models.Index(fields=['gid']),
             models.Index(fields=['status']),
             models.Index(fields=['has_top', 'has_recommend']),
             models.Index(fields=['create_time']),
         ]
 
     def __str__(self):
-        return f"{self.name} (gid: {self.gid})"
+        return f"{self.name} (id: {self.id})"
 
     @property
     def is_active(self):
@@ -63,4 +62,5 @@ class Product(models.Model):
     def is_pinned(self):
         """Check if product is pinned/top"""
         return self.has_top == 1
+
 

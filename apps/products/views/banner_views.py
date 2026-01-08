@@ -19,7 +19,7 @@ class GetBannersView(APIView):
             banners = Banner.objects.filter(is_active=True).order_by('order', 'created_at')
             
             # Serialize banner data
-            serializer = BannerSerializer(banners, many=True)
+            serializer = BannerSerializer(banners, many=True, context={'request': request})
             
             # Return in Node.js compatible format
             response_data = {

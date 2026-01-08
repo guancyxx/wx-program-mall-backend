@@ -48,3 +48,4 @@ class PaymentCallback(models.Model):
     def __str__(self):
         return f"Callback {self.callback_type} - {self.received_at}"
 
+

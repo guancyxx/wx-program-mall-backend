@@ -20,8 +20,8 @@ urlpatterns = [
     
     # RESTful API endpoints (for /api/products/)
     # GET /api/products/ - List products
-    # GET /api/products/{gid}/ - Get product detail
+    # GET /api/products/{id}/ - Get product detail by Django id (primary key)
     # Must be last to avoid conflicts with other paths
-    path('<int:gid>/', views.ProductDetailView.as_view(), name='product-detail-restful'),
+    path('<int:id>/', views.ProductDetailView.as_view(), name='product-detail-restful'),
     path('', views.ProductListView.as_view(), name='product-list-restful'),
 ]

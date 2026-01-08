@@ -33,3 +33,4 @@ class TierUpgradeLogSerializer(serializers.ModelSerializer):
         fields = ['from_tier', 'to_tier', 'reason', 'spending_amount', 'created_at']
         read_only_fields = fields
 
+

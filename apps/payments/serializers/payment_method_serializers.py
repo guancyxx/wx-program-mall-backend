@@ -13,3 +13,4 @@ class PaymentMethodSerializer(serializers.ModelSerializer):
         fields = ['name', 'display_name', 'is_active', 'config']
         read_only_fields = ['name']
 
+

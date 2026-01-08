@@ -7,7 +7,30 @@ from .models import Category, Product, ProductImage, ProductTag, Banner
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
-    fields = ['image_url', 'is_primary', 'order']
+    fields = ['image_preview', 'image', 'is_primary', 'order']
+    readonly_fields = ['image_preview']
+    
+    def image_preview(self, obj):
+        """Display image preview"""
+        if obj and obj.image_url:
+            # Try to get request from inline instance
+            request = getattr(self, 'request', None)
+            
+            if request:
+                # Use request to build absolute URL
+                url = request.build_absolute_uri(obj.image_url)
+            else:
+                # Fallback to settings
+                from django.conf import settings
+                backend_url = getattr(settings, 'BACKEND_URL', 'http://localhost:8000').rstrip('/')
+                url = f"{backend_url}{obj.image_url}"
+            
+            return format_html(
+                '<img src="{}" style="max-width: 150px; max-height: 150px; object-fit: contain; border: 1px solid #ddd; border-radius: 4px;" />',
+                url
+            )
+        return format_html('<span style="color: #999;">No image</span>')
+    image_preview.short_description = 'Preview'
 
 
 class ProductTagInline(admin.TabularInline):
@@ -27,24 +50,24 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = [
-        'gid', 'name', 'price', 'dis_price', 'status', 
+        'id', 'name', 'price', 'dis_price', 'status', 
         'inventory_status', 'sold', 'views', 'has_top', 'has_recommend'
     ]
     list_filter = [
         'status', 'has_top', 'has_recommend', 'is_member_exclusive',
         'min_tier_required', 'category', 'create_time'
     ]
-    search_fields = ['gid', 'name', 'description']
+    search_fields = ['id', 'name', 'description']
     # 包含非模型字段/方法时需要在 readonly_fields 中声明，才能在 fieldsets 中使用
-    readonly_fields = ['create_time', 'update_time', 'views', 'sold', 'inventory_alerts']
+    readonly_fields = ['id', 'create_time', 'update_time', 'views', 'sold', 'inventory_alerts']
     ordering = ['-create_time']
     
     fieldsets = (
         ('Basic Information', {
-            'fields': ('gid', 'name', 'description', 'content', 'category')
+            'fields': ('id', 'name', 'description', 'content', 'category')
         }),
         ('Pricing', {
-            'fields': ('price', 'dis_price')
+            'fields': ('price', 'dis_price', 'specification')
         }),
         ('Status & Features', {
             'fields': ('status', 'has_top', 'has_recommend')
@@ -62,6 +85,15 @@ class ProductAdmin(admin.ModelAdmin):
     )
     
     inlines = [ProductImageInline, ProductTagInline]
+    
+    def get_inline_instances(self, request, obj=None):
+        """Store request for use in inline image preview"""
+        inline_instances = super().get_inline_instances(request, obj)
+        # Store request in inline for image preview
+        for inline in inline_instances:
+            if isinstance(inline, ProductImageInline):
+                inline.request = request
+        return inline_instances
     
     def inventory_status(self, obj):
         """Display inventory status with color coding"""
@@ -137,17 +169,56 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
-    list_display = ['product', 'image_url', 'is_primary', 'order', 'created_at']
+    list_display = ['product', 'image_preview', 'is_primary', 'order', 'created_at']
     list_filter = ['is_primary', 'created_at']
-    search_fields = ['product__name', 'product__gid']
+    search_fields = ['product__name', 'product__id']
     ordering = ['product', 'order']
+    fields = ['product', 'image', 'image_url', 'image_preview', 'is_primary', 'order', 'created_at']
+    readonly_fields = ['image_preview', 'created_at']
+    
+    def image_preview(self, obj):
+        """Display image preview"""
+        if obj and obj.image_url:
+            # Try to get request from admin instance
+            request = getattr(self, 'request', None)
+            
+            if request:
+                # Use request to build absolute URL
+                url = request.build_absolute_uri(obj.image_url)
+            else:
+                # Fallback to settings
+                from django.conf import settings
+                backend_url = getattr(settings, 'BACKEND_URL', 'http://localhost:8000').rstrip('/')
+                url = f"{backend_url}{obj.image_url}"
+            
+            return format_html(
+                '<img src="{}" style="max-width: 300px; max-height: 300px; object-fit: contain; border: 1px solid #ddd; border-radius: 4px;" />',
+                url
+            )
+        return format_html('<span style="color: #999;">No image</span>')
+    image_preview.short_description = 'Image Preview'
+    
+    def get_inline_instances(self, request, obj=None):
+        # Store request for use in image_preview
+        self.request = request
+        return super().get_inline_instances(request, obj) if hasattr(super(), 'get_inline_instances') else []
+    
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        # Store request for use in image_preview
+        self.request = request
+        return super().changeform_view(request, object_id, form_url, extra_context)
+    
+    def changelist_view(self, request, extra_context=None):
+        # Store request for use in image_preview
+        self.request = request
+        return super().changelist_view(request, extra_context)
 
 
 @admin.register(ProductTag)
 class ProductTagAdmin(admin.ModelAdmin):
     list_display = ['product', 'tag', 'created_at']
     list_filter = ['tag', 'created_at']
-    search_fields = ['product__name', 'product__gid', 'tag']
+    search_fields = ['product__name', 'product__id', 'tag']
     ordering = ['tag']
 
 

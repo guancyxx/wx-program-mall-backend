@@ -149,6 +149,26 @@ def _build_gid_from_path(md_path: Path) -> str:
     return f"beef_{normalized}"
 
 
+def _remove_section(text: str, heading: str) -> str:
+    """
+    从 markdown 文本中移除指定二级标题（如 '## 建议定价区间'）及其下面的内容，
+    直到下一个同级标题或文末。
+    """
+    lines = text.splitlines()
+    result_lines: List[str] = []
+    skip_section = False
+    for line in lines:
+        if line.strip().startswith("## "):
+            if skip_section:
+                skip_section = False
+            if line.strip().startswith(heading):
+                skip_section = True
+                continue
+        if not skip_section:
+            result_lines.append(line)
+    return "\n".join(result_lines).strip()
+
+
 def parse_beef_markdown(md_path: Path) -> BeefProductData:
     """将单个牛肉 markdown 文件解析为 BeefProductData."""
     text = _read_text(md_path)
@@ -158,10 +178,16 @@ def parse_beef_markdown(md_path: Path) -> BeefProductData:
     if not description:
         # 退化为整篇内容前几行
         description = "\n".join(text.splitlines()[0:5]).strip()
+    
+    # 从description中移除「建议定价区间」部分
+    description = _remove_section(description, "## 建议定价区间")
 
     # 价格：查找「建议定价区间」段落
     price_section = _extract_section(text, "## 建议定价区间")
     price = _parse_price_from_text(price_section) if price_section else Decimal("0")
+
+    # 从content中移除「建议定价区间」部分
+    content_without_price = _remove_section(text, "## 建议定价区间")
 
     gid = _build_gid_from_path(md_path)
 
@@ -177,7 +203,7 @@ def parse_beef_markdown(md_path: Path) -> BeefProductData:
         price=price,
         dis_price=None,
         description=description,
-        content=text,
+        content=content_without_price,
         image_filename=image_filename,
     )
 
@@ -214,6 +240,7 @@ def import_beef_products() -> None:
             "name": data.name,
             "price": data.price,
             "dis_price": data.dis_price,
+            "specification": Decimal("1.0"),  # 默认规格：1公斤
             "description": data.description,
             "content": data.content,
             "status": 1,

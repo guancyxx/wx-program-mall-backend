@@ -105,7 +105,7 @@ class ProductMemberService:
     def get_product_with_member_info(cls, product, user):
         """Get product data enriched with member-specific information"""
         product_data = {
-            'gid': product.gid,
+            'id': product.id,
             'name': product.name,
             'price': float(product.price),
             'dis_price': float(product.dis_price) if product.dis_price else None,
@@ -140,4 +140,5 @@ class ProductMemberService:
             })
         
         return product_data
+
 

@@ -59,7 +59,7 @@ class ProductListView(APIView):
             # Serialize with member-specific information
             serializer_data = []
             for product in page_products:
-                product_data = ProductListSerializer(product).data
+                product_data = ProductListSerializer(product, context={'request': request}).data
                 # Add member-specific pricing and access info
                 member_info = ProductMemberService.get_product_with_member_info(product, request.user)
                 product_data.update({
@@ -86,23 +86,20 @@ class ProductListView(APIView):
 
 
 class ProductDetailView(APIView):
-    """Product detail endpoint - GET /api/products/{gid}/"""
+    """Product detail endpoint - GET /api/products/{id}/"""
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, gid=None):
+    def get(self, request, id=None):
         try:
-            # RESTful API uses path parameter
-            if not gid:
-                return error_response('商品ID不能为空', status_code=status.HTTP_400_BAD_REQUEST)
-            product_gid = gid
-            if not product_gid:
+            # RESTful API uses path parameter (Django primary key id)
+            if not id:
                 return error_response('商品ID不能为空', status_code=status.HTTP_400_BAD_REQUEST)
 
-            # Find product by gid matching Node.js logic
+            # Find product by Django primary key id
             try:
                 product = Product.objects.prefetch_related(
                     'images', 'product_tags', 'category'
-                ).get(gid=product_gid)
+                ).get(id=id)
             except Product.DoesNotExist:
                 return error_response('商品不存在', status_code=status.HTTP_404_NOT_FOUND)
 
@@ -119,7 +116,7 @@ class ProductDetailView(APIView):
             product.save(update_fields=['views'])
 
             # Get product data with member-specific information
-            product_data = ProductDetailSerializer(product).data
+            product_data = ProductDetailSerializer(product, context={'request': request}).data
             member_info = ProductMemberService.get_product_with_member_info(product, request.user)
             product_data.update({
                 'member_price': member_info['member_price'],

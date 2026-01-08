@@ -5,7 +5,6 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.db.models import Q
-from uuid import uuid4
 
 from apps.common.utils import success_response, error_response
 from ..models import Product
@@ -30,7 +29,7 @@ class AdminProductListView(APIView):
             query = Q()
 
             if keyword:
-                query &= Q(name__icontains=keyword) | Q(gid__icontains=keyword)
+                query &= Q(name__icontains=keyword) | Q(id__icontains=keyword)
 
             if status_filter is not None:
                 query &= Q(status=int(status_filter))
@@ -48,7 +47,7 @@ class AdminProductListView(APIView):
             end_index = start_index + page_size
             page_products = products[start_index:end_index]
 
-            serializer = AdminProductListSerializer(page_products, many=True)
+            serializer = AdminProductListSerializer(page_products, many=True, context={'request': request})
 
             response_data = {
                 "list": serializer.data,
@@ -72,17 +71,10 @@ class ProductCreateView(APIView):
 
     def post(self, request):
         try:
-            # Generate gid matching Node.js logic
-            gid = f"goods_{uuid4().hex[:8]}"
-            
-            # Prepare data with gid
-            data = request.data.copy()
-            data['gid'] = gid
-
-            serializer = ProductCreateUpdateSerializer(data=data)
+            serializer = ProductCreateUpdateSerializer(data=request.data)
             if serializer.is_valid():
                 product = serializer.save()
-                return success_response({'gid': product.gid}, '创建成功')
+                return success_response({'id': product.id}, '创建成功')
             else:
                 return error_response('数据验证失败', errors=serializer.errors, status_code=status.HTTP_400_BAD_REQUEST)
 
@@ -96,13 +88,13 @@ class ProductUpdateView(APIView):
 
     def post(self, request):
         try:
-            gid = request.data.get('gid')
-            if not gid:
+            product_id = request.data.get('id')
+            if not product_id:
                 return error_response('商品ID不能为空', status_code=status.HTTP_400_BAD_REQUEST)
 
             # Find existing product
             try:
-                product = Product.objects.get(gid=gid)
+                product = Product.objects.get(id=product_id)
             except Product.DoesNotExist:
                 return error_response('商品不存在', status_code=status.HTTP_404_NOT_FOUND)
 

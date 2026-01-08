@@ -237,6 +237,9 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Backend URL for building absolute URLs
+BACKEND_URL = config('BACKEND_URL', default='http://localhost:8000')
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

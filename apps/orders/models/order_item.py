@@ -35,3 +35,4 @@ class OrderItem(models.Model):
             self.amount = self.quantity * self.price
         super().save(*args, **kwargs)
 
+

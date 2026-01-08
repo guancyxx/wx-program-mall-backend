@@ -1,7 +1,6 @@
 """
 Product service for product creation and update operations.
 """
-from uuid import uuid4
 from ..models import Product, ProductImage, ProductTag
 
 
@@ -23,9 +22,8 @@ class ProductService:
         images_data = validated_data.pop('images', [])
         tags_data = validated_data.pop('tags', [])
         
-        # Auto-generate gid if not provided
-        if not validated_data.get('gid'):
-            validated_data['gid'] = f"goods_{uuid4().hex[:8]}"
+        # Remove gid if present (no longer used)
+        validated_data.pop('gid', None)
         
         # Create product
         product = Product.objects.create(**validated_data)

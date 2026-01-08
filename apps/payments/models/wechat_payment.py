@@ -53,3 +53,4 @@ class WeChatPayment(models.Model):
     def __str__(self):
         return f"WeChat Payment {self.out_trade_no}"
 
+

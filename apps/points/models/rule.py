@@ -53,3 +53,4 @@ class PointsRule(models.Model):
         """Get active rule by type"""
         return cls.objects.filter(rule_type=rule_type, is_active=True).first()
 
+

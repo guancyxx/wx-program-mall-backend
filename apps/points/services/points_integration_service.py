@@ -74,3 +74,4 @@ class PointsIntegrationService:
             'discount_amount': Decimal(str(points_amount)) / 100 if len(errors) == 0 else 0
         }
 
+

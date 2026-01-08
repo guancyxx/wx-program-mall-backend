@@ -144,3 +144,4 @@ class PointsAccount(models.Model):
         """Create points account for a new user"""
         return cls.objects.create(user=user)
 
+

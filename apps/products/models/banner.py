@@ -9,7 +9,7 @@ class Banner(models.Model):
         (3, '外部网站'),
     ]
     
-    cover = models.CharField(max_length=500, help_text="Banner image URL")
+    cover = models.CharField(max_length=500, help_text="Banner image URL (can be relative path like /static/banner.png or full URL)")
     title = models.CharField(max_length=200, help_text="Jump link/title")
     type = models.IntegerField(choices=TYPE_CHOICES, default=1, help_text="Jump type: 1=internal, 2=external mini-program, 3=external website")
     order = models.IntegerField(default=0, help_text="Display order")
@@ -27,4 +27,5 @@ class Banner(models.Model):
     
     def __str__(self):
         return f"Banner {self.id}: {self.title}"
+
 
