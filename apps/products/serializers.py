@@ -60,7 +60,11 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
 
 class ProductCreateUpdateSerializer(serializers.ModelSerializer):
-    """Serializer for creating/updating products - matches Node.js create/updateGoods"""
+    """
+    Serializer for creating/updating products - matches Node.js create/updateGoods.
+    Used for: POST /api/products/, PUT/PATCH /api/products/{id}/
+    Note: Business logic for creating images and tags is handled in ProductService.
+    """
     images = serializers.ListField(
         child=serializers.URLField(), 
         write_only=True, 
@@ -84,59 +88,14 @@ class ProductCreateUpdateSerializer(serializers.ModelSerializer):
         ]
     
     def create(self, validated_data):
-        from uuid import uuid4
-        
-        images_data = validated_data.pop('images', [])
-        tags_data = validated_data.pop('tags', [])
-        
-        # Auto-generate gid if not provided
-        if not validated_data.get('gid'):
-            validated_data['gid'] = f"goods_{uuid4().hex[:8]}"
-        
-        product = Product.objects.create(**validated_data)
-        
-        # Create images
-        for i, image_url in enumerate(images_data):
-            ProductImage.objects.create(
-                product=product,
-                image_url=image_url,
-                is_primary=(i == 0),  # First image is primary
-                order=i
-            )
-        
-        # Create tags
-        for tag in tags_data:
-            ProductTag.objects.create(product=product, tag=tag)
-        
-        return product
+        """Create product using ProductService"""
+        from .services import ProductService
+        return ProductService.create_product(validated_data)
     
     def update(self, instance, validated_data):
-        images_data = validated_data.pop('images', None)
-        tags_data = validated_data.pop('tags', None)
-        
-        # Update product fields
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
-        
-        # Update images if provided
-        if images_data is not None:
-            instance.images.all().delete()
-            for i, image_url in enumerate(images_data):
-                ProductImage.objects.create(
-                    product=instance,
-                    image_url=image_url,
-                    is_primary=(i == 0),
-                    order=i
-                )
-        
-        # Update tags if provided
-        if tags_data is not None:
-            instance.product_tags.all().delete()
-            for tag in tags_data:
-                ProductTag.objects.create(product=instance, tag=tag)
-        
-        return instance
+        """Update product using ProductService"""
+        from .services import ProductService
+        return ProductService.update_product(instance, validated_data)
 
 
 class AdminProductListSerializer(serializers.ModelSerializer):

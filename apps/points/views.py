@@ -8,7 +8,8 @@ from decimal import Decimal
 from .models import PointsAccount, PointsTransaction, PointsRule
 from .services import PointsService, PointsIntegrationService
 from .serializers import (
-    PointsAccountSerializer, PointsTransactionSerializer, 
+    PointsAccountListSerializer, PointsAccountSerializer,
+    PointsTransactionListSerializer, PointsTransactionSerializer,
     PointsSummarySerializer, PointsRedemptionSerializer,
     PointsRedemptionValidationSerializer, PointsRuleSerializer
 )
@@ -66,6 +67,7 @@ def get_points_transactions(request):
         # Filter parameters
         transaction_type = request.GET.get('type')
         
+        # Use select_related/prefetch_related to avoid N+1 queries
         transactions = account.transactions.all()
         
         if transaction_type:
@@ -76,7 +78,8 @@ def get_points_transactions(request):
         end = start + page_size
         paginated_transactions = transactions[start:end]
         
-        serializer = PointsTransactionSerializer(paginated_transactions, many=True)
+        # Use list serializer for list view
+        serializer = PointsTransactionListSerializer(paginated_transactions, many=True)
         
         return Response({
             'success': True,

@@ -1,9 +1,25 @@
 from rest_framework import serializers
+from apps.common.validators import validate_points_amount
 from .models import PointsAccount, PointsTransaction, PointsExpiration, PointsRule
 
 
+class PointsAccountListSerializer(serializers.ModelSerializer):
+    """
+    Serializer for points account list view - minimal fields for list display.
+    Used for: GET /api/points/accounts/
+    """
+    
+    class Meta:
+        model = PointsAccount
+        fields = ['total_points', 'available_points', 'created_at']
+        read_only_fields = fields
+
+
 class PointsAccountSerializer(serializers.ModelSerializer):
-    """Serializer for points account"""
+    """
+    Serializer for points account detail view - complete fields for detail display.
+    Used for: GET /api/points/accounts/{id}/
+    """
     
     class Meta:
         model = PointsAccount
@@ -14,8 +30,27 @@ class PointsAccountSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
+class PointsTransactionListSerializer(serializers.ModelSerializer):
+    """
+    Serializer for points transaction list view - minimal fields for list display.
+    Used for: GET /api/points/transactions/
+    """
+    transaction_type_display = serializers.CharField(source='get_transaction_type_display', read_only=True)
+    
+    class Meta:
+        model = PointsTransaction
+        fields = [
+            'id', 'transaction_type', 'transaction_type_display', 'amount', 
+            'balance_after', 'created_at'
+        ]
+        read_only_fields = fields
+
+
 class PointsTransactionSerializer(serializers.ModelSerializer):
-    """Serializer for points transactions"""
+    """
+    Serializer for points transaction detail view - complete fields for detail display.
+    Used for: GET /api/points/transactions/{id}/
+    """
     transaction_type_display = serializers.CharField(source='get_transaction_type_display', read_only=True)
     
     class Meta:
@@ -40,14 +75,21 @@ class PointsExpirationSerializer(serializers.ModelSerializer):
 
 
 class PointsRedemptionSerializer(serializers.Serializer):
-    """Serializer for points redemption requests"""
-    points_amount = serializers.IntegerField(min_value=500)
-    order_amount = serializers.DecimalField(max_digits=10, decimal_places=2, min_value=0)
-    
-    def validate_points_amount(self, value):
-        if value % 100 != 0:
-            raise serializers.ValidationError("Points must be in multiples of 100")
-        return value
+    """
+    Serializer for points redemption requests.
+    Used for: POST /api/points/redeem/
+    """
+    points_amount = serializers.IntegerField(
+        min_value=500,
+        validators=[validate_points_amount],
+        help_text="Points amount (must be multiple of 100, minimum 500)"
+    )
+    order_amount = serializers.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        min_value=0,
+        help_text="Order amount for redemption calculation"
+    )
 
 
 class PointsSummarySerializer(serializers.Serializer):

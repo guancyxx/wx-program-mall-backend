@@ -8,7 +8,10 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.cache import cache
 from .models import User, Address
-from .serializers import UserSerializer, AddressSerializer, UserRegistrationSerializer
+from .serializers import (
+    UserListSerializer, UserDetailSerializer, UserUpdateSerializer,
+    UserRegistrationSerializer, AddressSerializer
+)
 from apps.common.utils import success_response, error_response
 
 
@@ -23,7 +26,7 @@ class RegisterView(APIView):
             refresh = RefreshToken.for_user(user)
             
             # Cache user data for performance
-            user_data = UserSerializer(user, context={'request': request}).data
+            user_data = UserDetailSerializer(user, context={'request': request}).data
             cache.set(f'user:{user.id}', user_data, 300)  # 5 minutes
             
             return success_response({
@@ -77,7 +80,7 @@ class PasswordLoginView(APIView):
             return success_response({
                 'token': str(refresh.access_token),
                 'refresh': str(refresh),
-                'user': UserSerializer(user, context={'request': request}).data
+                'user': UserDetailSerializer(user, context={'request': request}).data
             }, 'Login successful')
         else:
             return error_response('Invalid credentials')
@@ -147,7 +150,7 @@ class WeChatLoginView(APIView):
         return success_response({
             'token': str(refresh.access_token),
             'refresh': str(refresh),
-            'user': UserSerializer(user, context={'request': request}).data
+            'user': UserDetailSerializer(user, context={'request': request}).data
         }, 'WeChat login successful')
 
 
@@ -157,15 +160,17 @@ class UserProfileView(APIView):
 
     def get(self, request):
         """getUserInfo endpoint"""
-        serializer = UserSerializer(request.user, context={'request': request})
+        serializer = UserDetailSerializer(request.user, context={'request': request})
         return success_response(serializer.data, 'User info retrieved successfully')
 
     def post(self, request):
         """modifyInfo endpoint (using POST to match Node.js API)"""
-        serializer = UserSerializer(request.user, data=request.data, partial=True, context={'request': request})
+        serializer = UserUpdateSerializer(request.user, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
-            return success_response(serializer.data, 'Profile updated successfully')
+            # Return updated user data using detail serializer
+            updated_data = UserDetailSerializer(request.user, context={'request': request}).data
+            return success_response(updated_data, 'Profile updated successfully')
         return error_response('Profile update failed', serializer.errors)
 
     def put(self, request):

@@ -11,9 +11,31 @@ class PaymentMethodSerializer(serializers.ModelSerializer):
         read_only_fields = ['name']
 
 
-class PaymentTransactionSerializer(serializers.ModelSerializer):
-    """Serializer for payment transactions"""
+class PaymentTransactionListSerializer(serializers.ModelSerializer):
+    """
+    Serializer for payment transaction list view - minimal fields for list display.
+    Used for: GET /api/payments/transactions/
+    """
+    payment_method_name = serializers.CharField(source='payment_method.name', read_only=True)
+    payment_method_display = serializers.CharField(source='payment_method.display_name', read_only=True)
     
+    class Meta:
+        model = PaymentTransaction
+        fields = [
+            'transaction_id', 'order_id', 'payment_method_name', 'payment_method_display',
+            'amount', 'currency', 'status', 'created_at', 'paid_at'
+        ]
+        read_only_fields = [
+            'transaction_id', 'created_at', 'paid_at'
+        ]
+
+
+class PaymentTransactionSerializer(serializers.ModelSerializer):
+    """
+    Serializer for payment transaction detail view - complete fields for detail display.
+    Used for: GET /api/payments/transactions/{id}/
+    Note: Sensitive fields like wechat_openid are included but should be protected by permissions.
+    """
     payment_method_name = serializers.CharField(source='payment_method.name', read_only=True)
     payment_method_display = serializers.CharField(source='payment_method.display_name', read_only=True)
     
@@ -33,12 +55,14 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
 
 
 class PaymentCreateSerializer(serializers.Serializer):
-    """Serializer for creating payment transactions"""
-    
+    """
+    Serializer for creating payment transactions.
+    Used for: POST /api/payments/create/
+    """
     order_id = serializers.CharField(max_length=50, help_text="Order ID to pay for")
     payment_method = serializers.CharField(max_length=50, help_text="Payment method name")
-    return_url = serializers.URLField(required=False, help_text="Return URL after payment")
-    notify_url = serializers.URLField(required=False, help_text="Callback URL for payment notifications")
+    return_url = serializers.URLField(required=False, allow_blank=True, help_text="Return URL after payment")
+    notify_url = serializers.URLField(required=False, allow_blank=True, help_text="Callback URL for payment notifications")
     
     def validate_payment_method(self, value):
         """Validate payment method exists and is active"""
@@ -49,9 +73,30 @@ class PaymentCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError("Invalid or inactive payment method")
 
 
-class RefundRequestSerializer(serializers.ModelSerializer):
-    """Serializer for refund requests"""
+class RefundRequestListSerializer(serializers.ModelSerializer):
+    """
+    Serializer for refund request list view - minimal fields for list display.
+    Used for: GET /api/payments/refunds/
+    """
+    original_transaction_id = serializers.CharField(source='original_transaction.transaction_id', read_only=True)
     
+    class Meta:
+        model = RefundRequest
+        fields = [
+            'refund_id', 'original_transaction_id', 'order_id', 'return_order_id',
+            'refund_type', 'refund_amount', 'status', 'requested_at'
+        ]
+        read_only_fields = [
+            'refund_id', 'status', 'requested_at'
+        ]
+
+
+class RefundRequestSerializer(serializers.ModelSerializer):
+    """
+    Serializer for refund request detail view - complete fields for detail display.
+    Used for: GET /api/payments/refunds/{id}/
+    Note: admin_notes field is read-only and should only be visible to admins.
+    """
     original_transaction_id = serializers.CharField(source='original_transaction.transaction_id', read_only=True)
     
     class Meta:
@@ -70,10 +115,16 @@ class RefundRequestSerializer(serializers.ModelSerializer):
 
 
 class RefundCreateSerializer(serializers.Serializer):
-    """Serializer for creating refund requests"""
-    
+    """
+    Serializer for creating refund requests.
+    Used for: POST /api/payments/refunds/create/
+    """
     transaction_id = serializers.CharField(max_length=100, help_text="Original transaction ID")
-    refund_amount = serializers.DecimalField(max_digits=10, decimal_places=2, help_text="Refund amount")
+    refund_amount = serializers.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        help_text="Refund amount"
+    )
     refund_reason = serializers.CharField(max_length=500, help_text="Reason for refund")
     refund_type = serializers.ChoiceField(
         choices=RefundRequest.REFUND_TYPE_CHOICES,
@@ -82,7 +133,8 @@ class RefundCreateSerializer(serializers.Serializer):
     )
     return_order_id = serializers.CharField(
         max_length=50, 
-        required=False, 
+        required=False,
+        allow_blank=True,
         help_text="Return order ID if applicable"
     )
     
@@ -96,9 +148,8 @@ class RefundCreateSerializer(serializers.Serializer):
     
     def validate_refund_amount(self, value):
         """Validate refund amount is positive"""
-        if value <= 0:
-            raise serializers.ValidationError("Refund amount must be greater than 0")
-        return value
+        from apps.common.validators import validate_price_range
+        return validate_price_range(value, min_value=0)
 
 
 class WeChatPaymentSerializer(serializers.ModelSerializer):

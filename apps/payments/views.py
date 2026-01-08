@@ -10,8 +10,11 @@ import logging
 
 from .models import PaymentMethod, PaymentTransaction, RefundRequest, WeChatPayment, PaymentCallback
 from .serializers import (
-    PaymentMethodSerializer, PaymentTransactionSerializer, PaymentCreateSerializer,
-    RefundRequestSerializer, RefundCreateSerializer, PaymentStatusSerializer,
+    PaymentMethodSerializer,
+    PaymentTransactionListSerializer, PaymentTransactionSerializer,
+    PaymentCreateSerializer,
+    RefundRequestListSerializer, RefundRequestSerializer,
+    RefundCreateSerializer, PaymentStatusSerializer,
     PaymentCallbackSerializer
 )
 from .services import PaymentService, WeChatPayService
@@ -50,9 +53,11 @@ def create_payment(request):
         
         data = serializer.validated_data
         
-        # Get order
+        # Get order with related objects to avoid N+1 queries
         try:
-            order = Order.objects.get(roid=data['order_id'], uid=request.user)
+            order = Order.objects.select_related('uid').prefetch_related('items', 'discounts').get(
+                roid=data['order_id'], uid=request.user
+            )
         except Order.DoesNotExist:
             return error_response("Order not found")
         
@@ -60,8 +65,8 @@ def create_payment(request):
         if order.status != -1:  # Not pending payment
             return error_response("Order is not in pending payment status")
         
-        # Check if payment already exists
-        existing_payment = PaymentTransaction.objects.filter(
+        # Check if payment already exists (with select_related for payment_method)
+        existing_payment = PaymentTransaction.objects.select_related('payment_method').filter(
             order_id=data['order_id'],
             status__in=['pending', 'processing', 'success']
         ).first()
@@ -113,8 +118,9 @@ def create_payment(request):
 def get_payment_status(request, transaction_id):
     """Get payment transaction status"""
     try:
+        # Use select_related to avoid N+1 queries
         payment = get_object_or_404(
-            PaymentTransaction,
+            PaymentTransaction.objects.select_related('payment_method', 'user'),
             transaction_id=transaction_id,
             user=request.user
         )
@@ -145,8 +151,9 @@ def get_payment_status(request, transaction_id):
 def cancel_payment(request, transaction_id):
     """Cancel a pending payment transaction"""
     try:
+        # Use select_related to avoid N+1 queries
         payment = get_object_or_404(
-            PaymentTransaction,
+            PaymentTransaction.objects.select_related('payment_method', 'user'),
             transaction_id=transaction_id,
             user=request.user
         )
@@ -178,9 +185,9 @@ def create_refund(request):
         
         data = serializer.validated_data
         
-        # Get original transaction
+        # Get original transaction with related objects
         try:
-            transaction = PaymentTransaction.objects.get(
+            transaction = PaymentTransaction.objects.select_related('payment_method', 'user').get(
                 transaction_id=data['transaction_id'],
                 user=request.user,
                 status='success'
@@ -222,7 +229,10 @@ def create_refund(request):
 def get_user_payments(request):
     """Get user's payment transactions"""
     try:
-        payments = PaymentTransaction.objects.filter(user=request.user).order_by('-created_at')
+        # Use select_related to avoid N+1 queries for payment_method
+        payments = PaymentTransaction.objects.select_related('payment_method').filter(
+            user=request.user
+        ).order_by('-created_at')
         
         # Apply filters
         status_filter = request.GET.get('status')
@@ -241,7 +251,8 @@ def get_user_payments(request):
         end = start + page_size
         
         paginated_payments = payments[start:end]
-        serializer = PaymentTransactionSerializer(paginated_payments, many=True)
+        # Use list serializer for list view
+        serializer = PaymentTransactionListSerializer(paginated_payments, many=True)
         
         return success_response(
             data={
@@ -284,7 +295,8 @@ def get_user_refunds(request):
         end = start + page_size
         
         paginated_refunds = refunds[start:end]
-        serializer = RefundRequestSerializer(paginated_refunds, many=True)
+        # Use list serializer for list view
+        serializer = RefundRequestListSerializer(paginated_refunds, many=True)
         
         return success_response(
             data={
