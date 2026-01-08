@@ -41,19 +41,11 @@ COPY . /app/
 # Create necessary directories
 RUN mkdir -p /app/media /app/logs /app/static
 
-# Collect static files (for production)
-RUN python manage.py collectstatic --noinput || true
+# Make entrypoint script executable
+RUN chmod +x /app/entrypoint.sh
 
 # Expose port 80 for production
 EXPOSE 80
 
-# Use gunicorn for production deployment
-# 4 workers with auto-reload and proper logging
-CMD ["gunicorn", "mall_server.wsgi:application", \
-     "--bind", "0.0.0.0:80", \
-     "--workers", "4", \
-     "--worker-class", "sync", \
-     "--timeout", "120", \
-     "--access-logfile", "-", \
-     "--error-logfile", "-", \
-     "--log-level", "info"]
+# Use entrypoint script to handle initialization and startup
+ENTRYPOINT ["/app/entrypoint.sh"]

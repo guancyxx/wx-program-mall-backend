@@ -85,6 +85,20 @@ class ProductListSerializer(serializers.ModelSerializer):
             return float(obj.dis_price)
         return float(obj.price)
     
+    def get_disPrice(self, obj):
+        """Get original price (dis_price field) - 原价（划痕价）"""
+        if obj.dis_price is not None:
+            return float(obj.dis_price)
+        return None
+    
+    def get_sold(self, obj):
+        """Return sold count from database"""
+        return obj.sold
+    
+    def get_views(self, obj):
+        """Return views count from database"""
+        return obj.views
+    
     def get_sold(self, obj):
         """Return sold count from database"""
         return obj.sold
@@ -134,6 +148,20 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         if obj.dis_price is not None:
             return float(obj.dis_price)
         return float(obj.price)
+    
+    def get_disPrice(self, obj):
+        """Get original price (dis_price field) - 原价（划痕价）"""
+        if obj.dis_price is not None:
+            return float(obj.dis_price)
+        return None
+    
+    def get_sold(self, obj):
+        """Return sold count from database"""
+        return obj.sold
+    
+    def get_views(self, obj):
+        """Return views count from database"""
+        return obj.views
     
     def get_sold(self, obj):
         """Return sold count from database"""
@@ -188,19 +216,21 @@ class AdminProductListSerializer(serializers.ModelSerializer):
     tags = serializers.SerializerMethodField()
     originalPrice = serializers.SerializerMethodField()
     discountPrice = serializers.SerializerMethodField()
+    sold = serializers.SerializerMethodField()
+    views = serializers.SerializerMethodField()
     createTime = serializers.DateTimeField(source='create_time', format='%Y-%m-%d %H:%M:%S', read_only=True)
     updateTime = serializers.DateTimeField(source='update_time', format='%Y-%m-%d %H:%M:%S', read_only=True)
     hasTop = serializers.IntegerField(source='has_top', read_only=True)
     hasRecommend = serializers.IntegerField(source='has_recommend', read_only=True)
     isMemberExclusive = serializers.BooleanField(source='is_member_exclusive', read_only=True)
     minTierRequired = serializers.CharField(source='min_tier_required', read_only=True)
-    disPrice = serializers.DecimalField(source='dis_price', max_digits=10, decimal_places=2, read_only=True, allow_null=True)
+    disPrice = serializers.SerializerMethodField()  # 原价（划痕价）
     specification = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     
     class Meta:
         model = Product
         fields = [
-            'id', 'name', 'price', 'disPrice', 'originalPrice', 'discountPrice', 'specification', 'description', 
+            'id', 'name', 'price', 'disPrice', 'originalPrice', 'discountPrice', 'specification', 'description', 'content',
             'status', 'inventory', 'hasTop', 'hasRecommend', 
             'sold', 'views', 'createTime', 'updateTime',
             'images', 'tags', 'isMemberExclusive', 'minTierRequired'
@@ -219,4 +249,18 @@ class AdminProductListSerializer(serializers.ModelSerializer):
         if obj.dis_price is not None:
             return float(obj.dis_price)
         return float(obj.price)
+    
+    def get_disPrice(self, obj):
+        """Get original price (dis_price field) - 原价（划痕价）"""
+        if obj.dis_price is not None:
+            return float(obj.dis_price)
+        return None
+    
+    def get_sold(self, obj):
+        """Return sold count from database"""
+        return obj.sold
+    
+    def get_views(self, obj):
+        """Return views count from database"""
+        return obj.views
 

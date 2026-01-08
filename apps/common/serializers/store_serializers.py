@@ -9,10 +9,11 @@ class StoreSerializer(serializers.ModelSerializer):
     """Serializer for store model matching Node.js Live schema"""
     
     # CamelCase field names for frontend compatibility
-    lid = serializers.IntegerField(read_only=True)
-    startTime = serializers.CharField(source='start_time', allow_blank=True)
-    endTime = serializers.CharField(source='end_time', allow_blank=True)
+    lid = serializers.IntegerField(read_only=True, required=False)
+    startTime = serializers.CharField(source='start_time', allow_blank=True, required=False)
+    endTime = serializers.CharField(source='end_time', allow_blank=True, required=False)
     createTime = serializers.DateTimeField(source='create_time', read_only=True)
+    location = serializers.JSONField(required=False)
     
     class Meta:
         model = Store

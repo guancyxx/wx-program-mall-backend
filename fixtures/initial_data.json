@@ -1,0 +1,2940 @@
+[
+{
+  "model": "users.user",
+  "pk": 4,
+  "fields": {
+    "password": "secure_bcrypt$2b$12$K9Yt/gcR30YsgjThK1kfeu.hTYVWX643P0PDFtpGceb9sDkVHMm/C",
+    "last_login": "2026-01-08T12:29:01.201Z",
+    "is_superuser": true,
+    "username": "root",
+    "first_name": "",
+    "last_name": "",
+    "email": "guancyxx@guancyxx.cn",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-01-06T05:00:21.431Z",
+    "phone": null,
+    "wechat_openid": null,
+    "wechat_session_key": null,
+    "avatar": "",
+    "created_at": "2026-01-06T05:00:21.584Z",
+    "updated_at": "2026-01-06T05:00:21.584Z",
+    "failed_login_attempts": 0,
+    "last_failed_login": null,
+    "account_locked_until": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 8,
+  "fields": {
+    "password": "",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "微信用户",
+    "first_name": "微信用户",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-01-08T03:03:00Z",
+    "phone": null,
+    "wechat_openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "wechat_session_key": "7mgqs5iW38nOFUSzgC+4ww==",
+    "avatar": "avatars/JbcYFwop1xDPcba7cd929b6278d8e54cfb714b752657.jpg",
+    "created_at": "2026-01-08T03:03:19.478Z",
+    "updated_at": "2026-01-08T14:34:26.130Z",
+    "failed_login_attempts": 0,
+    "last_failed_login": null,
+    "account_locked_until": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.address",
+  "pk": 4,
+  "fields": {
+    "user": 8,
+    "name": "1111",
+    "phone": "18280368041",
+    "address": "四川省南充市蓬安县政府街19号",
+    "detail": "1112212恶打撒221",
+    "address_type": 3,
+    "is_default": false,
+    "created_at": "2026-01-08T03:10:50.889Z",
+    "updated_at": "2026-01-08T03:11:17.464Z"
+  }
+},
+{
+  "model": "users.address",
+  "pk": 5,
+  "fields": {
+    "user": 8,
+    "name": "阿松大",
+    "phone": "18888888888",
+    "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+    "detail": "阿松大",
+    "address_type": 0,
+    "is_default": false,
+    "created_at": "2026-01-08T03:11:39.803Z",
+    "updated_at": "2026-01-08T03:11:39.803Z"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 1,
+  "fields": {
+    "name": "牛肉",
+    "parent": null,
+    "created_at": "2026-01-07T07:18:36.439Z"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 2,
+  "fields": {
+    "name": "测试",
+    "parent": null,
+    "created_at": "2026-01-08T11:29:12.980Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 1,
+  "fields": {
+    "name": "牛肉 · 匙仁",
+    "price": "105.60",
+    "dis_price": "88.00",
+    "specification": "1.00",
+    "description": "匙仁位于牛后腿内侧，肌理细腻、脂肪含量低，几乎没有多余筋膜，是集嫩度与口感于一体的优质瘦肉部位。切片后纹理均匀、色泽鲜红，适合追求高蛋白、低脂肪饮食的家庭和健身人群。",
+    "content": "<div class=\"beef-shiren-wrapper\">\n    <style>\n        .beef-shiren-wrapper {\n            font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n            line-height: 1.8;\n            color: #333;\n            max-width: 800px;\n            margin: 0 auto;\n            padding: 20px;\n        }\n        .beef-shiren-container {\n            background-color: #fff;\n            border-radius: 8px;\n            padding: 30px;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.1);\n        }\n        .beef-shiren-wrapper h1 {\n            color: #8B4513;\n            font-size: 2em;\n            margin-bottom: 20px;\n            border-bottom: 3px solid #8B4513;\n            padding-bottom: 10px;\n        }\n        .beef-shiren-wrapper h2 {\n            color: #A0522D;\n            font-size: 1.5em;\n            margin-top: 30px;\n            margin-bottom: 15px;\n        }\n        .beef-shiren-wrapper p {\n            margin-bottom: 15px;\n            text-align: justify;\n        }\n        .beef-shiren-wrapper ul {\n            margin-left: 20px;\n            margin-bottom: 15px;\n        }\n        .beef-shiren-wrapper li {\n            margin-bottom: 10px;\n        }\n        .beef-shiren-intro {\n            background-color: #FFF8DC;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #8B4513;\n            margin-bottom: 20px;\n        }\n        .beef-shiren-feature-item {\n            margin-bottom: 8px;\n        }\n        .beef-shiren-feature-label {\n            font-weight: bold;\n            color: #8B4513;\n        }\n    </style>\n    <div class=\"beef-shiren-container\">\n        <h1>牛肉 · 匙仁</h1>\n        \n        <div class=\"beef-shiren-intro\">\n            <h2>商品简介</h2>\n            <p>匙仁位于牛后腿内侧,肌理细腻、脂肪含量低,几乎没有多余筋膜,是集嫩度与口感于一体的优质瘦肉部位。切片后纹理均匀、色泽鲜红,适合追求高蛋白、低脂肪饮食的家庭和健身人群。</p>\n        </div>\n\n        <h2>口感与适用菜式</h2>\n        <div class=\"beef-shiren-feature-item\">\n            <span class=\"beef-shiren-feature-label\">口感特点:</span> 肉质软嫩中带轻微嚼劲,纤维细密,入口多汁但不油腻。\n        </div>\n        \n        <ul>\n            <li><strong>火锅:</strong> 顺纹切成薄片,涮8-10秒即可食用,适合清汤锅、番茄锅、骨汤锅,蘸芝麻酱或蒜蓉香油都很搭。</li>\n            <li><strong>快炒:</strong> 搭配青椒、洋葱、芦笋等蔬菜,旺火快炒1-2分钟即可出锅,保持嫩度和汁水。</li>\n            <li><strong>西式做法:</strong> 可腌制后煎制成薄牛排,或切成小条做黑椒牛柳、照烧牛肉饭。</li>\n            <li><strong>轻食搭配:</strong> 与生菜沙拉、粗粮主食一起搭配,是兼顾口感与健康的日常主菜选择。</li>\n        </ul>\n\n        <h2>产品特色</h2>\n        <p>这是一块真正适合每日餐桌的健康牛肉——源自自然草场放牧饲养的黄牛,充足运动让肉质更加紧实有弹性,长期以青草和粗饲料为主食,脂肪含量更低,肉香却更醇厚。我们精选牛后腿内侧的优质匙仁部位,整块手工精修,尽量去除多余筋膜与脂肪,只把最嫩、最适合家庭烹饪的部分留给您。</p>\n\n        <p>每天忙碌工作之后,不必再为\"今晚吃什么\"发愁。一盘简单的葱爆牛肉、一锅清爽的番茄牛肉汤,甚至只需几片涮入火锅,就能让全家人围坐在一起,轻松享受高蛋白、低脂肪的美味主菜。草饲牛肉天然含有更丰富的优质蛋白和微量元素,搭配合理的饮食和适量运动,是关注身材管理和身体机能的理想选择。</p>\n\n        <p>我们坚持冷链运输与严格温控,肉品从屠宰、分割到包装,全程在低温环境下完成,最大程度锁住原始肉香与营养。每一片匙仁切片都色泽鲜红、纹理清晰,下锅不易大量出水,烹饪更省心。无论是给老人做一份口感柔软、易咀嚼的清炖牛肉,还是给孩子准备一盘香嫩牛肉意面,都能轻松驾驭。打开包装就能看见的新鲜质感,让您在家也能享受餐厅级别的牛肉体验。</p>\n    </div>\n</div>",
+    "status": 1,
+    "has_top": 0,
+    "has_recommend": 0,
+    "inventory": 0,
+    "sold": 264,
+    "views": 985,
+    "create_time": "2026-01-07T07:18:36.453Z",
+    "update_time": "2026-01-08T07:18:44.140Z",
+    "category": 1,
+    "is_member_exclusive": false,
+    "min_tier_required": null
+  }
+},
+{
+  "model": "products.product",
+  "pk": 2,
+  "fields": {
+    "name": "牛肉 · 里脊",
+    "price": "123.60",
+    "dis_price": "103.00",
+    "specification": "1.00",
+    "description": "牛里脊位于牛脊骨内侧，是全身最嫩的优质部位之一。肌纤维极细、脂肪含量低，几乎看不到粗筋，是家庭煎牛排、制作儿童和老人牛肉菜肴的理想选择。色泽鲜红、切面光滑，轻轻一按即可感受到弹性与嫩度。",
+    "content": "<div class=\"beef-liji-wrapper\">\n    <style>\n        .beef-liji-wrapper {\n            font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n            line-height: 1.8;\n            color: #333;\n            max-width: 800px;\n            margin: 0 auto;\n            padding: 20px;\n        }\n        .beef-liji-container {\n            background-color: #fff;\n            border-radius: 8px;\n            padding: 30px;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.1);\n        }\n        .beef-liji-wrapper h1 {\n            color: #8B4513;\n            font-size: 2em;\n            margin-bottom: 20px;\n            border-bottom: 3px solid #8B4513;\n            padding-bottom: 10px;\n        }\n        .beef-liji-wrapper h2 {\n            color: #A0522D;\n            font-size: 1.5em;\n            margin-top: 30px;\n            margin-bottom: 15px;\n        }\n        .beef-liji-wrapper p {\n            margin-bottom: 15px;\n            text-align: justify;\n        }\n        .beef-liji-wrapper ul {\n            margin-left: 20px;\n            margin-bottom: 15px;\n        }\n        .beef-liji-wrapper li {\n            margin-bottom: 10px;\n        }\n        .beef-liji-intro {\n            background-color: #FFF8DC;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #8B4513;\n            margin-bottom: 20px;\n        }\n        .beef-liji-feature-item {\n            margin-bottom: 8px;\n        }\n        .beef-liji-feature-label {\n            font-weight: bold;\n            color: #8B4513;\n        }\n    </style>\n    <div class=\"beef-liji-container\">\n        <h1>牛肉 · 里脊</h1>\n        \n        <div class=\"beef-liji-intro\">\n            <h2>商品简介</h2>\n            <p>牛里脊位于牛脊骨内侧,是全身最嫩的优质部位之一。肌纤维极细、脂肪含量低,几乎看不到粗筋,是家庭煎牛排、制作儿童和老人牛肉菜肴的理想选择。色泽鲜红、切面光滑,轻轻一按即可感受到弹性与嫩度。</p>\n        </div>\n\n        <h2>口感与适用菜式</h2>\n        <div class=\"beef-liji-feature-item\">\n            <span class=\"beef-liji-feature-label\">口感特点:</span> 异常嫩滑,几乎没有明显筋膜,受热时间短也能完全熟透,适合追求嫩度和细腻口感的顾客。\n        </div>\n        \n        <ul>\n            <li><strong>西式牛排:</strong> 整块里脊切成厚片,简单撒上盐、黑胡椒和少量黄油,两面各煎2-3分钟即可,适合三分或五分熟,肉汁丰富。</li>\n            <li><strong>中式牛柳:</strong> 逆纹切成细条,加入少量淀粉、鸡蛋液和调味料抓匀,快火滑炒,可以做黑椒牛柳、铁板牛柳、洋葱炒牛肉等家常菜。</li>\n            <li><strong>火锅与烧烤:</strong> 切成薄片或小块,轻涮几秒或快速炙烤即可入口,口感软嫩不柴,小朋友也容易咀嚼。</li>\n            <li><strong>清淡饮食:</strong> 搭配少油少盐的蒸、煮、焯做法,适合养生和康复期人群食用。</li>\n        </ul>\n\n        <h2>产品特色</h2>\n        <p>想在家里做出媲美西餐厅的牛排,其实并不难。选择一块真正优质的草饲牛里脊,是成功的一半。我们的里脊牛肉来自自然草场放牧饲养的黄牛,生长期以青草和粗饲料为主,少谷物、少添加,让牛肉保持更自然的香气和更清爽的脂肪比例。每一块里脊都经过严格挑选,只选中段嫩度最佳的部分,手工修去多余筋膜后快速分割锁鲜。</p>\n\n        <p>打开包装可以看到,整块牛里脊颜色鲜亮、纹理细腻,几乎没有厚重的脂肪块。简单腌制后入锅煎烤,很容易就能做出外焦里嫩、肉汁丰富的家庭牛排;切成细条与彩椒、洋葱同炒,又能变身色香味俱全的快手下饭菜。由于筋膜极少,即便是牙口一般的老人和小朋友,也能轻松咀嚼、不费力。</p>\n\n        <p>草饲牛肉相较于普通肉类,脂肪含量更低,蛋白质含量更高,更适合正在控制体重和注重健康饮食的人群。我们坚持全程冷链,不反复解冻,最大限度保留原有营养和口感;从工厂到您家冰箱,始终在安全温度范围内运输储存。拿起手机,在微信小程序上一键下单,就能把餐厅级别的\"黄金牛里脊\"送进自家厨房,让每一顿饭都多一点真实的牛肉香气和安心感。</p>\n    </div>\n</div>",
+    "status": 1,
+    "has_top": 0,
+    "has_recommend": 0,
+    "inventory": 0,
+    "sold": 278,
+    "views": 953,
+    "create_time": "2026-01-07T07:18:36.479Z",
+    "update_time": "2026-01-08T06:12:32.910Z",
+    "category": 1,
+    "is_member_exclusive": false,
+    "min_tier_required": null
+  }
+},
+{
+  "model": "products.product",
+  "pk": 3,
+  "fields": {
+    "name": "牛肉 · 肥拼",
+    "price": "84.00",
+    "dis_price": "70.00",
+    "specification": "1.00",
+    "description": "肥拼是由精瘦肉与雪花脂肪自然交织形成的特色部位，肥瘦比例协调、纹路清晰。肉片中既有细腻油脂带来的香气，又保留了适当的瘦肉口感，是火锅、烧烤和家宴中最受欢迎的合家欢选择之一。",
+    "content": "<div class=\"beef-feipin-wrapper\">\n    <style>\n        .beef-feipin-wrapper {\n            font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n            line-height: 1.8;\n            color: #333;\n            max-width: 800px;\n            margin: 0 auto;\n            padding: 20px;\n        }\n        .beef-feipin-container {\n            background-color: #fff;\n            border-radius: 8px;\n            padding: 30px;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.1);\n        }\n        .beef-feipin-wrapper h1 {\n            color: #8B4513;\n            font-size: 2em;\n            margin-bottom: 20px;\n            border-bottom: 3px solid #8B4513;\n            padding-bottom: 10px;\n        }\n        .beef-feipin-wrapper h2 {\n            color: #A0522D;\n            font-size: 1.5em;\n            margin-top: 30px;\n            margin-bottom: 15px;\n        }\n        .beef-feipin-wrapper p {\n            margin-bottom: 15px;\n            text-align: justify;\n        }\n        .beef-feipin-wrapper ul {\n            margin-left: 20px;\n            margin-bottom: 15px;\n        }\n        .beef-feipin-wrapper li {\n            margin-bottom: 10px;\n        }\n        .beef-feipin-intro {\n            background-color: #FFF8DC;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #8B4513;\n            margin-bottom: 20px;\n        }\n        .beef-feipin-feature-item {\n            margin-bottom: 8px;\n        }\n        .beef-feipin-feature-label {\n            font-weight: bold;\n            color: #8B4513;\n        }\n    </style>\n    <div class=\"beef-feipin-container\">\n        <h1>牛肉 · 肥拼</h1>\n        \n        <div class=\"beef-feipin-intro\">\n            <h2>商品简介</h2>\n            <p>肥拼是由精瘦肉与雪花脂肪自然交织形成的特色部位,肥瘦比例协调、纹路清晰。肉片中既有细腻油脂带来的香气,又保留了适当的瘦肉口感,是火锅、烧烤和家宴中最受欢迎的合家欢选择之一。</p>\n        </div>\n\n        <h2>口感与适用菜式</h2>\n        <div class=\"beef-feipin-feature-item\">\n            <span class=\"beef-feipin-feature-label\">口感特点:</span> 入口先感受到油脂的香气和顺滑,随后是瘦肉的弹牙和满足感,整体多汁不柴、香而不腻。\n        </div>\n        \n        <ul>\n            <li><strong>火锅:</strong> 切成均匀薄片,下锅轻涮5-8秒即可变色,蘸干碟或芝麻酱都非常出味,适合重口味火锅和清汤锅底。</li>\n            <li><strong>烧烤:</strong> 腌制后串成小签或平铺在烤盘上,油脂在高温下慢慢渗出,表面略带焦香,是家庭烧烤和露营烤肉的人气单品。</li>\n            <li><strong>干锅与香辣菜:</strong> 与土豆片、藕片、青椒等一起翻炒或做成干锅,油脂充分裹住配菜,让整锅菜更香更下饭。</li>\n            <li><strong>家常快炒:</strong> 简单搭配蒜苗、青椒、豆芽等食材爆炒,不必额外放太多食用油,就能拥有浓郁牛肉香。</li>\n        </ul>\n\n        <h2>产品特色</h2>\n        <p>如果您喜欢带一点肥香、吃起来又不至于油腻的牛肉,那一定不要错过这款\"黄金比例\"肥拼。我们选用自然草场放牧成长的草饲牛,健康运动让肌肉更加紧实,脂肪在纤维间自然分布,形成漂亮的雪花纹路。与一般高脂肪肉类不同,草饲牛脂口感更清爽、香气更纯,不会带来厚重和腻感。</p>\n\n        <p>每一块肥拼都经过精心分割和筛选,保证肥瘦相间,既有油脂带来的香气,又保留足够的瘦肉层次。做火锅时,只需轻轻一涮,油脂立刻在汤面上打开香味,配合您喜欢的蘸料,一口下去既有肉香又有汤香;做烧烤时,不必再额外刷太多油,肥拼自身的油脂就足够让烤盘吱吱作响、香味扑鼻。对于爱吃肉、又不想吃得太\"重\"的家庭来说,是节假日聚餐、朋友小聚必备的气氛担当。</p>\n\n        <p>我们坚守冷链配送和严格检验,从源头牧场到分割车间全程可追溯,尽量减少不必要的添加和腌制,在保证安全的前提下,更接近牛肉本身的自然味道。打开微信小程序即可下单,解冻后随手一切一烤,居家也能轻松拥有\"烧烤摊同款\"的幸福感;用肥拼做一锅家常火锅,更能让全家围坐一起,在热气腾腾中分享鲜香与健康。</p>\n    </div>\n</div>",
+    "status": 1,
+    "has_top": 0,
+    "has_recommend": 0,
+    "inventory": 0,
+    "sold": 262,
+    "views": 114,
+    "create_time": "2026-01-07T07:18:36.503Z",
+    "update_time": "2026-01-08T06:12:32.920Z",
+    "category": 1,
+    "is_member_exclusive": false,
+    "min_tier_required": null
+  }
+},
+{
+  "model": "products.product",
+  "pk": 4,
+  "fields": {
+    "name": "牛肉 · 匙柄",
+    "price": "74.40",
+    "dis_price": "62.00",
+    "specification": "1.00",
+    "description": "匙柄位于牛后腿外侧，条状瘦肉中夹杂细筋，纹理自然漂亮。经过顺纹切片后，既能保持牛肉原有的嚼劲，又不过分费牙，是兼顾口感层次与性价比的实惠选择，适合日常家用和餐饮店大批量采购。",
+    "content": "<div class=\"beef-shibing-wrapper\">\n    <style>\n        .beef-shibing-wrapper {\n            font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n            line-height: 1.8;\n            color: #333;\n            max-width: 800px;\n            margin: 0 auto;\n            padding: 20px;\n        }\n        .beef-shibing-container {\n            background-color: #fff;\n            border-radius: 8px;\n            padding: 30px;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.1);\n        }\n        .beef-shibing-wrapper h1 {\n            color: #8B4513;\n            font-size: 2em;\n            margin-bottom: 20px;\n            border-bottom: 3px solid #8B4513;\n            padding-bottom: 10px;\n        }\n        .beef-shibing-wrapper h2 {\n            color: #A0522D;\n            font-size: 1.5em;\n            margin-top: 30px;\n            margin-bottom: 15px;\n        }\n        .beef-shibing-wrapper h3 {\n            color: #8B4513;\n            font-size: 1.2em;\n            margin-top: 20px;\n            margin-bottom: 10px;\n        }\n        .beef-shibing-wrapper p {\n            margin-bottom: 15px;\n            text-align: justify;\n        }\n        .beef-shibing-wrapper ul {\n            margin-left: 20px;\n            margin-bottom: 15px;\n        }\n        .beef-shibing-wrapper li {\n            margin-bottom: 10px;\n        }\n        .beef-shibing-intro {\n            background-color: #FFF8DC;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #8B4513;\n            margin-bottom: 20px;\n        }\n        .beef-shibing-feature-item {\n            margin-bottom: 8px;\n        }\n        .beef-shibing-feature-label {\n            font-weight: bold;\n            color: #8B4513;\n        }\n        .beef-shibing-recipe {\n            background-color: #F5F5DC;\n            padding: 15px;\n            border-radius: 5px;\n            margin-bottom: 15px;\n        }\n        .beef-shibing-note {\n            background-color: #E8F5E9;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #4CAF50;\n            margin-bottom: 20px;\n            font-style: italic;\n        }\n    </style>\n    <div class=\"beef-shibing-container\">\n\n        <h1>牛肉 · 匙柄</h1>\n        \n        <div class=\"beef-shibing-intro\">\n            <h2>商品简介</h2>\n            <p>匙柄位于牛后腿外侧,条状瘦肉中夹杂细筋,纹理自然漂亮。经过顺纹切片后,既能保持牛肉原有的嚼劲,又不过分费牙,是兼顾口感层次与性价比的实惠选择,适合日常家用。</p>\n        </div>\n\n        <h2>口感与适用菜式</h2>\n        <div class=\"beef-shibing-feature-item\">\n            <span class=\"beef-shibing-feature-label\">口感特点:</span> 筋肉相间,入口有弹性,越嚼越香,适合喜欢\"有点嚼头\"的顾客。\n        </div>\n        \n        <ul>\n            <li><strong>火锅:</strong> 切成薄片,顺纹下刀,涮煮时间稍长于嫩肉类,适合麻辣锅、番茄锅等味道较浓的汤底。</li>\n            <li><strong>烧烤与铁板:</strong> 切成条或块,腌制后炙烤,外表微焦、内部有韧性,适合搭配孜然、辣椒粉。</li>\n            <li><strong>家常爆炒:</strong> 与蒜薹、香干、土豆片等一起快炒,多嚼更香,特别适合下饭和配啤酒。</li>\n            <li><strong>卤味与酱牛肉:</strong> 利用其中筋膜,成品切片后纹理分明、有\"拉丝感\",适合作为冷盘或佐餐小菜。</li>\n        </ul>\n\n        <h2>产品特色</h2>\n        <p>在众多牛肉部位中,匙柄是一块越吃越上瘾的\"隐藏宝藏\"。它不像里脊那样极致柔嫩,也不像纯瘦肉那样容易发柴,而是恰到好处地保留了牛肉应有的嚼劲和香气。来自草饲放牧牛群的匙柄部位,肌肉更结实,纤维更清晰,脂肪在肉间自然点缀,不油不腻。</p>\n\n        <p>对于爱吃有嚼劲牛肉的家庭来说,匙柄是非常实用的一块肉。炒一盘蒜苔炒牛肉,或做一锅香辣干锅牛肉,每一片肉都能充分吸附汤汁和调味料,入口先是酱香、蒜香、辣香扑鼻,再细细咀嚼,就能感受到草饲牛特有的清爽肉香。用来做烧烤和铁板,更是聚会和居家小酌的理想搭档,既满足\"吃肉\"的畅快,也不会油得发腻。</p>\n\n        <p>在加工过程中,我们特别注意顺纹切片和去除多余杂筋,让匙柄在保持弹性口感的同时,又尽量不费牙。肉品在低温环境下分割和储存,减少解冻次数,锁住原汁原味。解冻后简单腌制、快速翻炒或烤制,就能做出香气十足的牛肉菜肴,让日常三餐也能轻松享受草饲牛带来的自然健康与丰富口感。</p>\n\n        <h2>推荐菜谱</h2>\n        \n        <div class=\"beef-shibing-recipe\">\n            <h3>蒜苔炒匙柄牛肉</h3>\n            <p><strong>做法要点:</strong> 匙柄逆纹切薄片,加入少量生抽、淀粉和食用油抓匀腌制15分钟;蒜苔切段。热锅少油滑炒牛肉至变色盛出,锅中留底油爆香蒜末,下蒜苔断生后倒回牛肉,调味快速翻炒出锅。</p>\n            <p><strong>风味特点:</strong> 蒜香浓郁、牛肉有嚼劲,非常下饭。</p>\n        </div>\n\n        <div class=\"beef-shibing-recipe\">\n            <h3>香辣干锅匙柄</h3>\n            <p><strong>做法要点:</strong> 匙柄切片腌制备用,土豆片、藕片焯水。锅中炒香姜蒜和干辣椒,下豆瓣酱炒出红油,依次放入牛肉片和配菜,大火翻炒,最后撒上适量花椒粉和葱段收汁。</p>\n            <p><strong>风味特点:</strong> 麻辣鲜香、锅气十足,适合家庭聚餐。</p>\n        </div>\n\n        <div class=\"beef-shibing-recipe\">\n            <h3>铁板黑椒匙柄</h3>\n            <p><strong>做法要点:</strong> 牛肉切条,用黑椒汁、少量生抽和洋葱丝腌制20分钟。铁板或平底锅烧热,少量油滑开后放入牛肉快速翻炒至熟,最后淋少许黑椒汁收汁。</p>\n            <p><strong>风味特点:</strong> 椒香浓郁、口感有弹性,可配米饭或面食。</p>\n        </div>\n        </div>\n</div>",
+    "status": 1,
+    "has_top": 0,
+    "has_recommend": 0,
+    "inventory": 0,
+    "sold": 285,
+    "views": 1203,
+    "create_time": "2026-01-07T07:18:36.523Z",
+    "update_time": "2026-01-08T06:12:32.930Z",
+    "category": 1,
+    "is_member_exclusive": false,
+    "min_tier_required": null
+  }
+},
+{
+  "model": "products.product",
+  "pk": 5,
+  "fields": {
+    "name": "牛肉 · 吊龙",
+    "price": "120.00",
+    "dis_price": "100.00",
+    "specification": "1.00",
+    "description": "吊龙位于牛背部两侧，是兼具嫩度和油花的中高端部位。脂肪细密地分布在肌肉纤维间，形成自然的大理石纹路，整块切开后卖相出众。既适合厚切煎烤，也适合切片用于火锅或铁板烧，是追求口感和视觉双重享受家庭的理想选择。",
+    "content": "<div class=\"beef-diaolong-wrapper\">\n    <style>\n        .beef-diaolong-wrapper {\n            font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n            line-height: 1.8;\n            color: #333;\n            max-width: 800px;\n            margin: 0 auto;\n            padding: 20px;\n        }\n        .beef-diaolong-container {\n            background-color: #fff;\n            border-radius: 8px;\n            padding: 30px;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.1);\n        }\n        .beef-diaolong-wrapper h1 {\n            color: #8B4513;\n            font-size: 2em;\n            margin-bottom: 20px;\n            border-bottom: 3px solid #8B4513;\n            padding-bottom: 10px;\n        }\n        .beef-diaolong-wrapper h2 {\n            color: #A0522D;\n            font-size: 1.5em;\n            margin-top: 30px;\n            margin-bottom: 15px;\n        }\n        .beef-diaolong-wrapper h3 {\n            color: #8B4513;\n            font-size: 1.2em;\n            margin-top: 20px;\n            margin-bottom: 10px;\n        }\n        .beef-diaolong-wrapper p {\n            margin-bottom: 15px;\n            text-align: justify;\n        }\n        .beef-diaolong-wrapper ul {\n            margin-left: 20px;\n            margin-bottom: 15px;\n        }\n        .beef-diaolong-wrapper li {\n            margin-bottom: 10px;\n        }\n        .beef-diaolong-intro {\n            background-color: #FFF8DC;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #8B4513;\n            margin-bottom: 20px;\n        }\n        .beef-diaolong-feature-item {\n            margin-bottom: 8px;\n        }\n        .beef-diaolong-feature-label {\n            font-weight: bold;\n            color: #8B4513;\n        }\n        .beef-diaolong-recipe {\n            background-color: #F5F5DC;\n            padding: 15px;\n            border-radius: 5px;\n            margin-bottom: 15px;\n        }\n        .beef-diaolong-note {\n            background-color: #E8F5E9;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #4CAF50;\n            margin-bottom: 20px;\n            font-style: italic;\n        }\n    </style>\n    <div class=\"beef-diaolong-container\">\n\n        <h1>牛肉 · 吊龙</h1>\n        \n        <div class=\"beef-diaolong-intro\">\n            <h2>商品简介</h2>\n            <p>吊龙位于牛背部两侧,是兼具嫩度和油花的中高端部位。脂肪细密地分布在肌肉纤维间,形成自然的大理石纹路,整块切开后卖相出众。既适合厚切煎烤,也适合切片用于火锅或铁板烧,是追求口感和视觉双重享受家庭的理想选择。</p>\n        </div>\n\n        <h2>口感与适用菜式</h2>\n        <div class=\"beef-diaolong-feature-item\">\n            <span class=\"beef-diaolong-feature-label\">口感特点:</span> 外缘有一圈细腻脂肪,内部肉质柔嫩多汁,咬下去先是油脂香,再是浓郁牛肉味。\n        </div>\n        \n        <ul>\n            <li><strong>厚切牛排:</strong> 整块吊龙切成2-3cm厚片,中火煎至外表金黄,内部保持三分或五分熟,肉汁丰富,适合喜欢嚼感又不想太嫩的食客。</li>\n            <li><strong>烧烤与铁板烧:</strong> 切成条状或稍厚薄片,腌制后快速炙烤,外表微焦、内部多汁,是家庭聚会和露营烤肉的\"主角位\"。</li>\n            <li><strong>火锅和涮锅:</strong> 切成薄片,下锅一涮即可变色,脂肪在锅中迅速散发香气,适合爱吃香而不腻口味的人群。</li>\n            <li><strong>中式家常菜:</strong> 用于爆炒青椒、洋葱或做黑椒铁板牛肉,能兼顾嫩度与嚼劲,成菜香气特别足。</li>\n        </ul>\n\n        <h2>产品特色</h2>\n        <p>如果说里脊代表极致的嫩,那么吊龙就是\"香\"和\"韧\"的完美平衡。我们的吊龙牛肉来自健康草饲牛群,牛只长期在开阔草场自由活动,吃的是天然牧草和粗饲料,脂肪在肌肉间慢慢沉淀,形成细腻均匀的雪花油花。这样的牛肉油脂更清爽、香味更纯,不会有厚重油腻感,非常适合家庭日常享用。</p>\n\n        <p>将吊龙稍加修整后厚切下锅,您会发现它比普通瘦肉更香,比大理石高脂牛排又更耐吃。外层细脂在高温下慢慢融化,把香味牢牢锁在肉里;切开时肉汁轻轻溢出,一口下去既有肉的弹性,又能感受到丰富汁水。孩子们爱吃它的香嫩,家里的长辈则更喜欢它\"有嚼头但不费牙\"的口感,一块肉满足全家不同喜好。</p>\n\n        <p>所有吊龙均在低温车间完成分割与真空包装,从工厂冷库到小区门口全程冷链运输,减少反复解冻带来的口感流失。您只需要在微信小程序上轻点下单,便能把这块\"餐厅同款\"的优质牛肉带回家。无论是周末在家做一顿仪式感满满的厚切牛排,还是和亲朋好友围着电烤盘烤肉聊天,吊龙都能轻松撑起整桌的氛围与鲜香。</p>\n        </div>\n</div>",
+    "status": 1,
+    "has_top": 0,
+    "has_recommend": 0,
+    "inventory": 0,
+    "sold": 317,
+    "views": 266,
+    "create_time": "2026-01-07T07:18:36.544Z",
+    "update_time": "2026-01-08T06:12:32.939Z",
+    "category": 1,
+    "is_member_exclusive": false,
+    "min_tier_required": null
+  }
+},
+{
+  "model": "products.product",
+  "pk": 6,
+  "fields": {
+    "name": "牛肉 · 三花趾",
+    "price": "88.80",
+    "dis_price": "74.00",
+    "specification": "1.00",
+    "description": "三花趾因横切后纹理如“梅花三瓣”而得名，属于筋肉相间的特色牛肉部位。脂肪在肌纤维间自然分布，切片后红白相间、花纹清晰，摆盘颜值高，是火锅、干锅和家宴中非常抢眼的牛肉单品。",
+    "content": "<div class=\"beef-sanhuazhi2-wrapper\">\n    <style>\n        .beef-sanhuazhi2-wrapper {\n            font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n            line-height: 1.8;\n            color: #333;\n            max-width: 800px;\n            margin: 0 auto;\n            padding: 20px;\n        }\n        .beef-sanhuazhi2-container {\n            background-color: #fff;\n            border-radius: 8px;\n            padding: 30px;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.1);\n        }\n        .beef-sanhuazhi2-wrapper h1 {\n            color: #8B4513;\n            font-size: 2em;\n            margin-bottom: 20px;\n            border-bottom: 3px solid #8B4513;\n            padding-bottom: 10px;\n        }\n        .beef-sanhuazhi2-wrapper h2 {\n            color: #A0522D;\n            font-size: 1.5em;\n            margin-top: 30px;\n            margin-bottom: 15px;\n        }\n        .beef-sanhuazhi2-wrapper h3 {\n            color: #8B4513;\n            font-size: 1.2em;\n            margin-top: 20px;\n            margin-bottom: 10px;\n        }\n        .beef-sanhuazhi2-wrapper p {\n            margin-bottom: 15px;\n            text-align: justify;\n        }\n        .beef-sanhuazhi2-wrapper ul {\n            margin-left: 20px;\n            margin-bottom: 15px;\n        }\n        .beef-sanhuazhi2-wrapper li {\n            margin-bottom: 10px;\n        }\n        .beef-sanhuazhi2-intro {\n            background-color: #FFF8DC;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #8B4513;\n            margin-bottom: 20px;\n        }\n        .beef-sanhuazhi2-feature-item {\n            margin-bottom: 8px;\n        }\n        .beef-sanhuazhi2-feature-label {\n            font-weight: bold;\n            color: #8B4513;\n        }\n        .beef-sanhuazhi2-recipe {\n            background-color: #F5F5DC;\n            padding: 15px;\n            border-radius: 5px;\n            margin-bottom: 15px;\n        }\n        .beef-sanhuazhi2-note {\n            background-color: #E8F5E9;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #4CAF50;\n            margin-bottom: 20px;\n            font-style: italic;\n        }\n    </style>\n    <div class=\"beef-sanhuazhi2-container\">\n\n        <h1>牛肉 · 三花趾</h1>\n        \n        <div class=\"beef-sanhuazhi2-note\">\n            <p>本产品为三花趾的另一展示图片,不同摆盘和拍摄角度,方便在小程序中多图展示。</p>\n        </div>\n\n        <div class=\"beef-sanhuazhi2-intro\">\n            <h2>商品简介</h2>\n            <p>三花趾是筋肉交织、纹理优美的特色牛肉部位,横切后花纹如同\"梅花三瓣\",红白相间,极具视觉冲击力。来自草饲黄牛的三花趾,肉质紧实、脂肪清爽,适合火锅、干锅和香辣牛肉等多种家常做法。</p>\n        </div>\n\n        <h2>口感与适用菜式</h2>\n        <div class=\"beef-sanhuazhi2-feature-item\">\n            <span class=\"beef-sanhuazhi2-feature-label\">口感特点:</span> 筋肉相间、有弹性,脂肪细腻不腻口,久煮依然保持形状和嚼劲。\n        </div>\n        \n        <ul>\n            <li><strong>火锅与涮锅:</strong> 薄片涮煮5-10秒即可,适合麻辣、番茄、骨汤等多种锅底,爱吃辣和爱吃清淡的家人都能找到喜欢的吃法。</li>\n            <li><strong>干锅与香辣菜:</strong> 与藕片、土豆、花菜、洋葱等一起烹饪成干锅牛肉或香辣牛肉片,牛肉充分吸收汤汁,香气浓郁。</li>\n            <li><strong>砂锅与炖菜:</strong> 切块后小火慢炖,筋膜软糯、肉质紧实,适合做砂锅牛肉、牛肉杂蔬汤等暖胃料理。</li>\n        </ul>\n\n        <h2>产品特色</h2>\n        <p>在众多牛肉部位中,三花趾是既满足\"好看\",又兼顾\"好吃\"的那一类。来自天然草场的草饲黄牛,让这块肉拥有紧实的肌肉纤维和自然分布的油花,横切后呈现出一朵朵花瓣形状。放在盘中,无论是家庭聚餐还是招待朋友,都特别上镜,轻松成为餐桌上的\"C位\"。</p>\n\n        <p>对于爱吃火锅和香辣牛肉的您来说,三花趾尤其实用。入锅后,它不像纯瘦肉那样容易煮老变柴,也不会像高脂肪部位容易油腻。筋膜在慢煮过程中变得软糯,瘦肉保持弹性,咬下去既有嚼劲又不费牙,老人和年轻人都能接受。由于牛只长期以青草和粗饲料为主食,脂肪口感更清爽,香味更自然,吃完也不觉得油腻负担重。</p>\n\n        <p>我们在加工过程中,对每一块三花趾都进行人工挑选和修整,尽量去除多余碎筋与杂膜,只保留最适合家庭烹饪的部分。产品采用真空或气调包装,放入冷链系统,全程低温运输,最大程度保留新鲜度与营养。您只需在微信小程序上轻轻一点,就能把这样一款\"高颜值、高口感\"的草饲牛肉送到家中,周末和家人一起涮火锅、做干锅时,让餐桌更加丰盛、更有幸福感。</p>\n        </div>\n</div>",
+    "status": 1,
+    "has_top": 0,
+    "has_recommend": 0,
+    "inventory": 0,
+    "sold": 20,
+    "views": 500,
+    "create_time": "2026-01-07T07:18:36.571Z",
+    "update_time": "2026-01-08T06:12:32.948Z",
+    "category": 1,
+    "is_member_exclusive": false,
+    "min_tier_required": null
+  }
+},
+{
+  "model": "products.product",
+  "pk": 7,
+  "fields": {
+    "name": "牛肉 · 胸口油",
+    "price": "44.40",
+    "dis_price": "37.00",
+    "specification": "1.00",
+    "description": "胸口油是位于牛胸腔附近的优质脂肪组织，片状洁白、纹理细腻。下锅即化、香气浓郁，经常被用作火锅底料、爆炒和卤味提香的重要原料，是许多经典菜肴背后“看不见的灵魂”。",
+    "content": "<div class=\"beef-xiongkouyou-wrapper\">\n    <style>\n        .beef-xiongkouyou-wrapper {\n            font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n            line-height: 1.8;\n            color: #333;\n            max-width: 800px;\n            margin: 0 auto;\n            padding: 20px;\n        }\n        .beef-xiongkouyou-container {\n            background-color: #fff;\n            border-radius: 8px;\n            padding: 30px;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.1);\n        }\n        .beef-xiongkouyou-wrapper h1 {\n            color: #8B4513;\n            font-size: 2em;\n            margin-bottom: 20px;\n            border-bottom: 3px solid #8B4513;\n            padding-bottom: 10px;\n        }\n        .beef-xiongkouyou-wrapper h2 {\n            color: #A0522D;\n            font-size: 1.5em;\n            margin-top: 30px;\n            margin-bottom: 15px;\n        }\n        .beef-xiongkouyou-wrapper h3 {\n            color: #8B4513;\n            font-size: 1.2em;\n            margin-top: 20px;\n            margin-bottom: 10px;\n        }\n        .beef-xiongkouyou-wrapper p {\n            margin-bottom: 15px;\n            text-align: justify;\n        }\n        .beef-xiongkouyou-wrapper ul {\n            margin-left: 20px;\n            margin-bottom: 15px;\n        }\n        .beef-xiongkouyou-wrapper li {\n            margin-bottom: 10px;\n        }\n        .beef-xiongkouyou-intro {\n            background-color: #FFF8DC;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #8B4513;\n            margin-bottom: 20px;\n        }\n        .beef-xiongkouyou-feature-item {\n            margin-bottom: 8px;\n        }\n        .beef-xiongkouyou-feature-label {\n            font-weight: bold;\n            color: #8B4513;\n        }\n        .beef-xiongkouyou-recipe {\n            background-color: #F5F5DC;\n            padding: 15px;\n            border-radius: 5px;\n            margin-bottom: 15px;\n        }\n        .beef-xiongkouyou-note {\n            background-color: #E8F5E9;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #4CAF50;\n            margin-bottom: 20px;\n            font-style: italic;\n        }\n    </style>\n    <div class=\"beef-xiongkouyou-container\">\n\n        <h1>牛肉 · 胸口油</h1>\n        \n        <div class=\"beef-xiongkouyou-intro\">\n            <h2>商品简介</h2>\n            <p>胸口油是位于牛胸腔附近的优质脂肪组织,片状洁白、纹理细腻。下锅即化、香气浓郁,经常被用作火锅底料、爆炒和卤味提香的重要原料,是许多经典菜肴背后\"看不见的灵魂\"。</p>\n        </div>\n\n        <h2>口感与适用菜式</h2>\n        <div class=\"beef-xiongkouyou-feature-item\">\n            <span class=\"beef-xiongkouyou-feature-label\">口感特点:</span> 入口即化,油脂细腻纯净,无明显异味,能够让菜肴香而不腻。\n        </div>\n        \n        <ul>\n            <li><strong>火锅与砂锅:</strong> 少量放入锅底,与牛骨、牛肉搭配熬煮,可明显提升汤底香气和厚度。</li>\n            <li><strong>爆炒与干锅:</strong> 先小火炼出油,再下主料翻炒,能让牛肉、蔬菜更香,减少额外食用油用量。</li>\n            <li><strong>烧烤:</strong> 切成小块串烤或铺在烤盘边缘,慢慢融化后浇在主食材上,增香又提亮卖相。</li>\n            <li><strong>卤味与牛杂:</strong> 与牛杂、牛筋一起小火慢卤,出品油香充盈,汤汁更为浓郁。</li>\n        </ul>\n\n        <h2>产品特色</h2>\n        <p>很多人爱吃火锅、干锅和红烧牛肉,却不知道真正让整锅菜\"更上一层楼\"的关键之一,其实就是这一片朴实无华的胸口油。来自草饲黄牛的胸口油,脂肪质地更紧实、颜色更清亮,熬出来的油干净透明、香味自然,没有刺鼻的油腻感。只要加上一小块,就能让整个厨房瞬间充满诱人的牛油香。</p>\n\n        <p>对爱下厨的您来说,胸口油是一种既实用又能明显提升菜品档次的小秘密。做牛肉火锅时,在汤底里丢入几片胸口油,再配上您喜欢的香料,锅开之后香气会迅速升腾,蘸上一片牛肉或蔬菜,味道立刻比只用普通食用油更丰富。炒土豆片、炒辣子鸡、干锅花菜等家常菜时,先用少量胸口油小火慢慢炼出油脂,再下主料翻炒,哪怕调味很简单,也会觉得特别下饭。</p>\n\n        <p>我们精选源头可追溯的草饲牛,只取质地洁白、无异味的胸口油片,清理杂质后分装冷冻。全程冷链运输,确保您收到时依然干净、紧实、不发黄。使用时只需提前略微解冻,即可切块或整片投入锅中。通过微信小程序一键下单,把\"餐厅级底料\"的秘密武器搬回家,让每一锅汤、每一盘菜,都拥有闻得到的新鲜和尝得到的健康。</p>\n        </div>\n</div>",
+    "status": 1,
+    "has_top": 0,
+    "has_recommend": 0,
+    "inventory": 0,
+    "sold": 379,
+    "views": 1169,
+    "create_time": "2026-01-07T07:18:36.604Z",
+    "update_time": "2026-01-08T06:12:32.957Z",
+    "category": 1,
+    "is_member_exclusive": false,
+    "min_tier_required": null
+  }
+},
+{
+  "model": "products.product",
+  "pk": 8,
+  "fields": {
+    "name": "牛肉 · 嫩肉",
+    "price": "84.00",
+    "dis_price": "70.00",
+    "specification": "1.00",
+    "description": "嫩肉选自牛身上嫩度较高的多个精修部位，统一顺纹切片，颜色鲜亮、肉质细腻，是家庭日常最百搭、出镜率最高的牛肉选择之一。无论是快炒、涮锅还是简单腌制后煎烤，都能在较短时间内做出嫩滑多汁的牛肉菜肴。",
+    "content": "<div class=\"beef-nenrou-wrapper\">\n    <style>\n        .beef-nenrou-wrapper {\n            font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n            line-height: 1.8;\n            color: #333;\n            max-width: 800px;\n            margin: 0 auto;\n            padding: 20px;\n        }\n        .beef-nenrou-container {\n            background-color: #fff;\n            border-radius: 8px;\n            padding: 30px;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.1);\n        }\n        .beef-nenrou-wrapper h1 {\n            color: #8B4513;\n            font-size: 2em;\n            margin-bottom: 20px;\n            border-bottom: 3px solid #8B4513;\n            padding-bottom: 10px;\n        }\n        .beef-nenrou-wrapper h2 {\n            color: #A0522D;\n            font-size: 1.5em;\n            margin-top: 30px;\n            margin-bottom: 15px;\n        }\n        .beef-nenrou-wrapper h3 {\n            color: #8B4513;\n            font-size: 1.2em;\n            margin-top: 20px;\n            margin-bottom: 10px;\n        }\n        .beef-nenrou-wrapper p {\n            margin-bottom: 15px;\n            text-align: justify;\n        }\n        .beef-nenrou-wrapper ul {\n            margin-left: 20px;\n            margin-bottom: 15px;\n        }\n        .beef-nenrou-wrapper li {\n            margin-bottom: 10px;\n        }\n        .beef-nenrou-intro {\n            background-color: #FFF8DC;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #8B4513;\n            margin-bottom: 20px;\n        }\n        .beef-nenrou-feature-item {\n            margin-bottom: 8px;\n        }\n        .beef-nenrou-feature-label {\n            font-weight: bold;\n            color: #8B4513;\n        }\n        .beef-nenrou-recipe {\n            background-color: #F5F5DC;\n            padding: 15px;\n            border-radius: 5px;\n            margin-bottom: 15px;\n        }\n        .beef-nenrou-note {\n            background-color: #E8F5E9;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #4CAF50;\n            margin-bottom: 20px;\n            font-style: italic;\n        }\n    </style>\n    <div class=\"beef-nenrou-container\">\n\n        <h1>牛肉 · 嫩肉</h1>\n        \n        <div class=\"beef-nenrou-intro\">\n            <h2>商品简介</h2>\n            <p>嫩肉选自牛身上嫩度较高的多个精修部位,统一顺纹切片,颜色鲜亮、肉质细腻,是家庭日常最百搭、出镜率最高的牛肉选择之一。无论是快炒、涮锅还是简单腌制后煎烤,都能在较短时间内做出嫩滑多汁的牛肉菜肴。</p>\n        </div>\n\n        <h2>口感与适用菜式</h2>\n        <div class=\"beef-nenrou-feature-item\">\n            <span class=\"beef-nenrou-feature-label\">口感特点:</span> 整体偏嫩,纤维细腻,稍作腌制即可达到滑嫩口感,适合老人和孩子。\n        </div>\n        \n        <ul>\n            <li><strong>家常快炒:</strong> 青椒炒牛肉、洋葱炒牛肉、孜然炒牛肉等,只需旺火快炒1-2分钟即可出锅,肉片嫩而不柴。</li>\n            <li><strong>火锅与砂锅:</strong> 切成薄片用于火锅、番茄锅、清汤锅,轻涮即熟,搭配蔬菜、豆制品一起吃更均衡。</li>\n            <li><strong>腌制煎烤:</strong> 用少量酱油、黑胡椒和橄榄油腌制后,平底锅快速煎熟,适合作为简餐牛肉片或沙拉配料。</li>\n            <li><strong>炒饭与面食:</strong> 做成牛肉炒饭、牛肉面浇头、牛肉盖浇饭,既提升蛋白质摄入,又让主食更有满足感。</li>\n        </ul>\n\n        <h2>产品特色</h2>\n        <p>对多数家庭来说,冰箱里常备一份好用的牛肉,比什么调料都更重要。我们的嫩肉系列,专门为忙碌的上班族和爱做家常菜的您准备:选用牛身上嫩度较高的多个部位,统一进行精修和顺纹切片,力求做到\"拿来就能下锅,用哪都顺手\"。牛只来自天然草场,以青草和粗饲料为主食,让肉质更加结实有弹性、脂肪更清爽。</p>\n\n        <p>下班回家,只要提前从冷冻室拿到冷藏室自然解冻,晚饭时间就可以直接开炒。一盘简单的青椒炒牛肉,色泽鲜亮、肉片完整,入口嫩滑却不空心;做一锅番茄牛肉面,肉片在汤里略煮片刻就能熟透,汤头因为多了草饲牛肉的鲜香而更有层次。对于正在长身体的孩子和需要补充优质蛋白的老人来说,这样一盘嫩肉既好咀嚼,又比单纯吃猪肉更清爽。</p>\n\n        <p>我们坚持全程冷链、少添加,在保证安全和保鲜的前提下,不做复杂腌制,让您有更多自主调味的空间。打开微信小程序下单,按家庭日常用量分装的小包装嫩肉就能送到家门口;不管是炒菜、下火锅、做面条还是准备第二天的便当,只要冰箱里有一包嫩肉,随时都能轻松搞定一顿营养又健康的牛肉餐。</p>\n        </div>\n</div>",
+    "status": 1,
+    "has_top": 0,
+    "has_recommend": 0,
+    "inventory": 0,
+    "sold": 197,
+    "views": 1768,
+    "create_time": "2026-01-07T07:18:36.627Z",
+    "update_time": "2026-01-08T06:12:32.969Z",
+    "category": 1,
+    "is_member_exclusive": false,
+    "min_tier_required": null
+  }
+},
+{
+  "model": "products.product",
+  "pk": 9,
+  "fields": {
+    "name": "牛肉 · 五花趾",
+    "price": "92.40",
+    "dis_price": "77.00",
+    "specification": "1.00",
+    "description": "五花趾与三花趾类似，是筋肉花纹十分漂亮的经典牛肉部位。脂肪在横截面呈多层分布，红白相间宛如“五花肉”，切片后自然卷曲，极具视觉冲击力，是火锅、烧烤店里常用的展示招牌，也是家庭聚餐时非常上镜的一道牛肉。",
+    "content": "<div class=\"beef-wuhuazhi-wrapper\">\n    <style>\n        .beef-wuhuazhi-wrapper {\n            font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n            line-height: 1.8;\n            color: #333;\n            max-width: 800px;\n            margin: 0 auto;\n            padding: 20px;\n        }\n        .beef-wuhuazhi-container {\n            background-color: #fff;\n            border-radius: 8px;\n            padding: 30px;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.1);\n        }\n        .beef-wuhuazhi-wrapper h1 {\n            color: #8B4513;\n            font-size: 2em;\n            margin-bottom: 20px;\n            border-bottom: 3px solid #8B4513;\n            padding-bottom: 10px;\n        }\n        .beef-wuhuazhi-wrapper h2 {\n            color: #A0522D;\n            font-size: 1.5em;\n            margin-top: 30px;\n            margin-bottom: 15px;\n        }\n        .beef-wuhuazhi-wrapper h3 {\n            color: #8B4513;\n            font-size: 1.2em;\n            margin-top: 20px;\n            margin-bottom: 10px;\n        }\n        .beef-wuhuazhi-wrapper p {\n            margin-bottom: 15px;\n            text-align: justify;\n        }\n        .beef-wuhuazhi-wrapper ul {\n            margin-left: 20px;\n            margin-bottom: 15px;\n        }\n        .beef-wuhuazhi-wrapper li {\n            margin-bottom: 10px;\n        }\n        .beef-wuhuazhi-intro {\n            background-color: #FFF8DC;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #8B4513;\n            margin-bottom: 20px;\n        }\n        .beef-wuhuazhi-feature-item {\n            margin-bottom: 8px;\n        }\n        .beef-wuhuazhi-feature-label {\n            font-weight: bold;\n            color: #8B4513;\n        }\n        .beef-wuhuazhi-recipe {\n            background-color: #F5F5DC;\n            padding: 15px;\n            border-radius: 5px;\n            margin-bottom: 15px;\n        }\n        .beef-wuhuazhi-note {\n            background-color: #E8F5E9;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #4CAF50;\n            margin-bottom: 20px;\n            font-style: italic;\n        }\n    </style>\n    <div class=\"beef-wuhuazhi-container\">\n\n        <h1>牛肉 · 五花趾</h1>\n        \n        <div class=\"beef-wuhuazhi-intro\">\n            <h2>商品简介</h2>\n            <p>五花趾与三花趾类似,是筋肉花纹十分漂亮的经典牛肉部位。脂肪在横截面呈多层分布,红白相间宛如\"五花肉\",切片后自然卷曲,极具视觉冲击力,是火锅、烧烤店里常用的展示招牌,也是家庭聚餐时非常上镜的一道牛肉。</p>\n        </div>\n\n        <h2>口感与适用菜式</h2>\n        <div class=\"beef-wuhuazhi-feature-item\">\n            <span class=\"beef-wuhuazhi-feature-label\">口感特点:</span> 脂香浓郁、筋道有弹性,久煮不柴,适合喜爱嚼劲和浓香的食客。\n        </div>\n        \n        <ul>\n            <li><strong>火锅与铜锅:</strong> 切成薄片,在红汤或清汤中涮至变色即可,久煮之后筋膜变软糯,入口香而不腻。</li>\n            <li><strong>烧烤与铁板:</strong> 稍厚切片后腌制,放在烤盘上慢慢烤至表面微焦,油脂渗出,配孜然或辣椒粉风味更佳。</li>\n            <li><strong>干锅与香辣菜:</strong> 与藕片、四季豆、土豆等一同炖炒成干锅牛肉,牛肉吸汁能力强,是整锅的灵魂主角。</li>\n            <li><strong>砂锅与炖菜:</strong> 小火慢炖,可以做成砂锅牛肉、萝卜牛肉等,成品汤浓味厚,肉质软糯富有筋感。</li>\n        </ul>\n\n        <h2>产品特色</h2>\n        <p>对于懂牛肉的人来说,五花趾是一块\"看一眼就会动心\"的部位——鲜红的瘦肉间镶嵌着洁白细腻的脂肪,切片后自然卷成花形,在盘中层层叠叠,卖相极佳。我们的五花趾来自草饲黄牛,牛只在宽阔草场上自由采食青草和粗饲料,运动充分,使得肌肉更紧实,脂肪分布更均匀,熬煮之后也不会出现油腻发腥的问题。</p>\n\n        <p>对家庭火锅爱好者来说,五花趾几乎是\"涮锅必点\"。入锅之后,脂肪在热汤中迅速融化,与汤底和香料融合,产生迷人的牛油香;瘦肉部分则紧紧锁住汁水,吃起来既有弹性又不柴。对于爱吃烧烤、干锅的您而言,五花趾更是不可替代——油脂在烤盘上滋滋作响,肉片边缘微微卷曲、略带焦脆,一口下去既有香、又有嚼头,非常解馋。</p>\n\n        <p>我们在加工环节中坚持精细分割和严格挑选,只保留花纹清晰、颜色鲜亮的五花趾部分,并采用真空或气调包装,保持肉色和口感稳定。全程冷链运输,把新鲜安全的草饲牛肉送到您家门口。只需打开微信小程序,选择适合家庭份量的包装,就能在周末或节假日轻松安排一顿\"有排面\"的牛肉火锅或烤肉局,让朋友和家人都对您赞不绝口。</p>\n        </div>\n</div>",
+    "status": 1,
+    "has_top": 0,
+    "has_recommend": 0,
+    "inventory": 0,
+    "sold": 83,
+    "views": 443,
+    "create_time": "2026-01-07T07:18:36.657Z",
+    "update_time": "2026-01-08T06:12:32.977Z",
+    "category": 1,
+    "is_member_exclusive": false,
+    "min_tier_required": null
+  }
+},
+{
+  "model": "products.product",
+  "pk": 10,
+  "fields": {
+    "name": "牛肉 · 后腿肉",
+    "price": "63.60",
+    "dis_price": "53.00",
+    "specification": "1.00",
+    "description": "后腿肉是整头牛产量较大的经典部位之一，瘦肉率高、脂肪少，纹理清晰，价格亲民。经过顺纹切片或切丁处理后，既能保证一定的口感，又具备很高的性价比，是家庭日常红烧、炖煮、煮汤和制作牛肉馅的常用原料。",
+    "content": "<div class=\"beef-houtuirou-wrapper\">\n    <style>\n        .beef-houtuirou-wrapper {\n            font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n            line-height: 1.8;\n            color: #333;\n            max-width: 800px;\n            margin: 0 auto;\n            padding: 20px;\n        }\n        .beef-houtuirou-container {\n            background-color: #fff;\n            border-radius: 8px;\n            padding: 30px;\n            box-shadow: 0 2px 8px rgba(0,0,0,0.1);\n        }\n        .beef-houtuirou-wrapper h1 {\n            color: #8B4513;\n            font-size: 2em;\n            margin-bottom: 20px;\n            border-bottom: 3px solid #8B4513;\n            padding-bottom: 10px;\n        }\n        .beef-houtuirou-wrapper h2 {\n            color: #A0522D;\n            font-size: 1.5em;\n            margin-top: 30px;\n            margin-bottom: 15px;\n        }\n        .beef-houtuirou-wrapper h3 {\n            color: #8B4513;\n            font-size: 1.2em;\n            margin-top: 20px;\n            margin-bottom: 10px;\n        }\n        .beef-houtuirou-wrapper p {\n            margin-bottom: 15px;\n            text-align: justify;\n        }\n        .beef-houtuirou-wrapper ul {\n            margin-left: 20px;\n            margin-bottom: 15px;\n        }\n        .beef-houtuirou-wrapper li {\n            margin-bottom: 10px;\n        }\n        .beef-houtuirou-intro {\n            background-color: #FFF8DC;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #8B4513;\n            margin-bottom: 20px;\n        }\n        .beef-houtuirou-feature-item {\n            margin-bottom: 8px;\n        }\n        .beef-houtuirou-feature-label {\n            font-weight: bold;\n            color: #8B4513;\n        }\n        .beef-houtuirou-recipe {\n            background-color: #F5F5DC;\n            padding: 15px;\n            border-radius: 5px;\n            margin-bottom: 15px;\n        }\n        .beef-houtuirou-note {\n            background-color: #E8F5E9;\n            padding: 15px;\n            border-radius: 5px;\n            border-left: 4px solid #4CAF50;\n            margin-bottom: 20px;\n            font-style: italic;\n        }\n    </style>\n    <div class=\"beef-houtuirou-container\">\n\n        <h1>牛肉 · 后腿肉</h1>\n        \n        <div class=\"beef-houtuirou-intro\">\n            <h2>商品简介</h2>\n            <p>后腿肉是整头牛产量较大的经典部位之一,瘦肉率高、脂肪少,纹理清晰,价格亲民。经过顺纹切片或切丁处理后,既能保证一定的口感,又具备很高的性价比,是家庭日常红烧、炖煮、煮汤和制作牛肉馅的常用原料。</p>\n        </div>\n\n        <h2>口感与适用菜式</h2>\n        <div class=\"beef-houtuirou-feature-item\">\n            <span class=\"beef-houtuirou-feature-label\">口感特点:</span> 整体偏瘦,略有嚼劲,适合通过腌制、炖煮或慢煮来提升嫩度。\n        </div>\n        \n        <ul>\n            <li><strong>红烧与炖煮:</strong> 切成中块做红烧牛肉、萝卜牛肉、咖喱牛肉等,长时间小火炖煮后,肉质软烂入味,非常下饭。</li>\n            <li><strong>卤味与酱牛肉:</strong> 整块卤制,冷却后切片,纹理分明、肉味浓郁,可作为凉菜或早餐夹馍食用。</li>\n            <li><strong>肉馅与丸子:</strong> 切丁或绞碎做牛肉丸、牛肉饺子馅、煎牛肉饼,既补充蛋白,又比纯肥肉更清爽。</li>\n            <li><strong>砂锅与汤品:</strong> 与骨头、蔬菜搭配做砂锅或清炖牛肉汤,汤色清亮,肉块结实不散。</li>\n        </ul>\n\n        <h2>产品特色</h2>\n        <p>后腿肉是一块真正适合走进千家万户厨房的\"百搭牛肉\"。我们选用草饲黄牛后腿部位,瘦肉比例高、脂肪较少,更符合现代家庭追求清爽、少油饮食的需求。草饲方式让牛只在开阔草场上自由活动,肉质更加紧实耐炖,炖汤、红烧时不容易碎散,既能保证卖相,又能充分吸收汤汁。</p>\n\n        <p>对于讲究实惠和营养的家庭来说,后腿肉是非常值得长期囤一点在冰箱里的。一个周末,可以用它炖一大锅牛肉萝卜汤,全家人都能喝到鲜香又温补的清汤;工作日晚上,只要提前用酱油、料酒和少量姜片腌制,再和土豆一起红烧,配上一碗米饭就是简单满足的一餐。把后腿肉绞成肉馅,还能做成牛肉丸、牛肉水饺、牛肉汉堡饼,让孩子在爱吃的主食里多摄入一份优质蛋白。</p>\n\n        <p>我们在加工时注意顺纹切块、去除多余筋膜,同时保持适当脂肪,让后腿肉在耐炖的同时不至于过于干柴。所有产品均在低温环境中分割、包装,并通过冷链运输送达小区。您只需要在微信小程序上一键下单,根据家庭人口选择合适规格,就能用亲民的价格享受到来自草场的新鲜牛肉,让一日三餐都多一点健康与踏实。</p>\n        </div>\n</div>",
+    "status": 1,
+    "has_top": 0,
+    "has_recommend": 0,
+    "inventory": 0,
+    "sold": 287,
+    "views": 3,
+    "create_time": "2026-01-07T07:18:36.681Z",
+    "update_time": "2026-01-08T06:12:32.988Z",
+    "category": 1,
+    "is_member_exclusive": false,
+    "min_tier_required": null
+  }
+},
+{
+  "model": "products.product",
+  "pk": 11,
+  "fields": {
+    "name": "牛肉 · 三花趾",
+    "price": "88.80",
+    "dis_price": "74.00",
+    "specification": "1.00",
+    "description": "三花趾是筋肉交织、纹理优美的特色牛肉部位，横切后花纹如同“梅花三瓣”，红白相间，极具视觉冲击力。来自草饲黄牛的三花趾，肉质紧实、脂肪清爽，适合火锅、干锅和香辣牛肉等多种家常做法。",
+    "content": "# 牛肉 · 三花趾（图二）\r\n\r\n> 本款与编号 06「三花趾」为同一商品，本图片为不同摆盘和拍摄角度的备用展示图，方便在微信小程序中轮播展示。\r\n\r\n## 商品简介\r\n三花趾是筋肉交织、纹理优美的特色牛肉部位，横切后花纹如同“梅花三瓣”，红白相间，极具视觉冲击力。来自草饲黄牛的三花趾，肉质紧实、脂肪清爽，适合火锅、干锅和香辣牛肉等多种家常做法。\r\n\r\n## 口感与适用菜式\r\n- 口感特点：筋肉相间、有弹性，脂肪细腻不腻口，久煮依然保持形状和嚼劲。\r\n- 火锅与涮锅：薄片涮煮 5–10 秒即可，适合麻辣、番茄、骨汤等多种锅底，爱吃辣和爱吃清淡的家人都能找到喜欢的吃法。\r\n- 干锅与香辣菜：与藕片、土豆、花菜、洋葱等一起烹饪成干锅牛肉或香辣牛肉片，牛肉充分吸收汤汁，香气浓郁。\r\n- 砂锅与炖菜：切块后小火慢炖，筋膜软糯、肉质紧实，适合做砂锅牛肉、牛肉杂蔬汤等暖胃料理。\r\n\r\n## 商品广告词（面向居民顾客）\r\n在众多牛肉部位中，三花趾是既满足“好看”，又兼顾“好吃”的那一类。来自天然草场的草饲黄牛，让这块肉拥有紧实的肌肉纤维和自然分布的油花，横切后呈现出一朵朵花瓣形状。放在盘中，无论是家庭聚餐还是招待朋友，都特别上镜，轻松成为餐桌上的“C 位”。\r\n\r\n对于爱吃火锅和香辣牛肉的你来说，三花趾尤其实用。入锅后，它不像纯瘦肉那样容易煮老变柴，也不会像高脂肪部位容易油腻。筋膜在慢煮过程中变得软糯，瘦肉保持弹性，咬下去既有嚼劲又不费牙，老人和年轻人都能接受。由于牛只长期以青草和粗饲料为主食，脂肪口感更清爽，香味更自然，吃完也不觉得油腻负担重。\r\n\r\n我们在加工过程中，对每一块三花趾都进行人工挑选和修整，尽量去除多余碎筋与杂膜，只保留最适合家庭烹饪的部分。产品采用真空或气调包装，放入冷链系统，全程低温运输，最大程度保留新鲜度与营养。你只需在微信小程序上轻轻一点，就能把这样一款“高颜值、高口感”的草饲牛肉送到家中，周末和家人一起涮火锅、做干锅时，让餐桌更加丰盛、更有幸福感。\r\n\r\n## 建议定价区间（人民币）\r\n- 与 06 号三花趾统一定价：\r\n  - 散装零售：¥56–¥76 / 斤\r\n  - 修整切片、托盘保鲜装：¥76–¥92 / 斤",
+    "status": 1,
+    "has_top": 0,
+    "has_recommend": 0,
+    "inventory": 200,
+    "sold": 238,
+    "views": 14,
+    "create_time": "2026-01-07T07:18:36.704Z",
+    "update_time": "2026-01-08T06:35:54.820Z",
+    "category": 1,
+    "is_member_exclusive": false,
+    "min_tier_required": null
+  }
+},
+{
+  "model": "products.product",
+  "pk": 12,
+  "fields": {
+    "name": "测试商品阿松大阿萨",
+    "price": "0.01",
+    "dis_price": "0.01",
+    "specification": "1.00",
+    "description": "测试商品的发射点",
+    "content": "<p>测试商品打发士大夫士大夫</p>",
+    "status": 0,
+    "has_top": 0,
+    "has_recommend": 0,
+    "inventory": 300,
+    "sold": 0,
+    "views": 6,
+    "create_time": "2026-01-08T11:29:44.667Z",
+    "update_time": "2026-01-08T14:24:06.273Z",
+    "category": 2,
+    "is_member_exclusive": false,
+    "min_tier_required": null
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 1,
+  "fields": {
+    "product": 1,
+    "image": "",
+    "image_url": "/static/beef/01_shiren.jpg",
+    "is_primary": true,
+    "order": 0,
+    "created_at": "2026-01-07T07:18:36.469Z"
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 2,
+  "fields": {
+    "product": 2,
+    "image": "",
+    "image_url": "/static/beef/02_liji.jpg",
+    "is_primary": true,
+    "order": 0,
+    "created_at": "2026-01-07T07:18:36.491Z"
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 3,
+  "fields": {
+    "product": 3,
+    "image": "",
+    "image_url": "/static/beef/03_feipin.jpg",
+    "is_primary": true,
+    "order": 0,
+    "created_at": "2026-01-07T07:18:36.513Z"
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 4,
+  "fields": {
+    "product": 4,
+    "image": "",
+    "image_url": "/static/beef/04_shibing.jpg",
+    "is_primary": true,
+    "order": 0,
+    "created_at": "2026-01-07T07:18:36.534Z"
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 5,
+  "fields": {
+    "product": 5,
+    "image": "",
+    "image_url": "/static/beef/05_diaolong.jpg",
+    "is_primary": true,
+    "order": 0,
+    "created_at": "2026-01-07T07:18:36.561Z"
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 6,
+  "fields": {
+    "product": 6,
+    "image": "",
+    "image_url": "/static/beef/06_sanhuazhi.jpg",
+    "is_primary": true,
+    "order": 0,
+    "created_at": "2026-01-07T07:18:36.593Z"
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 7,
+  "fields": {
+    "product": 7,
+    "image": "",
+    "image_url": "/static/beef/07_xiongkouyou.jpg",
+    "is_primary": true,
+    "order": 0,
+    "created_at": "2026-01-07T07:18:36.614Z"
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 8,
+  "fields": {
+    "product": 8,
+    "image": "",
+    "image_url": "/static/beef/08_nenrou.jpg",
+    "is_primary": true,
+    "order": 0,
+    "created_at": "2026-01-07T07:18:36.647Z"
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 9,
+  "fields": {
+    "product": 9,
+    "image": "",
+    "image_url": "/static/beef/09_wuhuazhi.jpg",
+    "is_primary": true,
+    "order": 0,
+    "created_at": "2026-01-07T07:18:36.669Z"
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 10,
+  "fields": {
+    "product": 10,
+    "image": "",
+    "image_url": "/static/beef/10_houtuirou.jpg",
+    "is_primary": true,
+    "order": 0,
+    "created_at": "2026-01-07T07:18:36.694Z"
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 11,
+  "fields": {
+    "product": 11,
+    "image": "",
+    "image_url": "/static/beef/11_sanhuazhi_2.jpg",
+    "is_primary": true,
+    "order": 0,
+    "created_at": "2026-01-07T07:18:36.720Z"
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 17,
+  "fields": {
+    "product": 12,
+    "image": "",
+    "image_url": "http://192.168.1.199:8001/static/beef/00_%E6%B5%8B%E8%AF%95%E5%95%86%E5%93%81.png",
+    "is_primary": true,
+    "order": 0,
+    "created_at": "2026-01-08T14:23:51.172Z"
+  }
+},
+{
+  "model": "products.banner",
+  "pk": 1,
+  "fields": {
+    "cover": "/static/banner.png",
+    "title": "222222",
+    "type": 1,
+    "order": 0,
+    "is_active": true,
+    "created_at": "2026-01-06T06:04:41.220Z",
+    "updated_at": "2026-01-06T06:04:41.220Z"
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 1,
+  "fields": {
+    "roid": "xx_12d6010c42",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T07:30:28.831Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "88.80",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "created_at": "2026-01-08T11:11:39.803684+08:00",
+      "is_default": false,
+      "updated_at": "2026-01-08T11:11:39.803697+08:00",
+      "address_type": 0
+    },
+    "lock_timeout": "2026-01-08T07:45:28.831Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 2,
+  "fields": {
+    "roid": "xx_104247a955",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T07:36:05.536Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "88.80",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T07:51:05.536Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 3,
+  "fields": {
+    "roid": "xx_9fac8351bb",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T07:38:53.374Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "88.80",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T07:53:53.374Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 4,
+  "fields": {
+    "roid": "xx_44c58e238c",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T07:42:23.884Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "88.80",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T07:57:23.884Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 5,
+  "fields": {
+    "roid": "xx_4823b5cb57",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T08:04:28.318Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "88.80",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T08:19:28.318Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 6,
+  "fields": {
+    "roid": "xx_5d754b7920",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T08:04:34.543Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "88.80",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T08:19:34.543Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 7,
+  "fields": {
+    "roid": "xx_c4e7f30f76",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T08:05:04.624Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "177.60",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T08:20:04.624Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 8,
+  "fields": {
+    "roid": "xx_77f323d633",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T08:06:57.837Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "177.60",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T08:21:57.837Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 9,
+  "fields": {
+    "roid": "xx_c7e3bd4d27",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T08:39:56.012Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "177.60",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T08:54:56.011Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 10,
+  "fields": {
+    "roid": "xx_4f6ccf15b3",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T08:40:41.820Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "177.60",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T08:55:41.820Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 11,
+  "fields": {
+    "roid": "xx_d28e097e85",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T08:44:23.561Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "177.60",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T08:59:23.561Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 12,
+  "fields": {
+    "roid": "xx_c16c03874d",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T08:46:03.953Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "177.60",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T09:01:03.953Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 13,
+  "fields": {
+    "roid": "xx_29d0d11e32",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T08:49:20.949Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "177.60",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T09:04:20.948Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 14,
+  "fields": {
+    "roid": "xx_ddd808f289",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T08:54:25.439Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "177.60",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T09:09:25.439Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 15,
+  "fields": {
+    "roid": "xx_f649332e1c",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T08:56:51.589Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "177.60",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T09:11:51.589Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 16,
+  "fields": {
+    "roid": "xx_738c8e9d71",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T11:30:24.449Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "0.01",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T11:45:24.449Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 17,
+  "fields": {
+    "roid": "xx_50dcbb22ad",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T11:32:15.595Z",
+    "pay_time": "2026-01-08T12:10:16.962Z",
+    "send_time": null,
+    "amount": "0.01",
+    "status": 1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": null,
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 18,
+  "fields": {
+    "roid": "xx_6cf3b9f592",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T11:42:49.630Z",
+    "pay_time": null,
+    "send_time": null,
+    "amount": "0.01",
+    "status": -1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": "2026-01-08T11:57:49.630Z",
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 19,
+  "fields": {
+    "roid": "xx_a2b4f6f167",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T11:43:43.429Z",
+    "pay_time": "2026-01-08T12:10:01.147Z",
+    "send_time": null,
+    "amount": "0.01",
+    "status": 1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": null,
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 20,
+  "fields": {
+    "roid": "xx_f92110980b",
+    "uid": 8,
+    "lid": null,
+    "create_time": "2026-01-08T11:46:40.018Z",
+    "pay_time": "2026-01-08T11:46:51.467Z",
+    "send_time": null,
+    "amount": "0.01",
+    "status": 1,
+    "refund_info": {
+      "reason": "",
+      "applyTime": ""
+    },
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "type": 2,
+    "logistics": {
+      "code": "",
+      "number": "",
+      "company": ""
+    },
+    "remark": "无",
+    "address": {
+      "id": 5,
+      "name": "阿松大",
+      "phone": "18888888888",
+      "detail": "阿松大",
+      "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+      "is_default": false,
+      "address_type": ""
+    },
+    "lock_timeout": null,
+    "cancel_text": "",
+    "qrcode": "",
+    "verify_time": null,
+    "verify_status": 0
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 1,
+  "fields": {
+    "order": 1,
+    "rrid": "49abe8ba-8190-4ca1-8438-8c42412d2dc9",
+    "gid": "11",
+    "quantity": 1,
+    "price": "88.80",
+    "amount": "88.80",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T07:30:28.833Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 2,
+  "fields": {
+    "order": 2,
+    "rrid": "5a7fbae8-d392-41ca-acaa-2a45dfbfac62",
+    "gid": "11",
+    "quantity": 1,
+    "price": "88.80",
+    "amount": "88.80",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T07:36:05.538Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 3,
+  "fields": {
+    "order": 3,
+    "rrid": "b0458944-e23b-4855-a243-3e4fcec630d2",
+    "gid": "11",
+    "quantity": 1,
+    "price": "88.80",
+    "amount": "88.80",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T07:38:53.377Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 4,
+  "fields": {
+    "order": 4,
+    "rrid": "9d4ec93c-f2fe-413b-a0fe-5b0790760b0e",
+    "gid": "11",
+    "quantity": 1,
+    "price": "88.80",
+    "amount": "88.80",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T07:42:23.885Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 5,
+  "fields": {
+    "order": 5,
+    "rrid": "ecb7f6cd-2a47-4828-89a0-e4108fa51b8c",
+    "gid": "11",
+    "quantity": 1,
+    "price": "88.80",
+    "amount": "88.80",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T08:04:28.321Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 6,
+  "fields": {
+    "order": 6,
+    "rrid": "41043ff5-f6a6-4bde-a2c4-179ed486eba6",
+    "gid": "11",
+    "quantity": 1,
+    "price": "88.80",
+    "amount": "88.80",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T08:04:34.544Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 7,
+  "fields": {
+    "order": 7,
+    "rrid": "096dfd71-0a79-467c-9065-2e96dbfe21be",
+    "gid": "11",
+    "quantity": 2,
+    "price": "88.80",
+    "amount": "177.60",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T08:05:04.625Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 8,
+  "fields": {
+    "order": 8,
+    "rrid": "bdf0380d-7bcb-4307-9533-c9c468522612",
+    "gid": "11",
+    "quantity": 2,
+    "price": "88.80",
+    "amount": "177.60",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T08:06:57.838Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 9,
+  "fields": {
+    "order": 9,
+    "rrid": "d2480098-d972-4bac-a421-6c7d12028845",
+    "gid": "11",
+    "quantity": 2,
+    "price": "88.80",
+    "amount": "177.60",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T08:39:56.014Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 10,
+  "fields": {
+    "order": 10,
+    "rrid": "5754d31a-465d-465e-ba69-e564f0becfd7",
+    "gid": "11",
+    "quantity": 2,
+    "price": "88.80",
+    "amount": "177.60",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T08:40:41.823Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 11,
+  "fields": {
+    "order": 11,
+    "rrid": "e6159817-2b6d-430d-9d23-2299be254ca4",
+    "gid": "11",
+    "quantity": 2,
+    "price": "88.80",
+    "amount": "177.60",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T08:44:23.565Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 12,
+  "fields": {
+    "order": 12,
+    "rrid": "7ba7c1ee-8589-499c-8b84-2983a8fddce0",
+    "gid": "11",
+    "quantity": 2,
+    "price": "88.80",
+    "amount": "177.60",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T08:46:03.956Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 13,
+  "fields": {
+    "order": 13,
+    "rrid": "cfab3904-8c06-4c41-a5fd-b107f490f353",
+    "gid": "11",
+    "quantity": 2,
+    "price": "88.80",
+    "amount": "177.60",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T08:49:20.951Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 14,
+  "fields": {
+    "order": 14,
+    "rrid": "0398ed82-cff3-444f-b007-dfededa4c241",
+    "gid": "11",
+    "quantity": 2,
+    "price": "88.80",
+    "amount": "177.60",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T08:54:25.442Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 15,
+  "fields": {
+    "order": 15,
+    "rrid": "5857492a-be6d-4423-8f31-bf3cc42b9f22",
+    "gid": "11",
+    "quantity": 2,
+    "price": "88.80",
+    "amount": "177.60",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 88.8,
+      "original_price": 88.8,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T08:56:51.591Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 16,
+  "fields": {
+    "order": 16,
+    "rrid": "d42f1007-d1f9-4727-aeff-c990c7a2ef5a",
+    "gid": "12",
+    "quantity": 1,
+    "price": "0.01",
+    "amount": "0.01",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 0.01,
+      "original_price": 0.01,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T11:30:24.450Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 17,
+  "fields": {
+    "order": 17,
+    "rrid": "2cf69ab2-365a-4bde-85c8-7171c6b6aa7a",
+    "gid": "12",
+    "quantity": 1,
+    "price": "0.01",
+    "amount": "0.01",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 0.01,
+      "original_price": 0.01,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T11:32:15.597Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 18,
+  "fields": {
+    "order": 18,
+    "rrid": "179eaca5-3f9f-4c02-90fb-a17c9128a4b4",
+    "gid": "12",
+    "quantity": 1,
+    "price": "0.01",
+    "amount": "0.01",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 0.01,
+      "original_price": 0.01,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T11:42:49.632Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 19,
+  "fields": {
+    "order": 19,
+    "rrid": "9fddb31f-816a-47f3-a75d-d36b444da6d5",
+    "gid": "12",
+    "quantity": 1,
+    "price": "0.01",
+    "amount": "0.01",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 0.01,
+      "original_price": 0.01,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T11:43:43.431Z"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 20,
+  "fields": {
+    "order": 20,
+    "rrid": "b74253dd-0718-4379-b3e2-362f16956e12",
+    "gid": "12",
+    "quantity": 1,
+    "price": "0.01",
+    "amount": "0.01",
+    "is_return": false,
+    "product_info": {
+      "tier": "bronze",
+      "member_price": 0.01,
+      "original_price": 0.01,
+      "member_discount": 0.0
+    },
+    "created_at": "2026-01-08T11:46:40.021Z"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 1,
+  "fields": {
+    "rrid": "49abe8ba-8190-4ca1-8438-8c42412d2dc9",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_12d6010c42",
+    "amount": "88.80",
+    "refund_amount": "88.80",
+    "status": -1,
+    "create_time": "2026-01-08T07:30:28.835Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 2,
+  "fields": {
+    "rrid": "5a7fbae8-d392-41ca-acaa-2a45dfbfac62",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_104247a955",
+    "amount": "88.80",
+    "refund_amount": "88.80",
+    "status": -1,
+    "create_time": "2026-01-08T07:36:05.539Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 3,
+  "fields": {
+    "rrid": "b0458944-e23b-4855-a243-3e4fcec630d2",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_9fac8351bb",
+    "amount": "88.80",
+    "refund_amount": "88.80",
+    "status": -1,
+    "create_time": "2026-01-08T07:38:53.378Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 4,
+  "fields": {
+    "rrid": "9d4ec93c-f2fe-413b-a0fe-5b0790760b0e",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_44c58e238c",
+    "amount": "88.80",
+    "refund_amount": "88.80",
+    "status": -1,
+    "create_time": "2026-01-08T07:42:23.886Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 5,
+  "fields": {
+    "rrid": "ecb7f6cd-2a47-4828-89a0-e4108fa51b8c",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_4823b5cb57",
+    "amount": "88.80",
+    "refund_amount": "88.80",
+    "status": -1,
+    "create_time": "2026-01-08T08:04:28.322Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 6,
+  "fields": {
+    "rrid": "41043ff5-f6a6-4bde-a2c4-179ed486eba6",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_5d754b7920",
+    "amount": "88.80",
+    "refund_amount": "88.80",
+    "status": -1,
+    "create_time": "2026-01-08T08:04:34.544Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 7,
+  "fields": {
+    "rrid": "096dfd71-0a79-467c-9065-2e96dbfe21be",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_c4e7f30f76",
+    "amount": "177.60",
+    "refund_amount": "177.60",
+    "status": -1,
+    "create_time": "2026-01-08T08:05:04.626Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 8,
+  "fields": {
+    "rrid": "bdf0380d-7bcb-4307-9533-c9c468522612",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_77f323d633",
+    "amount": "177.60",
+    "refund_amount": "177.60",
+    "status": -1,
+    "create_time": "2026-01-08T08:06:57.839Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 9,
+  "fields": {
+    "rrid": "d2480098-d972-4bac-a421-6c7d12028845",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_c7e3bd4d27",
+    "amount": "177.60",
+    "refund_amount": "177.60",
+    "status": -1,
+    "create_time": "2026-01-08T08:39:56.015Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 10,
+  "fields": {
+    "rrid": "5754d31a-465d-465e-ba69-e564f0becfd7",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_4f6ccf15b3",
+    "amount": "177.60",
+    "refund_amount": "177.60",
+    "status": -1,
+    "create_time": "2026-01-08T08:40:41.823Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 11,
+  "fields": {
+    "rrid": "e6159817-2b6d-430d-9d23-2299be254ca4",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_d28e097e85",
+    "amount": "177.60",
+    "refund_amount": "177.60",
+    "status": -1,
+    "create_time": "2026-01-08T08:44:23.565Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 12,
+  "fields": {
+    "rrid": "7ba7c1ee-8589-499c-8b84-2983a8fddce0",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_c16c03874d",
+    "amount": "177.60",
+    "refund_amount": "177.60",
+    "status": -1,
+    "create_time": "2026-01-08T08:46:03.957Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 13,
+  "fields": {
+    "rrid": "cfab3904-8c06-4c41-a5fd-b107f490f353",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_29d0d11e32",
+    "amount": "177.60",
+    "refund_amount": "177.60",
+    "status": -1,
+    "create_time": "2026-01-08T08:49:20.952Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 14,
+  "fields": {
+    "rrid": "0398ed82-cff3-444f-b007-dfededa4c241",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_ddd808f289",
+    "amount": "177.60",
+    "refund_amount": "177.60",
+    "status": -1,
+    "create_time": "2026-01-08T08:54:25.443Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 15,
+  "fields": {
+    "rrid": "5857492a-be6d-4423-8f31-bf3cc42b9f22",
+    "gid": "11",
+    "uid": 8,
+    "roid": "xx_f649332e1c",
+    "amount": "177.60",
+    "refund_amount": "177.60",
+    "status": -1,
+    "create_time": "2026-01-08T08:56:51.592Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 16,
+  "fields": {
+    "rrid": "d42f1007-d1f9-4727-aeff-c990c7a2ef5a",
+    "gid": "12",
+    "uid": 8,
+    "roid": "xx_738c8e9d71",
+    "amount": "0.01",
+    "refund_amount": "0.01",
+    "status": -1,
+    "create_time": "2026-01-08T11:30:24.451Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 17,
+  "fields": {
+    "rrid": "2cf69ab2-365a-4bde-85c8-7171c6b6aa7a",
+    "gid": "12",
+    "uid": 8,
+    "roid": "xx_50dcbb22ad",
+    "amount": "0.01",
+    "refund_amount": "0.01",
+    "status": -1,
+    "create_time": "2026-01-08T11:32:15.597Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 18,
+  "fields": {
+    "rrid": "179eaca5-3f9f-4c02-90fb-a17c9128a4b4",
+    "gid": "12",
+    "uid": 8,
+    "roid": "xx_6cf3b9f592",
+    "amount": "0.01",
+    "refund_amount": "0.01",
+    "status": -1,
+    "create_time": "2026-01-08T11:42:49.633Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 19,
+  "fields": {
+    "rrid": "9fddb31f-816a-47f3-a75d-d36b444da6d5",
+    "gid": "12",
+    "uid": 8,
+    "roid": "xx_a2b4f6f167",
+    "amount": "0.01",
+    "refund_amount": "0.01",
+    "status": -1,
+    "create_time": "2026-01-08T11:43:43.431Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "orders.returnorder",
+  "pk": 20,
+  "fields": {
+    "rrid": "b74253dd-0718-4379-b3e2-362f16956e12",
+    "gid": "12",
+    "uid": 8,
+    "roid": "xx_f92110980b",
+    "amount": "0.01",
+    "refund_amount": "0.01",
+    "status": -1,
+    "create_time": "2026-01-08T11:46:40.021Z",
+    "openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU"
+  }
+},
+{
+  "model": "payments.paymentmethod",
+  "pk": 1,
+  "fields": {
+    "name": "wechat_pay",
+    "display_name": "微信支付",
+    "is_active": true,
+    "sort_order": 1,
+    "config": {
+      "currency": "CNY",
+      "description": "WeChat Pay integration for mini-program and app payments",
+      "supported_types": [
+        "JSAPI",
+        "NATIVE",
+        "APP"
+      ]
+    },
+    "created_at": "2026-01-08T08:06:12.243Z",
+    "updated_at": "2026-01-08T08:06:12.243Z"
+  }
+},
+{
+  "model": "payments.paymentmethod",
+  "pk": 2,
+  "fields": {
+    "name": "alipay",
+    "display_name": "支付宝",
+    "is_active": false,
+    "sort_order": 2,
+    "config": {
+      "currency": "CNY",
+      "description": "Alipay integration (future implementation)",
+      "supported_types": [
+        "JSAPI",
+        "NATIVE",
+        "APP"
+      ]
+    },
+    "created_at": "2026-01-08T08:06:12.253Z",
+    "updated_at": "2026-01-08T08:06:12.253Z"
+  }
+},
+{
+  "model": "payments.paymentmethod",
+  "pk": 3,
+  "fields": {
+    "name": "bank_card",
+    "display_name": "银行卡支付",
+    "is_active": false,
+    "sort_order": 3,
+    "config": {
+      "currency": "CNY",
+      "description": "Bank card payment integration (future implementation)",
+      "supported_types": [
+        "WEB",
+        "APP"
+      ]
+    },
+    "created_at": "2026-01-08T08:06:12.262Z",
+    "updated_at": "2026-01-08T08:06:12.262Z"
+  }
+},
+{
+  "model": "payments.paymentmethod",
+  "pk": 4,
+  "fields": {
+    "name": "balance",
+    "display_name": "余额支付",
+    "is_active": false,
+    "sort_order": 4,
+    "config": {
+      "currency": "CNY",
+      "description": "Account balance payment (future implementation)",
+      "supported_types": [
+        "INTERNAL"
+      ]
+    },
+    "created_at": "2026-01-08T08:06:12.272Z",
+    "updated_at": "2026-01-08T08:06:12.272Z"
+  }
+},
+{
+  "model": "payments.paymenttransaction",
+  "pk": 1,
+  "fields": {
+    "transaction_id": "pay_43ee3fcfa6bd46fd",
+    "order_id": "xx_77f323d633",
+    "user": 8,
+    "payment_method": 1,
+    "amount": "177.60",
+    "currency": "CNY",
+    "status": "failed",
+    "external_transaction_id": "",
+    "external_order_id": "",
+    "wechat_openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "wechat_prepay_id": "",
+    "created_at": "2026-01-08T08:06:57.855Z",
+    "paid_at": null,
+    "expired_at": "2026-01-08T08:21:57.855Z",
+    "payment_data": {
+      "notify_url": "http://192.168.1.199:8001/api/order/callback",
+      "order_type": 2,
+      "return_url": null,
+      "order_address": {
+        "id": 5,
+        "name": "阿松大",
+        "phone": "18888888888",
+        "detail": "阿松大",
+        "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+        "is_default": false,
+        "address_type": ""
+      }
+    },
+    "callback_data": {},
+    "callback_received_at": null,
+    "error_code": "",
+    "error_message": "WeChat Pay error: ç­¾åéè¯¯ï¼è¯·æ£æ¥ååè¯",
+    "updated_at": "2026-01-08T08:06:58.364Z"
+  }
+},
+{
+  "model": "payments.paymenttransaction",
+  "pk": 2,
+  "fields": {
+    "transaction_id": "pay_dd1d8b104ae4477a",
+    "order_id": "xx_c7e3bd4d27",
+    "user": 8,
+    "payment_method": 1,
+    "amount": "177.60",
+    "currency": "CNY",
+    "status": "failed",
+    "external_transaction_id": "",
+    "external_order_id": "",
+    "wechat_openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "wechat_prepay_id": "",
+    "created_at": "2026-01-08T08:39:56.031Z",
+    "paid_at": null,
+    "expired_at": "2026-01-08T08:54:56.031Z",
+    "payment_data": {
+      "notify_url": "http://192.168.1.199:8001/api/order/callback",
+      "order_type": 2,
+      "return_url": null,
+      "order_address": {
+        "id": 5,
+        "name": "阿松大",
+        "phone": "18888888888",
+        "detail": "阿松大",
+        "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+        "is_default": false,
+        "address_type": ""
+      }
+    },
+    "callback_data": {},
+    "callback_received_at": null,
+    "error_code": "",
+    "error_message": "WeChat Pay initialization failed: wechatpayv3 package not installed",
+    "updated_at": "2026-01-08T08:39:56.032Z"
+  }
+},
+{
+  "model": "payments.paymenttransaction",
+  "pk": 3,
+  "fields": {
+    "transaction_id": "pay_a250268a89ee4b2c",
+    "order_id": "xx_4f6ccf15b3",
+    "user": 8,
+    "payment_method": 1,
+    "amount": "177.60",
+    "currency": "CNY",
+    "status": "failed",
+    "external_transaction_id": "",
+    "external_order_id": "",
+    "wechat_openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "wechat_prepay_id": "",
+    "created_at": "2026-01-08T08:40:41.844Z",
+    "paid_at": null,
+    "expired_at": "2026-01-08T08:55:41.844Z",
+    "payment_data": {
+      "notify_url": "http://192.168.1.199:8001/api/order/callback",
+      "order_type": 2,
+      "return_url": null,
+      "order_address": {
+        "id": 5,
+        "name": "阿松大",
+        "phone": "18888888888",
+        "detail": "阿松大",
+        "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+        "is_default": false,
+        "address_type": ""
+      }
+    },
+    "callback_data": {},
+    "callback_received_at": null,
+    "error_code": "",
+    "error_message": "WeChat Pay initialization failed: WeChat Pay V3 configuration incomplete. Required: WECHAT_MCHID, WECHAT_APPID, WECHAT_CERT_SERIAL_NO, WECHAT_APIV3_KEY, WECHAT_KEY_PATH",
+    "updated_at": "2026-01-08T08:40:41.846Z"
+  }
+},
+{
+  "model": "payments.paymenttransaction",
+  "pk": 4,
+  "fields": {
+    "transaction_id": "pay_e08a7c6076374d4d",
+    "order_id": "xx_d28e097e85",
+    "user": 8,
+    "payment_method": 1,
+    "amount": "177.60",
+    "currency": "CNY",
+    "status": "failed",
+    "external_transaction_id": "",
+    "external_order_id": "",
+    "wechat_openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "wechat_prepay_id": "",
+    "created_at": "2026-01-08T08:44:23.587Z",
+    "paid_at": null,
+    "expired_at": "2026-01-08T08:59:23.587Z",
+    "payment_data": {
+      "notify_url": "http://192.168.1.199:8001/api/order/callback",
+      "order_type": 2,
+      "return_url": null,
+      "order_address": {
+        "id": 5,
+        "name": "阿松大",
+        "phone": "18888888888",
+        "detail": "阿松大",
+        "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+        "is_default": false,
+        "address_type": ""
+      }
+    },
+    "callback_data": {},
+    "callback_received_at": null,
+    "error_code": "",
+    "error_message": "Failed to create WeChat Pay payment: pay() got an unexpected keyword argument 'pay_type'",
+    "updated_at": "2026-01-08T08:44:23.648Z"
+  }
+},
+{
+  "model": "payments.paymenttransaction",
+  "pk": 5,
+  "fields": {
+    "transaction_id": "pay_2698b39375434b70",
+    "order_id": "xx_c16c03874d",
+    "user": 8,
+    "payment_method": 1,
+    "amount": "177.60",
+    "currency": "CNY",
+    "status": "failed",
+    "external_transaction_id": "",
+    "external_order_id": "",
+    "wechat_openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "wechat_prepay_id": "",
+    "created_at": "2026-01-08T08:46:03.974Z",
+    "paid_at": null,
+    "expired_at": "2026-01-08T09:01:03.974Z",
+    "payment_data": {
+      "notify_url": "http://192.168.1.199:8001/api/order/callback",
+      "order_type": 2,
+      "return_url": null,
+      "order_address": {
+        "id": 5,
+        "name": "阿松大",
+        "phone": "18888888888",
+        "detail": "阿松大",
+        "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+        "is_default": false,
+        "address_type": ""
+      }
+    },
+    "callback_data": {},
+    "callback_received_at": null,
+    "error_code": "",
+    "error_message": "Failed to create WeChat Pay payment: invalid literal for int() with base 16: '0xPUB_KEY_ID_0117307616392025111000182373005400'",
+    "updated_at": "2026-01-08T08:46:04.794Z"
+  }
+},
+{
+  "model": "payments.paymenttransaction",
+  "pk": 6,
+  "fields": {
+    "transaction_id": "pay_456629567f1e49b4",
+    "order_id": "xx_29d0d11e32",
+    "user": 8,
+    "payment_method": 1,
+    "amount": "177.60",
+    "currency": "CNY",
+    "status": "failed",
+    "external_transaction_id": "",
+    "external_order_id": "",
+    "wechat_openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "wechat_prepay_id": "",
+    "created_at": "2026-01-08T08:49:20.969Z",
+    "paid_at": null,
+    "expired_at": "2026-01-08T09:04:20.969Z",
+    "payment_data": {
+      "notify_url": "http://192.168.1.199:8001/api/order/callback",
+      "order_type": 2,
+      "return_url": null,
+      "order_address": {
+        "id": 5,
+        "name": "阿松大",
+        "phone": "18888888888",
+        "detail": "阿松大",
+        "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+        "is_default": false,
+        "address_type": ""
+      }
+    },
+    "callback_data": {},
+    "callback_received_at": null,
+    "error_code": "",
+    "error_message": "Failed to create WeChat Pay payment: invalid literal for int() with base 16: '0xPUB_KEY_ID_0117307616392025111000182373005400'",
+    "updated_at": "2026-01-08T08:49:21.692Z"
+  }
+},
+{
+  "model": "payments.paymenttransaction",
+  "pk": 7,
+  "fields": {
+    "transaction_id": "pay_cf5f68e9862a44c6",
+    "order_id": "xx_ddd808f289",
+    "user": 8,
+    "payment_method": 1,
+    "amount": "177.60",
+    "currency": "CNY",
+    "status": "failed",
+    "external_transaction_id": "",
+    "external_order_id": "",
+    "wechat_openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "wechat_prepay_id": "",
+    "created_at": "2026-01-08T08:54:25.460Z",
+    "paid_at": null,
+    "expired_at": "2026-01-08T09:09:25.460Z",
+    "payment_data": {
+      "notify_url": "http://192.168.1.199:8001/api/order/callback",
+      "order_type": 2,
+      "return_url": null,
+      "order_address": {
+        "id": 5,
+        "name": "阿松大",
+        "phone": "18888888888",
+        "detail": "阿松大",
+        "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+        "is_default": false,
+        "address_type": ""
+      }
+    },
+    "callback_data": {},
+    "callback_received_at": null,
+    "error_code": "",
+    "error_message": "Failed to create WeChat Pay payment: (1048, \"Column 'spbill_create_ip' cannot be null\")",
+    "updated_at": "2026-01-08T08:54:26.207Z"
+  }
+},
+{
+  "model": "payments.paymenttransaction",
+  "pk": 8,
+  "fields": {
+    "transaction_id": "pay_f8b0a521ffa3451a",
+    "order_id": "xx_f649332e1c",
+    "user": 8,
+    "payment_method": 1,
+    "amount": "177.60",
+    "currency": "CNY",
+    "status": "pending",
+    "external_transaction_id": "wx08165652271620e7192f53537601b60001",
+    "external_order_id": "",
+    "wechat_openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "wechat_prepay_id": "wx08165652271620e7192f53537601b60001",
+    "created_at": "2026-01-08T08:56:51.608Z",
+    "paid_at": null,
+    "expired_at": "2026-01-08T09:11:51.608Z",
+    "payment_data": {
+      "notify_url": "http://192.168.1.199:8001/api/order/callback",
+      "order_type": 2,
+      "return_url": null,
+      "order_address": {
+        "id": 5,
+        "name": "阿松大",
+        "phone": "18888888888",
+        "detail": "阿松大",
+        "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+        "is_default": false,
+        "address_type": ""
+      }
+    },
+    "callback_data": {},
+    "callback_received_at": null,
+    "error_code": "",
+    "error_message": "",
+    "updated_at": "2026-01-08T08:56:52.274Z"
+  }
+},
+{
+  "model": "payments.paymenttransaction",
+  "pk": 9,
+  "fields": {
+    "transaction_id": "pay_aa729fdb41604bd9",
+    "order_id": "xx_738c8e9d71",
+    "user": 8,
+    "payment_method": 1,
+    "amount": "0.01",
+    "currency": "CNY",
+    "status": "pending",
+    "external_transaction_id": "wx081930253064167d13d08024c72e2c0001",
+    "external_order_id": "",
+    "wechat_openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "wechat_prepay_id": "wx081930253064167d13d08024c72e2c0001",
+    "created_at": "2026-01-08T11:30:24.465Z",
+    "paid_at": null,
+    "expired_at": "2026-01-08T11:45:24.465Z",
+    "payment_data": {
+      "notify_url": "http://192.168.1.199:8001/api/order/callback",
+      "order_type": 2,
+      "return_url": null,
+      "order_address": {
+        "id": 5,
+        "name": "阿松大",
+        "phone": "18888888888",
+        "detail": "阿松大",
+        "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+        "is_default": false,
+        "address_type": ""
+      }
+    },
+    "callback_data": {},
+    "callback_received_at": null,
+    "error_code": "",
+    "error_message": "",
+    "updated_at": "2026-01-08T11:30:25.143Z"
+  }
+},
+{
+  "model": "payments.paymenttransaction",
+  "pk": 10,
+  "fields": {
+    "transaction_id": "pay_586d38a277604704",
+    "order_id": "xx_50dcbb22ad",
+    "user": 8,
+    "payment_method": 1,
+    "amount": "0.01",
+    "currency": "CNY",
+    "status": "paid",
+    "external_transaction_id": "4200002900202601089984993994",
+    "external_order_id": "",
+    "wechat_openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "wechat_prepay_id": "wx08193216488114725597d8d337ce130001",
+    "created_at": "2026-01-08T11:32:15.612Z",
+    "paid_at": "2026-01-08T12:10:16.940Z",
+    "expired_at": "2026-01-08T11:47:15.612Z",
+    "payment_data": {
+      "notify_url": "http://192.168.1.199:8001/api/order/callback",
+      "order_type": 2,
+      "return_url": null,
+      "order_address": {
+        "id": 5,
+        "name": "阿松大",
+        "phone": "18888888888",
+        "detail": "阿松大",
+        "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+        "is_default": false,
+        "address_type": ""
+      }
+    },
+    "callback_data": {},
+    "callback_received_at": null,
+    "error_code": "",
+    "error_message": "",
+    "updated_at": "2026-01-08T12:10:16.940Z"
+  }
+},
+{
+  "model": "payments.paymenttransaction",
+  "pk": 11,
+  "fields": {
+    "transaction_id": "pay_f0ae0d69a1dd4c3d",
+    "order_id": "xx_c6e2a79a65",
+    "user": 8,
+    "payment_method": 1,
+    "amount": "0.01",
+    "currency": "CNY",
+    "status": "paid",
+    "external_transaction_id": "4200002984202601086009498475",
+    "external_order_id": "",
+    "wechat_openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "wechat_prepay_id": "wx08194250539003506d145b5433b3a10000",
+    "created_at": "2026-01-08T11:42:49.656Z",
+    "paid_at": "2026-01-08T11:43:08.600Z",
+    "expired_at": "2026-01-08T11:57:49.656Z",
+    "payment_data": {
+      "notify_url": "http://192.168.1.199:8001/api/order/callback",
+      "order_type": 2,
+      "return_url": null,
+      "order_address": {
+        "id": 5,
+        "name": "阿松大",
+        "phone": "18888888888",
+        "detail": "阿松大",
+        "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+        "is_default": false,
+        "address_type": ""
+      }
+    },
+    "callback_data": {},
+    "callback_received_at": null,
+    "error_code": "",
+    "error_message": "",
+    "updated_at": "2026-01-08T11:43:08.600Z"
+  }
+},
+{
+  "model": "payments.paymenttransaction",
+  "pk": 12,
+  "fields": {
+    "transaction_id": "pay_56847aaba5044165",
+    "order_id": "xx_a2b4f6f167",
+    "user": 8,
+    "payment_method": 1,
+    "amount": "0.01",
+    "currency": "CNY",
+    "status": "paid",
+    "external_transaction_id": "4200002993202601080619138759",
+    "external_order_id": "",
+    "wechat_openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "wechat_prepay_id": "wx081943443412438ff4752124199b460001",
+    "created_at": "2026-01-08T11:43:43.448Z",
+    "paid_at": "2026-01-08T12:10:01.136Z",
+    "expired_at": "2026-01-08T11:58:43.448Z",
+    "payment_data": {
+      "notify_url": "http://192.168.1.199:8001/api/order/callback",
+      "order_type": 2,
+      "return_url": null,
+      "order_address": {
+        "id": 5,
+        "name": "阿松大",
+        "phone": "18888888888",
+        "detail": "阿松大",
+        "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+        "is_default": false,
+        "address_type": ""
+      }
+    },
+    "callback_data": {},
+    "callback_received_at": null,
+    "error_code": "",
+    "error_message": "",
+    "updated_at": "2026-01-08T12:10:01.136Z"
+  }
+},
+{
+  "model": "payments.paymenttransaction",
+  "pk": 13,
+  "fields": {
+    "transaction_id": "pay_b570ffadc2b0433b",
+    "order_id": "xx_f92110980b",
+    "user": 8,
+    "payment_method": 1,
+    "amount": "0.01",
+    "currency": "CNY",
+    "status": "paid",
+    "external_transaction_id": "4200002901202601085939407808",
+    "external_order_id": "",
+    "wechat_openid": "oHYNA13l0xas8kpmcMKEvAb8EzjU",
+    "wechat_prepay_id": "wx08194640880109e09d1aa63c3538d40000",
+    "created_at": "2026-01-08T11:46:40.042Z",
+    "paid_at": "2026-01-08T11:46:51.449Z",
+    "expired_at": "2026-01-08T12:01:40.042Z",
+    "payment_data": {
+      "notify_url": "http://192.168.1.199:8001/api/order/callback",
+      "order_type": 2,
+      "return_url": null,
+      "order_address": {
+        "id": 5,
+        "name": "阿松大",
+        "phone": "18888888888",
+        "detail": "阿松大",
+        "address": "四川省南充市蓬安县永安巷四川蓬安惠民医院东北侧约120米",
+        "is_default": false,
+        "address_type": ""
+      }
+    },
+    "callback_data": {},
+    "callback_received_at": null,
+    "error_code": "",
+    "error_message": "",
+    "updated_at": "2026-01-08T11:46:51.449Z"
+  }
+},
+{
+  "model": "payments.wechatpayment",
+  "pk": 1,
+  "fields": {
+    "payment_transaction": 1,
+    "appid": "wx23fedab0e057b533",
+    "mch_id": "1730761639",
+    "nonce_str": "30e6879765684f529638dd629f6e9884",
+    "body": "Order xx_77f323d633",
+    "out_trade_no": "xx_77f323d633",
+    "total_fee": 17760,
+    "spbill_create_ip": "127.0.0.1",
+    "prepay_id": "",
+    "code_url": "",
+    "transaction_id": "",
+    "bank_type": "",
+    "settlement_total_fee": null,
+    "cash_fee": null,
+    "sign": "24D1E57EA57807B290E2BD11B2452EFE",
+    "sign_type": "MD5",
+    "wechat_data": {},
+    "created_at": "2026-01-08T08:06:57.857Z",
+    "updated_at": "2026-01-08T08:06:57.857Z"
+  }
+},
+{
+  "model": "payments.wechatpayment",
+  "pk": 2,
+  "fields": {
+    "payment_transaction": 8,
+    "appid": "wx23fedab0e057b533",
+    "mch_id": "1730761639",
+    "nonce_str": "",
+    "body": "Order xx_f649332e1c",
+    "out_trade_no": "xx_f649332e1c",
+    "total_fee": 17760,
+    "spbill_create_ip": "127.0.0.1",
+    "prepay_id": "wx08165652271620e7192f53537601b60001",
+    "code_url": "",
+    "transaction_id": "",
+    "bank_type": "",
+    "settlement_total_fee": null,
+    "cash_fee": null,
+    "sign": "",
+    "sign_type": "MD5",
+    "wechat_data": {
+      "prepay_id": "wx08165652271620e7192f53537601b60001"
+    },
+    "created_at": "2026-01-08T08:56:52.239Z",
+    "updated_at": "2026-01-08T08:56:52.239Z"
+  }
+},
+{
+  "model": "payments.wechatpayment",
+  "pk": 3,
+  "fields": {
+    "payment_transaction": 9,
+    "appid": "wx23fedab0e057b533",
+    "mch_id": "1730761639",
+    "nonce_str": "",
+    "body": "Order xx_738c8e9d71",
+    "out_trade_no": "xx_738c8e9d71",
+    "total_fee": 1,
+    "spbill_create_ip": "127.0.0.1",
+    "prepay_id": "wx081930253064167d13d08024c72e2c0001",
+    "code_url": "",
+    "transaction_id": "",
+    "bank_type": "",
+    "settlement_total_fee": null,
+    "cash_fee": null,
+    "sign": "",
+    "sign_type": "MD5",
+    "wechat_data": {
+      "prepay_id": "wx081930253064167d13d08024c72e2c0001"
+    },
+    "created_at": "2026-01-08T11:30:25.113Z",
+    "updated_at": "2026-01-08T11:30:25.113Z"
+  }
+},
+{
+  "model": "payments.wechatpayment",
+  "pk": 4,
+  "fields": {
+    "payment_transaction": 10,
+    "appid": "wx23fedab0e057b533",
+    "mch_id": "1730761639",
+    "nonce_str": "",
+    "body": "Order xx_50dcbb22ad",
+    "out_trade_no": "xx_50dcbb22ad",
+    "total_fee": 1,
+    "spbill_create_ip": "127.0.0.1",
+    "prepay_id": "wx08193216488114725597d8d337ce130001",
+    "code_url": "",
+    "transaction_id": "",
+    "bank_type": "",
+    "settlement_total_fee": null,
+    "cash_fee": null,
+    "sign": "",
+    "sign_type": "MD5",
+    "wechat_data": {
+      "prepay_id": "wx08193216488114725597d8d337ce130001"
+    },
+    "created_at": "2026-01-08T11:32:16.293Z",
+    "updated_at": "2026-01-08T11:32:16.293Z"
+  }
+},
+{
+  "model": "payments.wechatpayment",
+  "pk": 5,
+  "fields": {
+    "payment_transaction": 11,
+    "appid": "wx23fedab0e057b533",
+    "mch_id": "1730761639",
+    "nonce_str": "",
+    "body": "Order xx_c6e2a79a65",
+    "out_trade_no": "xx_c6e2a79a65",
+    "total_fee": 1,
+    "spbill_create_ip": "127.0.0.1",
+    "prepay_id": "wx08194250539003506d145b5433b3a10000",
+    "code_url": "",
+    "transaction_id": "",
+    "bank_type": "",
+    "settlement_total_fee": null,
+    "cash_fee": null,
+    "sign": "",
+    "sign_type": "MD5",
+    "wechat_data": {
+      "prepay_id": "wx08194250539003506d145b5433b3a10000"
+    },
+    "created_at": "2026-01-08T11:42:50.291Z",
+    "updated_at": "2026-01-08T11:42:50.291Z"
+  }
+},
+{
+  "model": "payments.wechatpayment",
+  "pk": 6,
+  "fields": {
+    "payment_transaction": 12,
+    "appid": "wx23fedab0e057b533",
+    "mch_id": "1730761639",
+    "nonce_str": "",
+    "body": "Order xx_a2b4f6f167",
+    "out_trade_no": "xx_a2b4f6f167",
+    "total_fee": 1,
+    "spbill_create_ip": "127.0.0.1",
+    "prepay_id": "wx081943443412438ff4752124199b460001",
+    "code_url": "",
+    "transaction_id": "",
+    "bank_type": "",
+    "settlement_total_fee": null,
+    "cash_fee": null,
+    "sign": "",
+    "sign_type": "MD5",
+    "wechat_data": {
+      "prepay_id": "wx081943443412438ff4752124199b460001"
+    },
+    "created_at": "2026-01-08T11:43:44.126Z",
+    "updated_at": "2026-01-08T11:43:44.126Z"
+  }
+},
+{
+  "model": "payments.wechatpayment",
+  "pk": 7,
+  "fields": {
+    "payment_transaction": 13,
+    "appid": "wx23fedab0e057b533",
+    "mch_id": "1730761639",
+    "nonce_str": "",
+    "body": "Order xx_f92110980b",
+    "out_trade_no": "xx_f92110980b",
+    "total_fee": 1,
+    "spbill_create_ip": "127.0.0.1",
+    "prepay_id": "wx08194640880109e09d1aa63c3538d40000",
+    "code_url": "",
+    "transaction_id": "",
+    "bank_type": "",
+    "settlement_total_fee": null,
+    "cash_fee": null,
+    "sign": "",
+    "sign_type": "MD5",
+    "wechat_data": {
+      "prepay_id": "wx08194640880109e09d1aa63c3538d40000"
+    },
+    "created_at": "2026-01-08T11:46:40.641Z",
+    "updated_at": "2026-01-08T11:46:40.641Z"
+  }
+},
+{
+  "model": "points.pointsaccount",
+  "pk": 4,
+  "fields": {
+    "user": 4,
+    "total_points": 0,
+    "available_points": 0,
+    "lifetime_earned": 0,
+    "lifetime_redeemed": 0,
+    "created_at": "2026-01-06T05:00:21.615Z",
+    "updated_at": "2026-01-06T05:00:21.615Z"
+  }
+},
+{
+  "model": "points.pointsaccount",
+  "pk": 8,
+  "fields": {
+    "user": 8,
+    "total_points": 0,
+    "available_points": 0,
+    "lifetime_earned": 0,
+    "lifetime_redeemed": 0,
+    "created_at": "2026-01-08T03:03:19.513Z",
+    "updated_at": "2026-01-08T03:03:19.513Z"
+  }
+},
+{
+  "model": "membership.membershiptier",
+  "pk": 1,
+  "fields": {
+    "name": "bronze",
+    "display_name": "Bronze",
+    "min_spending": "0.00",
+    "max_spending": "999.99",
+    "points_multiplier": "1.00",
+    "benefits": {
+      "early_access": false,
+      "free_shipping": false,
+      "priority_support": false,
+      "exclusive_products": false
+    },
+    "created_at": "2026-01-06T03:09:25.503Z",
+    "updated_at": "2026-01-06T03:09:25.503Z"
+  }
+},
+{
+  "model": "membership.membershiptier",
+  "pk": 2,
+  "fields": {
+    "name": "silver",
+    "display_name": "Silver",
+    "min_spending": "1000.00",
+    "max_spending": "4999.99",
+    "points_multiplier": "1.20",
+    "benefits": {
+      "early_access": false,
+      "free_shipping": true,
+      "priority_support": false,
+      "exclusive_products": false
+    },
+    "created_at": "2026-01-06T03:09:25.505Z",
+    "updated_at": "2026-01-06T03:09:25.505Z"
+  }
+},
+{
+  "model": "membership.membershiptier",
+  "pk": 3,
+  "fields": {
+    "name": "gold",
+    "display_name": "Gold",
+    "min_spending": "5000.00",
+    "max_spending": "19999.99",
+    "points_multiplier": "1.50",
+    "benefits": {
+      "early_access": true,
+      "free_shipping": true,
+      "priority_support": true,
+      "exclusive_products": false
+    },
+    "created_at": "2026-01-06T03:09:25.506Z",
+    "updated_at": "2026-01-06T03:09:25.506Z"
+  }
+},
+{
+  "model": "membership.membershiptier",
+  "pk": 4,
+  "fields": {
+    "name": "platinum",
+    "display_name": "Platinum",
+    "min_spending": "20000.00",
+    "max_spending": null,
+    "points_multiplier": "2.00",
+    "benefits": {
+      "early_access": true,
+      "free_shipping": true,
+      "priority_support": true,
+      "exclusive_products": true
+    },
+    "created_at": "2026-01-06T03:09:25.507Z",
+    "updated_at": "2026-01-06T03:09:25.507Z"
+  }
+},
+{
+  "model": "membership.membershipstatus",
+  "pk": 4,
+  "fields": {
+    "user": 4,
+    "tier": 1,
+    "total_spending": "0.00",
+    "tier_start_date": "2026-01-06T05:00:21.599Z",
+    "created_at": "2026-01-06T05:00:21.599Z",
+    "updated_at": "2026-01-06T05:00:21.599Z"
+  }
+},
+{
+  "model": "membership.membershipstatus",
+  "pk": 8,
+  "fields": {
+    "user": 8,
+    "tier": 1,
+    "total_spending": "0.00",
+    "tier_start_date": "2026-01-08T03:03:19.497Z",
+    "created_at": "2026-01-08T03:03:19.497Z",
+    "updated_at": "2026-01-08T03:03:19.497Z"
+  }
+}
+]
