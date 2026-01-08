@@ -44,9 +44,9 @@ class UserDetailSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'username', 'email', 'phone', 'first_name', 'last_name', 
-            'avatar', 'avatar_url', 'wechat_openid', 'created_at', 'updated_at'
+            'avatar', 'avatar_url', 'wechat_openid', 'is_staff', 'created_at', 'updated_at'
         ]
-        read_only_fields = ['id', 'wechat_openid', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'wechat_openid', 'is_staff', 'created_at', 'updated_at']
 
     def get_avatar_url(self, obj):
         """Get full avatar URL"""
@@ -56,6 +56,78 @@ class UserDetailSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(obj.avatar.url)
             return obj.avatar.url
         return None
+
+
+class UserInfoSerializer(serializers.ModelSerializer):
+    """
+    Serializer for getUserInfo endpoint - matches Node.js API format.
+    Used for: GET /api/users/getUserInfo/
+    Returns fields in camelCase format expected by frontend.
+    """
+    uid = serializers.IntegerField(source='id', read_only=True)
+    nickName = serializers.CharField(source='first_name', read_only=True)
+    avatar = serializers.SerializerMethodField()
+    token = serializers.SerializerMethodField()
+    roles = serializers.SerializerMethodField()
+    is_staff = serializers.SerializerMethodField()  # 使用 SerializerMethodField 确保正确处理
+    createTime = serializers.SerializerMethodField()
+    address = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = User
+        fields = [
+            'uid', 'nickName', 'avatar', 'token', 'roles', 'is_staff', 
+            'createTime', 'address'
+        ]
+        read_only_fields = fields
+    
+    def get_avatar(self, obj):
+        """Get avatar URL"""
+        if obj.avatar:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.avatar.url)
+            return obj.avatar.url
+        return ''
+    
+    def get_token(self, obj):
+        """Get JWT token from request"""
+        request = self.context.get('request')
+        if request and hasattr(request, 'auth') and request.auth:
+            return str(request.auth)
+        return ''
+    
+    def get_roles(self, obj):
+        """Get roles - 0 for staff, 1 for normal user"""
+        return 0 if obj.is_staff else 1
+    
+    def get_is_staff(self, obj):
+        """Get is_staff - ensure it's always a boolean"""
+        return bool(obj.is_staff) if obj.is_staff is not None else False
+    
+    def get_createTime(self, obj):
+        """Convert created_at to timestamp (milliseconds)"""
+        if obj.created_at:
+            return int(obj.created_at.timestamp() * 1000)
+        return None
+    
+    def get_address(self, obj):
+        """Get user addresses"""
+        # Import here to avoid circular imports
+        from ..models import Address
+        addresses = Address.objects.filter(user=obj)
+        return [
+            {
+                'id': addr.id,
+                'name': addr.name,
+                'phone': addr.phone,
+                'address': addr.address,
+                'detail': addr.detail,
+                'address_type': addr.address_type,
+                'is_default': addr.is_default
+            }
+            for addr in addresses
+        ]
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):

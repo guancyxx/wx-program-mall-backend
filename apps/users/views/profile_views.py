@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
 from apps.common.utils import success_response, error_response
-from ..serializers import UserDetailSerializer, UserUpdateSerializer
+from ..serializers import UserDetailSerializer, UserUpdateSerializer, UserInfoSerializer
 
 
 class UserProfileView(APIView):
@@ -14,7 +14,7 @@ class UserProfileView(APIView):
 
     def get(self, request):
         """getUserInfo endpoint"""
-        serializer = UserDetailSerializer(request.user, context={'request': request})
+        serializer = UserInfoSerializer(request.user, context={'request': request})
         return success_response(serializer.data, 'User info retrieved successfully')
 
     def post(self, request):

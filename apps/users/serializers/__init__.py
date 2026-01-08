@@ -5,7 +5,7 @@ All serializers are exported from this module to maintain backward compatibility
 """
 from .user_serializers import (
     UserListSerializer, UserDetailSerializer,
-    UserRegistrationSerializer, UserUpdateSerializer
+    UserRegistrationSerializer, UserUpdateSerializer, UserInfoSerializer
 )
 from .address_serializers import AddressSerializer
 
@@ -14,6 +14,7 @@ __all__ = [
     'UserDetailSerializer',
     'UserRegistrationSerializer',
     'UserUpdateSerializer',
+    'UserInfoSerializer',
     'AddressSerializer',
 ]
 
