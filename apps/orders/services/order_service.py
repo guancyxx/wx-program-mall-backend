@@ -327,8 +327,8 @@ class OrderService:
                 'address': order.address,
                 'lockTimeout': to_timestamp(order.lock_timeout),
                 'cancelText': order.cancel_text,
-                'lid': order.lid,
-                'qrcode': order.qrcode,
+                'lid': order.lid,  # Store ID stored in lid field
+                'qrcode': order.qrcode if order.qrcode else '',  # QR code for verification
                 'verifyTime': to_timestamp(order.verify_time),
                 'verifyStatus': order.verify_status,
                 'value': total_quantity,  # Total quantity of goods
@@ -336,14 +336,26 @@ class OrderService:
                 'storeInfo': {}  # Will be populated if lid exists
             }
             
-            # Add store information if lid exists
+            # Add store information if lid exists (lid stores the store id)
             if order.lid:
                 try:
                     from apps.common.models import Store
-                    store = Store.objects.filter(lid=order.lid, status=1).first()
+                    # lid field in Order model stores the store id
+                    store = Store.objects.filter(id=order.lid, status=1).first()
                     if store:
+                        # Build absolute URL for store image
+                        img_url = store.img
+                        if img_url and not (img_url.startswith('http://') or img_url.startswith('https://')):
+                            # If relative URL, try to build absolute URL
+                            # Note: This is a fallback, ideally should use request.build_absolute_uri
+                            from django.conf import settings
+                            if hasattr(settings, 'MEDIA_URL') and img_url.startswith(settings.MEDIA_URL):
+                                base_url = getattr(settings, 'BASE_URL', '')
+                                if base_url:
+                                    img_url = f"{base_url.rstrip('/')}{img_url}"
+                        
                         store_info = {
-                            'lid': store.lid,
+                            'id': store.id,  # Store ID
                             'name': store.name,
                             'address': store.address,
                             'detail': store.detail,
@@ -352,7 +364,7 @@ class OrderService:
                             'endTime': store.end_time,
                             'distance': 0,  # Will be calculated if latitude/longitude provided
                             'status': store.status,
-                            'img': store.img,
+                            'img': img_url,  # Store image URL (absolute if possible)
                             'location': store.location,
                             'createTime': store.create_time.isoformat() if store.create_time else '',
                         }
@@ -374,7 +386,7 @@ class OrderService:
                 except Exception as e:
                     import logging
                     logger = logging.getLogger(__name__)
-                    logger.warning(f"Failed to fetch store info for lid {order.lid}: {e}")
+                    logger.warning(f"Failed to fetch store info for id {order.lid}: {e}")
             
             # Add goods/items
             from django.conf import settings

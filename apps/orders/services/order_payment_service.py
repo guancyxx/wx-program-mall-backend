@@ -26,6 +26,12 @@ class OrderPaymentService:
             order.status = 1  # Paid
             order.pay_time = timezone.now()
             order.lock_timeout = None
+            
+            # Generate QR code for pickup orders if not already generated
+            if order.type == 1 and not order.qrcode:
+                qr_code_url = OrderPaymentService.generate_order_qr_code(order)
+                order.qrcode = qr_code_url
+            
             order.save()
             
             # Award membership points

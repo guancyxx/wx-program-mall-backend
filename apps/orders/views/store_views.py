@@ -42,24 +42,39 @@ def get_nearest_store(request):
         nearest_store = None
         min_distance = float('inf')
         
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.debug(f"Searching for nearest store from lat={lat}, lng={lng}")
+        logger.debug(f"Found {stores.count()} active stores")
+        
         for store in stores:
+            logger.debug(f"Checking store {store.id}: {store.name}, location={store.location}")
+            store_lon, store_lat = store.get_coordinates()
+            logger.debug(f"Store coordinates: lon={store_lon}, lat={store_lat}")
+            
             distance = store.calculate_distance(lat, lng)
+            logger.debug(f"Distance calculated: {distance}")
+            
             if distance is not None and distance < min_distance:
                 min_distance = distance
                 nearest_store = store
+                logger.debug(f"New nearest store: {store.name} at {distance}km")
         
         if not nearest_store:
+            logger.warning("No stores found with valid location data")
             return error_response("No stores found with valid location data")
         
         # Set distance on store object for serializer
         nearest_store._distance = min_distance
         
-        # Serialize store data
-        serializer = StoreListSerializer(nearest_store)
+        # Serialize store data with request context for image URL conversion
+        serializer = StoreListSerializer(nearest_store, context={'request': request})
         store_data = serializer.data
         
         # Ensure distance is included
         store_data['distance'] = min_distance
+        
+        logger.debug(f"Returning nearest store: {nearest_store.name} at {min_distance}km")
 
         return success_response(store_data, 'Nearest store retrieved successfully')
 

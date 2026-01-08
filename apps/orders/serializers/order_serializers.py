@@ -174,6 +174,7 @@ class OrderListSerializer(serializers.ModelSerializer):
     lockTimeout = serializers.SerializerMethodField()
     cancelText = serializers.CharField(source='cancel_text', read_only=True, allow_null=True)
     orderNo = serializers.CharField(source='roid', read_only=True)
+    uid = serializers.SerializerMethodField()  # User info for admin order list
     
     class Meta:
         model = Order
@@ -182,6 +183,25 @@ class OrderListSerializer(serializers.ModelSerializer):
             'amount', 'status', 'refund_info', 'type', 'logistics',
             'remark', 'address', 'lockTimeout', 'cancelText', 'goods'
         ]
+    
+    def get_uid(self, obj):
+        """Get user info for admin order list"""
+        if obj.uid:
+            return {
+                'uid': obj.uid.id,
+                'nickName': obj.uid.first_name or obj.uid.username or '用户',
+                'avatar': self._get_avatar_url(obj.uid)
+            }
+        return {'uid': 0, 'nickName': '', 'avatar': ''}
+    
+    def _get_avatar_url(self, user):
+        """Get user avatar URL"""
+        if user.avatar:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(user.avatar.url)
+            return user.avatar.url if hasattr(user.avatar, 'url') else ''
+        return ''
 
     def get_createTime(self, obj):
         """Convert create_time to timestamp (milliseconds)"""

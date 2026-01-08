@@ -4,6 +4,10 @@ from .admin_views import (
     SecurityDashboardView, ReportExportView, dashboard_api, system_health_check
 )
 from .views.store_views import StoreListView, StoreDetailView
+from apps.orders.views.admin_order_views import (
+    AdminGetAllOrderView, AdminConfirmOrderView, AdminSendGoodsView,
+    AdminWriteOffOrderView, AdminRefundView
+)
 
 app_name = 'common'
 
@@ -21,6 +25,13 @@ urlpatterns = [
     # API endpoints
     path('admin/api/dashboard/', dashboard_api, name='dashboard_api'),
     path('health/', system_health_check, name='health_check'),
+    
+    # Admin order management endpoints
+    path('admin/getAllOrder', AdminGetAllOrderView.as_view(), name='admin-get-all-order'),
+    path('admin/confirmOrder', AdminConfirmOrderView.as_view(), name='admin-confirm-order'),
+    path('admin/sendGoods', AdminSendGoodsView.as_view(), name='admin-send-goods'),
+    path('admin/writeOffOrder', AdminWriteOffOrderView.as_view(), name='admin-write-off-order'),
+    path('admin/adminRefund', AdminRefundView.as_view(), name='admin-refund'),
     
     # Store endpoints
     path('stores/', StoreListView.as_view(), name='store_list'),

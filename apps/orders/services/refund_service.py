@@ -62,3 +62,60 @@ class RefundService:
         except Exception as e:
             return False, f"Failed to process refund: {str(e)}"
 
+    @staticmethod
+    @transaction.atomic
+    def process_admin_refund(order: Order, rrid: str = None, reason: str = '管理员退款') -> Tuple[bool, str]:
+        """Process admin refund for an order"""
+        try:
+            # Check if order supports refund
+            if order.status in [-1, 2, 3, 4, 5, 7]:
+                return False, "This order does not support refund"
+            
+            # If rrid is provided, refund specific item
+            if rrid:
+                try:
+                    return_order = ReturnOrder.objects.get(rrid=rrid, roid=order.roid)
+                    if return_order.status != -1:
+                        return False, "Return order status is invalid"
+                    
+                    # TODO: Implement actual WeChat Pay refund API call
+                    # For now, simulate successful refund
+                    refund_success = True
+                    
+                    if not refund_success:
+                        return False, "Refund failed"
+                    
+                    # Update order status
+                    order.status = 6  # Partial refund
+                    return_order.status = 1  # Completed
+                    
+                    # Update order item
+                    order_item = OrderItem.objects.get(rrid=rrid)
+                    order_item.is_return = True
+                    order_item.save()
+                    
+                    # Check if all items are returned
+                    all_returned = all(item.is_return for item in order.items.all())
+                    if all_returned:
+                        order.status = 4  # All refunded
+                    
+                    return_order.save()
+                    order.save()
+                    
+                    return True, "Refund processed successfully"
+                except ReturnOrder.DoesNotExist:
+                    return False, "Return order not found"
+            else:
+                # Refund entire order
+                # TODO: Implement actual WeChat Pay refund API call
+                order.status = 4  # All refunded
+                order.save()
+                
+                # Mark all items as returned
+                OrderItem.objects.filter(roid=order.roid).update(is_return=True)
+                
+                return True, "Order refunded successfully"
+            
+        except Exception as e:
+            return False, f"Failed to process refund: {str(e)}"
+

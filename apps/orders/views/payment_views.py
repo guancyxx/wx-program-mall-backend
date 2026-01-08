@@ -23,10 +23,12 @@ def get_pay_status(request):
             return error_response("Order not found")
 
         if order.status == 1:  # Paid
-            # TODO: Generate QR code for pickup orders if needed
+            # Generate QR code for pickup orders if needed
             if order.type == 1 and not order.qrcode:
-                # Generate QR code logic would go here
-                pass
+                from apps.orders.services.order_payment_service import OrderPaymentService
+                qr_code_url = OrderPaymentService.generate_order_qr_code(order)
+                order.qrcode = qr_code_url
+                order.save(update_fields=['qrcode'])
             
             # Return status matching frontend expectation
             return success_response({
