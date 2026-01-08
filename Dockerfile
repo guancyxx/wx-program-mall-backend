@@ -48,4 +48,4 @@ RUN chmod +x /app/entrypoint.sh
 EXPOSE 80
 
 # Use entrypoint script to handle initialization and startup
-ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:80"]
