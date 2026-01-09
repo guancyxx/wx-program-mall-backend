@@ -5,6 +5,7 @@ import requests
 import json
 import certifi
 import os
+import warnings
 from django.conf import settings
 from django.core.cache import cache
 
@@ -16,8 +17,26 @@ class WeChatAPI:
         self.appid = settings.WECHAT_APPID
         self.appsecret = settings.WECHAT_APPSECRET
         self.base_url = "https://api.weixin.qq.com"
-        # 使用certifi提供的CA证书包路径，确保使用最新的证书
-        self.verify_ssl = os.getenv('WECHAT_VERIFY_SSL', certifi.where())
+        
+        # SSL verification configuration
+        # WECHAT_VERIFY_SSL can be:
+        # - 'true' or '1': Use certifi (default, secure)
+        # - 'false' or '0': Disable SSL verification (insecure, only for production issues)
+        # - Path to CA bundle: Use custom CA bundle
+        verify_ssl_env = os.getenv('WECHAT_VERIFY_SSL', 'true').lower()
+        if verify_ssl_env in ('false', '0', 'no'):
+            warnings.warn(
+                "WECHAT_VERIFY_SSL is disabled. This is insecure and should only be used "
+                "as a temporary workaround for SSL certificate issues in production.",
+                UserWarning
+            )
+            self.verify_ssl = False
+        elif verify_ssl_env in ('true', '1', 'yes', ''):
+            # Use certifi provided CA certificate bundle
+            self.verify_ssl = certifi.where()
+        else:
+            # Custom CA bundle path
+            self.verify_ssl = verify_ssl_env
         
         # Validate configuration
         if not self.appid or not self.appsecret:
@@ -69,6 +88,19 @@ class WeChatAPI:
                 'unionid': data.get('unionid')
             }, None
             
+        except requests.exceptions.SSLError as e:
+            # Provide helpful error message for SSL errors
+            error_msg = f"SSL verification failed: {str(e)}. "
+            if self.verify_ssl:
+                error_msg += (
+                    "This may be caused by: 1) Corporate proxy/firewall with self-signed certificates, "
+                    "2) Outdated CA certificates, or 3) System time incorrect. "
+                    "As a temporary workaround, you can set WECHAT_VERIFY_SSL=false in environment variables, "
+                    "but this is insecure and should only be used in production if absolutely necessary."
+                )
+            else:
+                error_msg += "SSL verification is disabled but error still occurred."
+            return None, error_msg
         except requests.RequestException as e:
             return None, f"Network error: {str(e)}"
         except json.JSONDecodeError:
@@ -108,6 +140,11 @@ class WeChatAPI:
                 'country_code': phone_info.get('countryCode')
             }, None
             
+        except requests.exceptions.SSLError as e:
+            error_msg = f"SSL verification failed: {str(e)}. "
+            if self.verify_ssl:
+                error_msg += "Consider setting WECHAT_VERIFY_SSL=false if in production with SSL issues."
+            return None, error_msg
         except requests.RequestException as e:
             return None, f"Network error: {str(e)}"
         except json.JSONDecodeError:
@@ -143,6 +180,12 @@ class WeChatAPI:
             
             return None
             
+        except requests.exceptions.SSLError as e:
+            # Log SSL error but don't expose details
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"WeChat get_access_token SSL error: {str(e)}")
+            return None
         except (requests.RequestException, json.JSONDecodeError):
             return None
     

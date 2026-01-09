@@ -25,6 +25,12 @@ echo ""
 echo "Collecting static files..."
 python manage.py collectstatic --noinput || echo "Warning: collectstatic failed, continuing..."
 
+# 更新 certifi
+pip install --upgrade certifi
+
+# 或者更新系统 CA 证书
+apt-get update && apt-get install -y ca-certificates
+
 # Start server
 echo ""
 echo "=========================================="
