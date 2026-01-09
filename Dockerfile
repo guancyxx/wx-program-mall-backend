@@ -27,6 +27,7 @@ COPY . /app/
 
 # Create media directory
 RUN mkdir -p /app/media
+RUN chmod +x /app/entrypoint.sh
 
 # Expose port
 EXPOSE 80
