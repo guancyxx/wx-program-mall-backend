@@ -2,7 +2,7 @@
 Product list and detail views.
 """
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from django.db.models import Q
 
@@ -14,7 +14,7 @@ from ..services import ProductMemberService
 
 class ProductListView(APIView):
     """Product list endpoint - GET /api/products/"""
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
         try:
@@ -87,7 +87,7 @@ class ProductListView(APIView):
 
 class ProductDetailView(APIView):
     """Product detail endpoint - GET /api/products/{id}/"""
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request, id=None):
         try:
@@ -107,10 +107,10 @@ class ProductDetailView(APIView):
             if product.status != 1:
                 return error_response('商品已下架', status_code=status.HTTP_400_BAD_REQUEST)
 
-            # Check member access for exclusive products
-            if not ProductMemberService.can_access_product(product, request.user):
-                return error_response('该商品仅限会员访问', status_code=status.HTTP_403_FORBIDDEN)
-
+            # Allow unauthenticated users to view product details
+            # For member-exclusive products, they can view but cannot purchase without login
+            can_access = ProductMemberService.can_access_product(product, request.user)
+            
             # Increment view count matching Node.js behavior
             product.views += 1
             product.save(update_fields=['views'])
@@ -123,6 +123,7 @@ class ProductDetailView(APIView):
                 'member_discount_rate': member_info['member_discount_rate'],
                 'can_access': member_info['can_access'],
                 'user_tier_level': member_info['user_tier_level'],
+                'requires_login': product.is_member_exclusive and not can_access,  # 标识是否需要登录才能购买
             })
 
             return success_response(product_data, '获取商品详情成功')

@@ -2,7 +2,7 @@
 Banner views.
 """
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 
 from apps.common.utils import success_response, error_response
 from ..models import Banner
@@ -11,7 +11,7 @@ from ..serializers import BannerSerializer
 
 class GetBannersView(APIView):
     """Banner list endpoint - matches /api/goods/getBanners"""
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
         try:
