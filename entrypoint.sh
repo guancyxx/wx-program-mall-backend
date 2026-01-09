@@ -16,9 +16,9 @@ echo "Creating cache table(s)..."
 python manage.py createcachetable --verbosity 0 || echo "Warning: createcachetable failed (table may already exist or not using DatabaseCache)"
 
 # Load initial data
-echo ""
-echo "Loading from fixtures/initial_data.json..."
-python manage.py loaddata fixtures/initial_data.json || echo "Warning: Failed to load fixtures, will use init_data.py instead"
+# echo ""
+# echo "Loading from fixtures/initial_data.json..."
+# python manage.py loaddata fixtures/initial_data.json || echo "Warning: Failed to load fixtures, will use init_data.py instead"
 
 # Collect static files (if needed)
 echo ""
