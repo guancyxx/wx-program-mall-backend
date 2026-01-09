@@ -92,3 +92,4 @@ class User(AbstractUser):
             self.save(update_fields=['failed_login_attempts', 'last_failed_login'])
 
 
+

@@ -145,3 +145,4 @@ class PointsAccount(models.Model):
         return cls.objects.create(user=user)
 
 
+

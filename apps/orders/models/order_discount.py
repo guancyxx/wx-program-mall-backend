@@ -32,3 +32,4 @@ class OrderDiscount(models.Model):
         return f"Discount {self.discount_type} - {self.discount_amount}"
 
 
+

@@ -30,3 +30,4 @@ class PaymentMethod(models.Model):
         return self.display_name
 
 
+

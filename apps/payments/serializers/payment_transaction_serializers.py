@@ -82,3 +82,4 @@ class PaymentStatusSerializer(serializers.Serializer):
     wechat_prepay_id = serializers.CharField(allow_blank=True, required=False)
 
 
+

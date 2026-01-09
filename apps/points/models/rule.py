@@ -54,3 +54,4 @@ class PointsRule(models.Model):
         return cls.objects.filter(rule_type=rule_type, is_active=True).first()
 
 
+

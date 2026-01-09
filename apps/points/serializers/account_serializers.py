@@ -32,3 +32,4 @@ class PointsAccountSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
+

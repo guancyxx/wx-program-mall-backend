@@ -19,3 +19,4 @@ class ProductTag(models.Model):
         return f"{self.product.name} - {self.tag}"
 
 
+

@@ -39,3 +39,4 @@ class PointsTransaction(models.Model):
         return self.amount < 0
 
 
+
