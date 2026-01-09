@@ -147,6 +147,9 @@ class WeChatLoginView(APIView):
 
     def post(self, request):
         from apps.common.wechat import WeChatAPI
+        import logging
+        
+        logger = logging.getLogger(__name__)
         
         code = request.data.get('code')
         phone_code = request.data.get('phoneCode')
@@ -162,20 +165,32 @@ class WeChatLoginView(APIView):
         # Get session info from WeChat
         session_info, error = wechat_api.code2session(code)
         if error:
+            logger.error(f'WeChat code2session failed: {error}')
             return error_response(f'WeChat authentication failed: {error}')
 
-        openid = session_info['openid']
-        session_key = session_info['session_key']
+        openid = session_info.get('openid')
+        session_key = session_info.get('session_key')
+        
+        if not openid:
+            logger.error('WeChat code2session returned empty openid')
+            return error_response('Failed to get WeChat openid, please try again')
+        
+        if not session_key:
+            logger.error('WeChat code2session returned empty session_key')
+            return error_response('Failed to get WeChat session_key, please try again')
+        
         is_new_user = False
         wechat_phone = None
 
-        # Try to find existing user
+        # Try to find existing user by wechat_openid
         try:
             user = User.objects.get(wechat_openid=openid)
+            logger.info(f'Found existing user: {user.id} (openid: {openid})')
             user.wechat_session_key = session_key
             user.save(update_fields=['wechat_session_key'])
         except User.DoesNotExist:
             is_new_user = True
+            logger.info(f'User not found for openid: {openid}, will create new user')
 
         # Get phone number if phone_code is provided
         if phone_code:
@@ -185,30 +200,36 @@ class WeChatLoginView(APIView):
 
         # Create or update user
         if is_new_user:
-            # Use WeChat nickname as username if available, otherwise use openid
-            username = nickname or f"wx_{openid[:8]}"
-            # Ensure username is unique
-            base_username = username
-            counter = 1
-            while User.objects.filter(username=username).exists():
-                username = f"{base_username}_{counter}"
-                counter += 1
-            
-            user = User.objects.create(
-                username=username,
-                first_name=nickname or '',
-                phone=wechat_phone,
-                wechat_openid=openid,
-                wechat_session_key=session_key
-            )
-            
-            # Download and save avatar after user is created
-            if avatar_url:
-                if self._download_avatar(avatar_url, user):
-                    # Force save to update avatar field in database
-                    user.save(update_fields=['avatar'])
-                    # Refresh from database to get updated avatar URL
-                    user.refresh_from_db()
+            try:
+                # Use WeChat nickname as username if available, otherwise use openid
+                username = nickname or f"wx_{openid[:8]}"
+                # Ensure username is unique
+                base_username = username
+                counter = 1
+                while User.objects.filter(username=username).exists():
+                    username = f"{base_username}_{counter}"
+                    counter += 1
+                
+                # Create new user
+                user = User.objects.create(
+                    username=username,
+                    first_name=nickname or '',
+                    phone=wechat_phone,
+                    wechat_openid=openid,
+                    wechat_session_key=session_key
+                )
+                logger.info(f'Created new user: {user.id} (username: {username}, openid: {openid})')
+                
+                # Download and save avatar after user is created
+                if avatar_url:
+                    if self._download_avatar(avatar_url, user):
+                        # Force save to update avatar field in database
+                        user.save(update_fields=['avatar'])
+                        # Refresh from database to get updated avatar URL
+                        user.refresh_from_db()
+            except Exception as e:
+                logger.error(f'Failed to create user for openid {openid}: {str(e)}', exc_info=True)
+                return error_response(f'Failed to create user: {str(e)}')
         else:
             # Update existing user with WeChat info
             update_fields = ['wechat_session_key']

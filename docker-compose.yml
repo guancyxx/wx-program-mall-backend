@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # MySQL Database for Mall Server Development
+  mysql-mall:
+    image: mysql:8.0
+    container_name: mall-server-mysql-dev
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-dev_password}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-mall_server_dev}
+      MYSQL_USER: ${MYSQL_USER:-mall_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-mall_password}
+    volumes:
+      - mysql_mall_data:/var/lib/mysql
+      - ./scripts/mysql-init:/docker-entrypoint-initdb.d
+    ports:
+      - "3307:3306"
+    networks:
+      - mall-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  # Mall Server Django Application
+  mall-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mall-server-django-dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Override MYSQL_HOST for Docker Compose (use service name instead of localhost)
+      MYSQL_HOST: ${MYSQL_HOST:-mysql-mall}
+      # Ensure Django settings module is set
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-mall_server.settings}
+    volumes:
+      - .:/app
+      - mall_server_media:/app/media
+    ports:
+      - "8001:80"
+    networks:
+      - mall-network
+    depends_on:
+      mysql-mall:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  mysql_mall_data:
+    driver: local
+  mall_server_media:
+    driver: local
+
+networks:
+  mall-network:
+    driver: bridge

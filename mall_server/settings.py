@@ -191,8 +191,9 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = config('SECURE_HSTS_INCLUDE_SUBDOMAINS', defaul
 SECURE_HSTS_PRELOAD = config('SECURE_HSTS_PRELOAD', default=False, cast=bool)
 
 # Password Security Integration Settings
-PASSWORD_RESET_TIMEOUT = 3600  # 1 hour for password reset tokens
-PASSWORD_RESET_TIMEOUT_DAYS = 1  # Deprecated but kept for compatibility
+PASSWORD_RESET_TIMEOUT = 3600  # 1 hour for password reset tokens (in seconds)
+# PASSWORD_RESET_TIMEOUT_DAYS is deprecated and mutually exclusive with PASSWORD_RESET_TIMEOUT in Django 3.2+
+# Removed for Django 3.2 compatibility
 LOGIN_ATTEMPTS_LIMIT = 5  # Maximum login attempts before lockout
 LOGIN_ATTEMPTS_TIMEOUT = 900  # 15 minutes lockout duration
 ACCOUNT_LOCKOUT_ENABLED = True
@@ -247,7 +248,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Django REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'apps.common.authentication.SafeJWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',

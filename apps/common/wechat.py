@@ -18,6 +18,12 @@ class WeChatAPI:
         self.base_url = "https://api.weixin.qq.com"
         # 使用certifi提供的CA证书包路径，确保使用最新的证书
         self.verify_ssl = os.getenv('WECHAT_VERIFY_SSL', certifi.where())
+        
+        # Validate configuration
+        if not self.appid or not self.appsecret:
+            raise ValueError(
+                "WeChat configuration is missing. Please set WECHAT_APPID and WECHAT_APPSECRET in environment variables."
+            )
     
     def code2session(self, js_code):
         """
@@ -36,7 +42,26 @@ class WeChatAPI:
             data = response.json()
             
             if 'errcode' in data and data['errcode'] != 0:
-                return None, f"WeChat API error: {data.get('errmsg', 'Unknown error')}"
+                errcode = data.get('errcode')
+                errmsg = data.get('errmsg', 'Unknown error')
+                
+                # Provide more helpful error messages for common errors
+                if errcode == 40013:
+                    error_msg = f"Invalid AppID. Please check WECHAT_APPID configuration. Error: {errmsg}"
+                elif errcode == 40125:
+                    error_msg = f"Invalid AppSecret. Please check WECHAT_APPSECRET configuration. The AppSecret may have been reset in WeChat platform. Error: {errmsg}"
+                elif errcode == 40029:
+                    error_msg = f"Invalid js_code. The code may have expired or been used. Error: {errmsg}"
+                elif errcode == 45011:
+                    error_msg = f"API frequency limit exceeded. Please try again later. Error: {errmsg}"
+                else:
+                    error_msg = f"WeChat API error (code: {errcode}): {errmsg}"
+                
+                return None, error_msg
+            
+            # Check if openid is missing (should not happen if request succeeded)
+            if 'openid' not in data:
+                return None, "WeChat API returned invalid response: missing openid"
             
             return {
                 'openid': data.get('openid'),
