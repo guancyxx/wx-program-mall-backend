@@ -3,6 +3,8 @@ WeChat API integration utilities
 """
 import requests
 import json
+import certifi
+import os
 from django.conf import settings
 from django.core.cache import cache
 
@@ -14,6 +16,8 @@ class WeChatAPI:
         self.appid = settings.WECHAT_APPID
         self.appsecret = settings.WECHAT_APPSECRET
         self.base_url = "https://api.weixin.qq.com"
+        # 使用certifi提供的CA证书包路径，确保使用最新的证书
+        self.verify_ssl = os.getenv('WECHAT_VERIFY_SSL', certifi.where())
     
     def code2session(self, js_code):
         """
@@ -28,7 +32,7 @@ class WeChatAPI:
         }
         
         try:
-            response = requests.get(url, params=params, timeout=10)
+            response = requests.get(url, params=params, timeout=10, verify=self.verify_ssl)
             data = response.json()
             
             if 'errcode' in data and data['errcode'] != 0:
@@ -64,7 +68,8 @@ class WeChatAPI:
             response = requests.post(
                 f"{url}?access_token={access_token}",
                 json=data,
-                timeout=10
+                timeout=10,
+                verify=self.verify_ssl
             )
             result = response.json()
             
@@ -101,7 +106,7 @@ class WeChatAPI:
         }
         
         try:
-            response = requests.get(url, params=params, timeout=10)
+            response = requests.get(url, params=params, timeout=10, verify=self.verify_ssl)
             data = response.json()
             
             if 'access_token' in data:
