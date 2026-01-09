@@ -41,9 +41,6 @@ COPY . /app/
 # Create necessary directories
 RUN mkdir -p /app/media /app/logs /app/static
 
-# Make entrypoint script executable
-RUN chmod +x /app/entrypoint.sh
-
 # Expose port 80 for production
 EXPOSE 80
 
