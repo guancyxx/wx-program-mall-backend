@@ -115,7 +115,8 @@ else:
                 'autocommit': True,
             },
             'CONN_MAX_AGE': config('DB_CONN_MAX_AGE', default=60, cast=int),
-            'CONN_HEALTH_CHECKS': config('DB_CONN_HEALTH_CHECKS', default=True, cast=bool),
+            # CONN_HEALTH_CHECKS is only available in Django 4.1+, removed for Django 3.2 compatibility
+            # 'CONN_HEALTH_CHECKS': config('DB_CONN_HEALTH_CHECKS', default=True, cast=bool),
         }
     }
 
