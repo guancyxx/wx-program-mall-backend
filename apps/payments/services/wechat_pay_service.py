@@ -70,6 +70,70 @@ class WeChatPayService:
     _wxpay_instance = None
 
     @staticmethod
+    def generate_order_description(order: Order, max_length: int = 127) -> str:
+        """
+        Generate order description from order items for WeChat Pay.
+        
+        Format:
+        - Single item: "商品名称"
+        - Multiple items: "第一个商品名称等N件商品"
+        
+        Args:
+            order: Order instance
+            max_length: Maximum description length (default 127 for WeChat Pay V3 API)
+            
+        Returns:
+            str: Order description
+        """
+        try:
+            # Get all order items
+            items = list(order.items.all())
+            
+            if not items:
+                # Fallback to order ID if no items
+                return f"Order {order.roid}"
+            
+            # Calculate total quantity
+            total_quantity = sum(item.quantity for item in items)
+            
+            # Get first item's product name
+            first_item = items[0]
+            product_info = first_item.product_info or {}
+            first_product_name = product_info.get('name', '').strip()
+            
+            # If product name is empty, try to use a default
+            if not first_product_name:
+                first_product_name = '商品'
+            
+            # Generate description based on item count
+            if len(items) == 1 and total_quantity == 1:
+                # Single item, single quantity: use product name directly
+                description = first_product_name
+            else:
+                # Multiple items or quantities: use summary format
+                description = f"{first_product_name}等{total_quantity}件商品"
+            
+            # Truncate if exceeds max length (ensure UTF-8 safe)
+            if len(description.encode('utf-8')) > max_length:
+                # Truncate by character, then check byte length
+                truncated = description
+                while len(truncated.encode('utf-8')) > max_length - 3 and len(truncated) > 0:
+                    truncated = truncated[:-1]
+                description = truncated + '...'
+                
+                # If still too long (edge case), use fallback
+                if len(description.encode('utf-8')) > max_length:
+                    return f"Order {order.roid}"
+            
+            return description
+            
+        except Exception as e:
+            # Log error but don't fail payment
+            logger.warning(f"Failed to generate order description for order {order.roid}: {e}")
+            # Fallback to original format
+            return f"Order {order.roid}"
+
+    @staticmethod
     def get_wxpay_instance():
         """Get or create WeChatPay instance (singleton)"""
         if WeChatPayService._wxpay_instance is not None:
@@ -189,7 +253,7 @@ class WeChatPayService:
             
             # Prepare payment parameters
             out_trade_no = order.roid  # Use order ID as out_trade_no
-            description = f"Order {order.roid}"
+            description = WeChatPayService.generate_order_description(order)
             amount_total = int(payment_transaction.amount * 100)  # Convert to cents
             
             # Get payer openid

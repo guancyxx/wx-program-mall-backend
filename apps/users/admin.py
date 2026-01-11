@@ -66,9 +66,10 @@ class UserAdmin(BaseUserAdmin):
     def avatar_preview(self, obj):
         """Display avatar preview"""
         if obj.avatar:
+            # avatar is now a URLField, not an ImageField
             return format_html(
                 '<img src="{}" width="50" height="50" style="border-radius: 50%;" />',
-                obj.avatar.url
+                obj.avatar
             )
         return 'No avatar'
     avatar_preview.short_description = 'Avatar'

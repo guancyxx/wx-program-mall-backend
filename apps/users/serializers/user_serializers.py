@@ -25,10 +25,8 @@ class UserListSerializer(serializers.ModelSerializer):
     def get_avatar_url(self, obj):
         """Get full avatar URL"""
         if obj.avatar:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.avatar.url)
-            return obj.avatar.url
+            # avatar is now a URL string, not an ImageField
+            return obj.avatar
         return None
 
 
@@ -51,10 +49,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
     def get_avatar_url(self, obj):
         """Get full avatar URL"""
         if obj.avatar:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.avatar.url)
-            return obj.avatar.url
+            # avatar is now a URL string, not an ImageField
+            return obj.avatar
         return None
 
 
@@ -84,10 +80,8 @@ class UserInfoSerializer(serializers.ModelSerializer):
     def get_avatar(self, obj):
         """Get avatar URL"""
         if obj.avatar:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.avatar.url)
-            return obj.avatar.url
+            # avatar is now a URL string, not an ImageField
+            return obj.avatar
         return ''
     
     def get_token(self, obj):
@@ -209,6 +203,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         validators=[validate_phone],
         help_text="Phone number (11 digits starting with 1)"
     )
+    avatar = serializers.URLField(required=False, allow_blank=True, max_length=500, help_text="Avatar URL from cloud storage")
 
     class Meta:
         model = User

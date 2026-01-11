@@ -33,21 +33,16 @@ class UserProfileView(APIView):
 
 
 class UploadAvatarView(APIView):
-    """Avatar upload endpoint matching Node.js API (uploaderImg)"""
+    """
+    Avatar upload endpoint matching Node.js API (uploaderImg).
+    Note: This endpoint is deprecated. Avatar should be updated via modifyInfo endpoint with URL string.
+    Kept for backward compatibility but returns error.
+    """
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        if 'avatar' not in request.FILES and 'file' not in request.FILES:
-            return error_response('No avatar file provided')
-
-        # Support both 'avatar' and 'file' field names for compatibility
-        avatar_file = request.FILES.get('avatar') or request.FILES.get('file')
-        
-        request.user.avatar = avatar_file
-        request.user.save()
-
-        return success_response({
-            'avatar_url': request.user.avatar.url if request.user.avatar else None,
-            'url': request.user.avatar.url if request.user.avatar else None  # Alternative field name
-        }, 'Avatar uploaded successfully')
+        return error_response(
+            'This endpoint is deprecated. Please use modifyInfo endpoint to update avatar with URL string.',
+            status_code=410  # Gone
+        )
 

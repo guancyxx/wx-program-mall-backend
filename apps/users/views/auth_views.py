@@ -88,59 +88,25 @@ class WeChatLoginView(APIView):
     permission_classes = [AllowAny]
 
     def _download_avatar(self, avatar_url, user):
-        """Download and save avatar from WeChat"""
-        import requests
-        from django.core.files.base import ContentFile
-        import os
+        """
+        Save avatar URL from WeChat to user's avatar field.
+        Note: Avatar is now stored as URL string in cloud storage, not as file.
+        """
         import logging
         
         logger = logging.getLogger(__name__)
         
         try:
-            # Download avatar image
-            response = requests.get(avatar_url, timeout=10, stream=True)
-            response.raise_for_status()
-            
-            # Validate content type
-            content_type = response.headers.get('Content-Type', '')
-            if not content_type.startswith('image/'):
-                logger.warning(f"Invalid content type for avatar: {content_type}")
+            if not avatar_url:
+                logger.warning(f"No avatar URL provided for user {user.id}")
                 return False
             
-            # Get file extension from URL or content type
-            ext = os.path.splitext(avatar_url.split('?')[0])[1]  # Remove query params
-            if not ext:
-                # Try to determine from content type
-                if 'jpeg' in content_type or 'jpg' in content_type:
-                    ext = '.jpg'
-                elif 'png' in content_type:
-                    ext = '.png'
-                elif 'gif' in content_type:
-                    ext = '.gif'
-                else:
-                    ext = '.jpg'  # Default to jpg
+            # Save avatar URL directly to user's avatar field (now URLField)
+            user.avatar = avatar_url
+            user.save(update_fields=['avatar'])
             
-            filename = f'avatars/{user.id}_wechat{ext}'
-            
-            # Delete old avatar if exists
-            if user.avatar:
-                try:
-                    user.avatar.delete(save=False)
-                except Exception:
-                    pass
-            
-            # Save to user's avatar field
-            user.avatar.save(
-                filename,
-                ContentFile(response.content),
-                save=False
-            )
-            
-            logger.info(f"Successfully downloaded and saved avatar for user {user.id}")
+            logger.info(f"Successfully saved avatar URL for user {user.id}")
             return True
-        except requests.RequestException as e:
-            logger.error(f"Failed to download avatar for user {user.id}: {str(e)}")
-            return False
         except Exception as e:
             logger.error(f"Failed to save avatar for user {user.id}: {str(e)}")
             return False
@@ -220,13 +186,9 @@ class WeChatLoginView(APIView):
                 )
                 logger.info(f'Created new user: {user.id} (username: {username}, openid: {openid})')
                 
-                # Download and save avatar after user is created
+                # Save avatar URL after user is created
                 if avatar_url:
-                    if self._download_avatar(avatar_url, user):
-                        # Force save to update avatar field in database
-                        user.save(update_fields=['avatar'])
-                        # Refresh from database to get updated avatar URL
-                        user.refresh_from_db()
+                    self._download_avatar(avatar_url, user)
             except Exception as e:
                 logger.error(f'Failed to create user for openid {openid}: {str(e)}', exc_info=True)
                 return error_response(f'Failed to create user: {str(e)}')
@@ -255,16 +217,12 @@ class WeChatLoginView(APIView):
                 user.phone = wechat_phone
                 update_fields.append('phone')
             
-            # Download and save avatar if provided and not set
+            # Save avatar URL if provided and not set
             if avatar_url and not user.avatar:
-                if self._download_avatar(avatar_url, user):
-                    update_fields.append('avatar')
+                self._download_avatar(avatar_url, user)
             
             if update_fields:
                 user.save(update_fields=update_fields)
-                # Refresh from database to get updated avatar URL if avatar was updated
-                if 'avatar' in update_fields:
-                    user.refresh_from_db()
 
         # Generate JWT token
         refresh = RefreshToken.for_user(user)

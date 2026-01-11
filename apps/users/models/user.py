@@ -8,7 +8,7 @@ class User(AbstractUser):
     phone = models.CharField(max_length=20, unique=True, null=True, blank=True)
     wechat_openid = models.CharField(max_length=100, unique=True, null=True, blank=True)
     wechat_session_key = models.CharField(max_length=100, null=True, blank=True)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.URLField(max_length=500, null=True, blank=True, help_text="Avatar URL stored in cloud storage")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

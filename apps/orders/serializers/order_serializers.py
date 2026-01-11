@@ -197,10 +197,8 @@ class OrderListSerializer(serializers.ModelSerializer):
     def _get_avatar_url(self, user):
         """Get user avatar URL"""
         if user.avatar:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(user.avatar.url)
-            return user.avatar.url if hasattr(user.avatar, 'url') else ''
+            # avatar is now a URLField, not an ImageField
+            return user.avatar
         return ''
 
     def get_createTime(self, obj):
