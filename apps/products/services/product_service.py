@@ -63,16 +63,19 @@ class ProductService:
             setattr(instance, attr, value)
         instance.save()
         
-        # Update images if provided
+        # Update images if provided (including empty list to clear images)
         if images_data is not None:
             instance.images.all().delete()
-            for i, image_url in enumerate(images_data):
-                ProductImage.objects.create(
-                    product=instance,
-                    image_url=image_url,
-                    is_primary=(i == 0),
-                    order=i
-                )
+            # Only create new images if the list is not empty
+            if images_data:
+                for i, image_url in enumerate(images_data):
+                    if image_url:  # Only create if URL is not empty
+                        ProductImage.objects.create(
+                            product=instance,
+                            image_url=image_url,
+                            is_primary=(i == 0),
+                            order=i
+                        )
         
         # Update tags if provided
         if tags_data is not None:

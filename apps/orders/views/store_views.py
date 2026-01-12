@@ -13,10 +13,12 @@ from apps.common.serializers.store_serializers import StoreListSerializer
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_nearest_store(request):
-    """Get nearest store endpoint matching Node.js /api/order/getLive"""
+    """Get stores list sorted by distance - supports pagination"""
     try:
         latitude = request.GET.get('latitude')
         longitude = request.GET.get('longitude')
+        page_index = int(request.GET.get('pageIndex', 0))
+        page_size = int(request.GET.get('pageSize', 20))
 
         if not latitude or not longitude:
             return error_response("Latitude and longitude parameters are required")
@@ -38,49 +40,58 @@ def get_nearest_store(request):
         if not stores.exists():
             return error_response("No active stores found")
         
-        # Calculate distance to each store and find nearest
-        nearest_store = None
-        min_distance = float('inf')
-        
+        # Calculate distance for each store and create list with distance
+        stores_with_distance = []
         import logging
         logger = logging.getLogger(__name__)
-        logger.debug(f"Searching for nearest store from lat={lat}, lng={lng}")
+        logger.debug(f"Searching for stores from lat={lat}, lng={lng}")
         logger.debug(f"Found {stores.count()} active stores")
         
         for store in stores:
-            logger.debug(f"Checking store {store.id}: {store.name}, location={store.location}")
             store_lon, store_lat = store.get_coordinates()
-            logger.debug(f"Store coordinates: lon={store_lon}, lat={store_lat}")
+            if store_lon is None or store_lat is None:
+                logger.debug(f"Store {store.id} has invalid coordinates, skipping")
+                continue
             
             distance = store.calculate_distance(lat, lng)
-            logger.debug(f"Distance calculated: {distance}")
-            
-            if distance is not None and distance < min_distance:
-                min_distance = distance
-                nearest_store = store
-                logger.debug(f"New nearest store: {store.name} at {distance}km")
+            if distance is not None:
+                stores_with_distance.append((store, distance))
         
-        if not nearest_store:
+        if not stores_with_distance:
             logger.warning("No stores found with valid location data")
             return error_response("No stores found with valid location data")
         
-        # Set distance on store object for serializer
-        nearest_store._distance = min_distance
+        # Sort by distance (nearest first)
+        stores_with_distance.sort(key=lambda x: x[1])
         
-        # Serialize store data with request context for image URL conversion
-        serializer = StoreListSerializer(nearest_store, context={'request': request})
-        store_data = serializer.data
+        # Apply pagination
+        total_count = len(stores_with_distance)
+        start_index = page_index * page_size
+        end_index = start_index + page_size
+        paginated_stores = stores_with_distance[start_index:end_index]
         
-        # Ensure distance is included
-        store_data['distance'] = min_distance
+        # Set distance on store objects and serialize
+        store_list = []
+        for store, distance in paginated_stores:
+            store._distance = distance
+            serializer = StoreListSerializer(store, context={'request': request})
+            store_data = serializer.data
+            store_data['distance'] = distance
+            store_list.append(store_data)
         
-        logger.debug(f"Returning nearest store: {nearest_store.name} at {min_distance}km")
+        # Return data in format matching Node.js API (list format)
+        response_data = {
+            'list': store_list,
+            'count': total_count
+        }
+        
+        logger.debug(f"Returning {len(store_list)} stores (page {page_index}, total {total_count})")
 
-        return success_response(store_data, 'Nearest store retrieved successfully')
+        return success_response(response_data, 'Stores retrieved successfully')
 
     except Exception as e:
         import logging
         logger = logging.getLogger(__name__)
-        logger.error(f"Error getting nearest store: {e}")
+        logger.error(f"Error getting stores: {e}")
         return error_response(f"Server error: {str(e)}")
 

@@ -22,6 +22,10 @@ class ProductImageSerializer(serializers.ModelSerializer):
     
     def get_imageUrl(self, obj):
         """Return full URL for image"""
+        # Handle None or empty string
+        if not obj.image_url:
+            return ''
+        
         request = self.context.get('request')
         
         # If already a full URL, return as-is

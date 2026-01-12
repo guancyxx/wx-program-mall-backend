@@ -203,13 +203,18 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         validators=[validate_phone],
         help_text="Phone number (11 digits starting with 1)"
     )
-    avatar = serializers.URLField(required=False, allow_blank=True, max_length=500, help_text="Avatar URL from cloud storage")
+    # Explicitly define avatar as URLField to override any model field inference
+    avatar = serializers.URLField(required=False, allow_blank=True, allow_null=True, max_length=500, help_text="Avatar URL from cloud storage")
 
     class Meta:
         model = User
         fields = [
             'username', 'email', 'phone', 'first_name', 'last_name', 'avatar'
         ]
+        # Explicitly specify that avatar should be treated as URLField, not file field
+        extra_kwargs = {
+            'avatar': {'required': False, 'allow_blank': True, 'allow_null': True}
+        }
 
     def validate_email(self, value):
         """Validate email uniqueness, excluding current user"""
@@ -223,3 +228,10 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             return validate_phone_unique(value, exclude_user=self.instance)
         return value
 
+    def validate_avatar(self, value):
+        """Validate avatar URL"""
+        # Allow empty string or null
+        if not value:
+            return value
+        # URLField already validates URL format, so just return the value
+        return value

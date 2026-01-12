@@ -11,7 +11,7 @@ urlpatterns = [
     path('againPay', views.AgainPayView.as_view(), name='again-pay'),
     path('getPayStatus', views.get_pay_status, name='get-pay-status'),
     path('callback', views.payment_callback, name='payment-callback'),
-    path('getLive', views.get_nearest_store, name='get-nearest-store'),
+    path('getLive/', views.get_nearest_store, name='get-nearest-store'),
     
     # New member benefits endpoints
     path('previewBenefits', views.preview_member_benefits, name='preview-member-benefits'),
