@@ -32,7 +32,4 @@ RUN chmod +x /app/entrypoint.sh
 # Expose port
 EXPOSE 80
 
-# ENTRYPOINT ["/app/entrypoint.sh"]
-
-WORKDIR /app
-CMD [ "python", "manage.py", "runserver" ]
+ENTRYPOINT ["/app/entrypoint.sh"]
