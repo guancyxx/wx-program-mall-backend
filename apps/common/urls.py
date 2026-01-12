@@ -8,6 +8,8 @@ from apps.orders.views.admin_order_views import (
     AdminGetAllOrderView, AdminConfirmOrderView, AdminSendGoodsView,
     AdminWriteOffOrderView, AdminRefundView
 )
+from apps.users.views.admin_views import AdminGetUserListView
+from apps.products.views.banner_views import SetHomeBannerView
 
 app_name = 'common'
 
@@ -27,11 +29,17 @@ urlpatterns = [
     path('health/', system_health_check, name='health_check'),
     
     # Admin order management endpoints
-    path('admin/getAllOrder', AdminGetAllOrderView.as_view(), name='admin-get-all-order'),
-    path('admin/confirmOrder', AdminConfirmOrderView.as_view(), name='admin-confirm-order'),
-    path('admin/sendGoods', AdminSendGoodsView.as_view(), name='admin-send-goods'),
-    path('admin/writeOffOrder', AdminWriteOffOrderView.as_view(), name='admin-write-off-order'),
-    path('admin/adminRefund', AdminRefundView.as_view(), name='admin-refund'),
+    path('admin/getAllOrder/', AdminGetAllOrderView.as_view(), name='admin-get-all-order'),
+    path('admin/confirmOrder/', AdminConfirmOrderView.as_view(), name='admin-confirm-order'),
+    path('admin/sendGoods/', AdminSendGoodsView.as_view(), name='admin-send-goods'),
+    path('admin/writeOffOrder/', AdminWriteOffOrderView.as_view(), name='admin-write-off-order'),
+    path('admin/adminRefund/', AdminRefundView.as_view(), name='admin-refund'),
+    
+    # Admin user management endpoints
+    path('admin/getUserList/', AdminGetUserListView.as_view(), name='admin-get-user-list'),
+    
+    # Admin banner management endpoints
+    path('admin/setHomeBanner/', SetHomeBannerView.as_view(), name='admin-set-home-banner'),
     
     # Store endpoints
     path('stores/', StoreListView.as_view(), name='store_list'),
