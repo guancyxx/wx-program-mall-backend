@@ -138,3 +138,4 @@ class Command(BaseCommand):
             self.stdout.write(f'  python manage.py loaddata {" ".join([f.name for f in map(Path, exported_files)])}')
 
 
+

@@ -20,3 +20,4 @@ class ProductTag(models.Model):
 
 
 
+
