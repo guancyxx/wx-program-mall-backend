@@ -199,7 +199,7 @@ class ProductCreateUpdateSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             'id', 'name', 'price', 'dis_price', 'specification', 'description', 'content',
-            'status', 'inventory', 'has_top', 'has_recommend', 
+            'status', 'inventory', 'sold', 'views', 'has_top', 'has_recommend', 
             'category', 'images', 'tags', 'is_member_exclusive', 'min_tier_required'
         ]
     

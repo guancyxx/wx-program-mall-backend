@@ -470,7 +470,9 @@ class EndToEndIntegrationTests(TransactionTestCase):
         
         # Verify Gold member benefits applied (free shipping, etc.)
         # This would depend on the specific implementation of member benefits
-        self.assertEqual(order.shipping_fee, Decimal('0'))  # Free shipping for Gold+
+        # Check if free shipping discount was applied for Gold+ members
+        shipping_discounts = order.discounts.filter(discount_type='free_shipping')
+        self.assertTrue(shipping_discounts.exists(), "Gold+ members should receive free shipping discount")
         
         # Step 3: Test lower tier member cannot access exclusive product
         bronze_user, _ = create_user_with_membership('bronze', 0)

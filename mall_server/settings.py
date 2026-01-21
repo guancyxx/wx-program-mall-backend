@@ -38,6 +38,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'drf_spectacular',
 ]
 
 LOCAL_APPS = [
@@ -259,6 +260,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': config('DRF_PAGE_SIZE', default=20, cast=int),
     'EXCEPTION_HANDLER': 'apps.common.exceptions.custom_exception_handler',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # JWT Settings
@@ -382,4 +384,17 @@ if TEST_MEDIA_ROOT:
     MEDIA_ROOT = TEST_MEDIA_ROOT
 if TEST_STATIC_ROOT:
     STATIC_ROOT = TEST_STATIC_ROOT
+
+# drf-spectacular settings
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Mall Server API',
+    'DESCRIPTION': 'Mall Server API Documentation',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SCHEMA_PATH_PREFIX': '/api',
+    'COMPONENT_SPLIT_REQUEST': True,
+    'AUTHENTICATION_WHITELIST': [
+        'apps.common.authentication.SafeJWTAuthentication',
+    ],
+}
 

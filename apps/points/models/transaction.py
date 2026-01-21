@@ -41,3 +41,6 @@ class PointsTransaction(models.Model):
 
 
 
+
+
+

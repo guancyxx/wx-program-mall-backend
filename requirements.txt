@@ -22,3 +22,5 @@ django-security==0.12.0
 django-csp==3.7
 # WeChat Pay V3 SDK
 wechatpayv3>=2.0.1
+# OpenAPI documentation
+drf-spectacular>=0.27.0
