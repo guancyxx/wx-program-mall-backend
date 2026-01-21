@@ -5,9 +5,9 @@ class Product(models.Model):
     """Product model - uses Django primary key (id) instead of gid"""
     # Core fields
     name = models.CharField(max_length=200)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    dis_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Discount price (disPrice in Node.js)")
-    specification = models.DecimalField(max_digits=10, decimal_places=2, default=1.0, help_text="Product specification in kilograms (规格，单位：公斤)")
+    price = models.IntegerField(help_text="Product price in cents")
+    dis_price = models.IntegerField(null=True, blank=True, help_text="Discount price in cents (disPrice in Node.js)")
+    specification = models.IntegerField(default=1000, help_text="Product specification in grams (规格，单位：克)")
     description = models.TextField(blank=True, default='')
     content = models.TextField(blank=True, default='', help_text="Detailed product content")
     

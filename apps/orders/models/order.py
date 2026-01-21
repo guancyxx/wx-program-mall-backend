@@ -35,7 +35,7 @@ class Order(models.Model):
     send_time = models.DateTimeField(null=True, blank=True, help_text="Shipping time")
     
     # Order details
-    amount = models.DecimalField(max_digits=10, decimal_places=2, help_text="Total order amount")
+    amount = models.IntegerField(help_text="Total order amount in cents")
     status = models.IntegerField(choices=STATUS_CHOICES, default=-1, help_text="Order status")
     
     # Refund information (stored as JSON to match Node.js object structure)

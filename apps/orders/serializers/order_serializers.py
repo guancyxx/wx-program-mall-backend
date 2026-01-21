@@ -90,8 +90,8 @@ class OrderSerializer(serializers.ModelSerializer):
                 'gid': item.gid,
                 'id': item.gid,  # For compatibility with frontend
                 'quantity': item.quantity,
-                'price': float(item.price),
-                'amount': float(item.amount),
+                'price': item.price,
+                'amount': item.amount,
                 'isReturn': item.is_return,
                 **product_info  # Spread product info (image, name, inventory, etc.)
             }
@@ -251,7 +251,7 @@ class OrderListSerializer(serializers.ModelSerializer):
                 'gid': item.gid,
                 'id': item.gid,  # For compatibility
                 'quantity': item.quantity,
-                'price': float(item.price),
+                'price': item.price,
                 'isReturn': item.is_return,
                 **product_info
             }
@@ -348,12 +348,12 @@ class OrderCreateSerializer(serializers.Serializer):
             except (ValueError, TypeError):
                 raise serializers.ValidationError(f"Goods item {idx}: Invalid quantity value")
             
-            # Convert and validate price
+            # Convert and validate price (convert yuan to cents)
             try:
-                price = float(item['price']) if isinstance(item['price'], str) else item['price']
-                if price <= 0:
+                price_yuan = float(item['price']) if isinstance(item['price'], str) else item['price']
+                if price_yuan <= 0:
                     raise serializers.ValidationError(f"Goods item {idx}: Price must be greater than 0")
-                item['price'] = price
+                item['price'] = int(price_yuan * 100)  # Convert yuan to cents
             except (ValueError, TypeError):
                 raise serializers.ValidationError(f"Goods item {idx}: Invalid price value")
             
