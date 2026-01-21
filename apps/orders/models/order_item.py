@@ -9,8 +9,8 @@ class OrderItem(models.Model):
     rrid = models.CharField(max_length=50, unique=True, help_text="Return order ID")
     gid = models.CharField(max_length=50, help_text="Product/Goods ID")
     quantity = models.IntegerField(help_text="Quantity ordered")
-    price = models.IntegerField(help_text="Unit price in cents")
-    amount = models.IntegerField(help_text="Line total in cents (quantity * price)")
+    price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Unit price")
+    amount = models.DecimalField(max_digits=10, decimal_places=2, help_text="Line total (quantity * price)")
     is_return = models.BooleanField(default=False, help_text="Whether item has been returned")
     
     # Additional product info (stored as JSON to match Node.js flexibility)
