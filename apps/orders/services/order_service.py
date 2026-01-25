@@ -300,6 +300,14 @@ class OrderService:
                 roid=roid, uid=user
             )
             
+            # For paid pickup orders, ensure QR code exists
+            # Generate QR code if missing for pickup orders that are paid
+            if order.type == 1 and order.status == 1 and (not order.qrcode or order.qrcode.strip() == ''):
+                from .order_payment_service import OrderPaymentService
+                qr_code_url = OrderPaymentService.generate_order_qr_code(order)
+                order.qrcode = qr_code_url
+                order.save(update_fields=['qrcode'])
+            
             # Calculate total quantity
             total_quantity = sum(item.quantity for item in order.items.all())
             

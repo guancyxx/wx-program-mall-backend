@@ -24,3 +24,4 @@ class ProductTag(models.Model):
 
 
 
+

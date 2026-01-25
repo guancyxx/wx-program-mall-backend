@@ -59,3 +59,4 @@ class PointsRule(models.Model):
 
 
 
+

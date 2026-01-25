@@ -27,10 +27,14 @@ class OrderPaymentService:
             order.pay_time = timezone.now()
             order.lock_timeout = None
             
-            # Generate QR code for pickup orders if not already generated
-            if order.type == 1 and not order.qrcode:
-                qr_code_url = OrderPaymentService.generate_order_qr_code(order)
-                order.qrcode = qr_code_url
+            # Generate QR code for pickup orders - ensure it exists after payment
+            # For pickup orders, QR code is required for verification
+            if order.type == 1:
+                # Always regenerate QR code if it's missing or empty
+                # This ensures QR code is available after payment success
+                if not order.qrcode or order.qrcode.strip() == '':
+                    qr_code_url = OrderPaymentService.generate_order_qr_code(order)
+                    order.qrcode = qr_code_url
             
             order.save()
             

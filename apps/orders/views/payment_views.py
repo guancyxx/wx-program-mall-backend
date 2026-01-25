@@ -24,7 +24,8 @@ def get_pay_status(request):
 
         if order.status == 1:  # Paid
             # Generate QR code for pickup orders if needed
-            if order.type == 1 and not order.qrcode:
+            # Ensure QR code exists for pickup orders after payment
+            if order.type == 1 and (not order.qrcode or order.qrcode.strip() == ''):
                 from apps.orders.services.order_payment_service import OrderPaymentService
                 qr_code_url = OrderPaymentService.generate_order_qr_code(order)
                 order.qrcode = qr_code_url
@@ -48,6 +49,13 @@ def get_pay_status(request):
                 if payment_status.get('success') and payment_status.get('paid'):
                     # Payment was successful, refresh order from database to get updated status
                     order.refresh_from_db()
+                    
+                    # Generate QR code for pickup orders if needed
+                    if order.type == 1 and (not order.qrcode or order.qrcode.strip() == ''):
+                        from apps.orders.services.order_payment_service import OrderPaymentService
+                        qr_code_url = OrderPaymentService.generate_order_qr_code(order)
+                        order.qrcode = qr_code_url
+                        order.save(update_fields=['qrcode'])
                     
                     # Return paid status
                     return success_response({
