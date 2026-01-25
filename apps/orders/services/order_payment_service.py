@@ -100,8 +100,8 @@ class OrderPaymentService:
             
         except ImportError:
             # If qrcode library is not available, return a placeholder URL
-            return f"/api/order/qr/{order.roid}"
+            return f"/api/order/qr/{order.roid}/"
         except Exception as e:
             print(f"Failed to generate QR code for order {order.roid}: {e}")
-            return f"/api/order/qr/{order.roid}"
+            return f"/api/order/qr/{order.roid}/"
 

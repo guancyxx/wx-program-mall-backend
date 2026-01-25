@@ -13,6 +13,9 @@ urlpatterns = [
     path('callback/', views.payment_callback, name='payment-callback'),
     path('getLive/', views.get_nearest_store, name='get-nearest-store'),
     
+    # QR code generation endpoint
+    path('qr/<str:roid>/', views.get_order_qr_code, name='get-order-qr-code'),
+    
     # New member benefits endpoints
     path('previewBenefits/', views.preview_member_benefits, name='preview-member-benefits'),
 ]

@@ -8,6 +8,7 @@ from .order_actions import CancelOrderView, RefundOrderView, AgainPayView
 from .payment_views import get_pay_status, payment_callback
 from .member_benefits_views import preview_member_benefits
 from .store_views import get_nearest_store
+from .qr_views import get_order_qr_code
 
 __all__ = [
     'CreateOrderView',
@@ -20,5 +21,6 @@ __all__ = [
     'payment_callback',
     'preview_member_benefits',
     'get_nearest_store',
+    'get_order_qr_code',
 ]
 
