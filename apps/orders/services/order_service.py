@@ -234,11 +234,7 @@ class OrderService:
             # Apply additional member promotions
             OrderMemberService.apply_member_promotions(order)
             
-            # Generate QR code for pickup orders
-            if order.type == 1:  # Store pickup
-                qr_code_url = OrderPaymentService.generate_order_qr_code(order)
-                order.qrcode = qr_code_url
-                order.save()
+            # Note: QR code is now generated on the frontend, no need to generate here
             
             # Payment transaction will be created in the view layer
             # This allows better error handling and response control
@@ -300,13 +296,7 @@ class OrderService:
                 roid=roid, uid=user
             )
             
-            # For paid pickup orders, ensure QR code exists
-            # Generate QR code if missing for pickup orders that are paid
-            if order.type == 1 and order.status == 1 and (not order.qrcode or order.qrcode.strip() == ''):
-                from .order_payment_service import OrderPaymentService
-                qr_code_url = OrderPaymentService.generate_order_qr_code(order)
-                order.qrcode = qr_code_url
-                order.save(update_fields=['qrcode'])
+            # Note: QR code is now generated on the frontend, no need to generate here
             
             # Calculate total quantity
             total_quantity = sum(item.quantity for item in order.items.all())
@@ -336,7 +326,7 @@ class OrderService:
                 'lockTimeout': to_timestamp(order.lock_timeout),
                 'cancelText': order.cancel_text,
                 'lid': order.lid,  # Store ID stored in lid field
-                'qrcode': order.qrcode if order.qrcode else '',  # QR code for verification
+                'qrcode': '',  # QR code is now generated on the frontend, kept for API compatibility
                 'verifyTime': to_timestamp(order.verify_time),
                 'verifyStatus': order.verify_status,
                 'value': total_quantity,  # Total quantity of goods
