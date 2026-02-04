@@ -6,7 +6,7 @@ from .admin_views import (
 from .views.store_views import StoreListView, StoreDetailView
 from apps.orders.views.admin_order_views import (
     AdminGetAllOrderView, AdminConfirmOrderView, AdminSendGoodsView,
-    AdminWriteOffOrderView, AdminRefundView
+    AdminWriteOffOrderView, AdminRefundView, AdminGetOrderDetailView
 )
 from apps.users.views.admin_views import AdminGetUserListView
 from apps.products.views.banner_views import SetHomeBannerView
@@ -30,6 +30,7 @@ urlpatterns = [
     
     # Admin order management endpoints
     path('admin/getAllOrder/', AdminGetAllOrderView.as_view(), name='admin-get-all-order'),
+    path('admin/getOrderDetail/', AdminGetOrderDetailView.as_view(), name='admin-get-order-detail'),
     path('admin/confirmOrder/', AdminConfirmOrderView.as_view(), name='admin-confirm-order'),
     path('admin/sendGoods/', AdminSendGoodsView.as_view(), name='admin-send-goods'),
     path('admin/writeOffOrder/', AdminWriteOffOrderView.as_view(), name='admin-write-off-order'),
