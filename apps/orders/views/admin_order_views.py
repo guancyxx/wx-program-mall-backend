@@ -2,7 +2,7 @@
 Admin order management views.
 """
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import status
 from django.db.models import Q
 from django.utils import timezone
@@ -228,6 +228,38 @@ class AdminRefundView(APIView):
                 }, message)
             else:
                 return error_response(message)
+
+        except Exception as e:
+            return error_response(f"Server error: {str(e)}", status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class AdminGetOrderDetailView(APIView):
+    """
+    Admin get order detail - matches /api/admin/getOrderDetail
+    Allows admin to query any user's order without user permission restriction
+    """
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def get(self, request):
+        try:
+            roid = request.GET.get('roid')
+            if not roid:
+                return error_response("Order ID (roid) is required", status_code=status.HTTP_400_BAD_REQUEST)
+
+            latitude = request.GET.get('latitude')
+            longitude = request.GET.get('longitude')
+
+            # Get order detail using admin service method (no user permission check)
+            order_data, error_msg = OrderService.get_admin_order_detail(
+                roid, latitude, longitude
+            )
+
+            if not order_data:
+                if error_msg == "Order not found":
+                    return error_response(error_msg, status_code=status.HTTP_404_NOT_FOUND)
+                return error_response(error_msg, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            return success_response(order_data, 'Order detail retrieved successfully')
 
         except Exception as e:
             return error_response(f"Server error: {str(e)}", status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)

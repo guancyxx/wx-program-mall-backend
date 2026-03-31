@@ -479,7 +479,175 @@ class OrderService:
             # This would require integration with the Live/Store model
             
             return order_data, ""
-            
+
+        except Order.DoesNotExist:
+            return None, "Order not found"
+        except Exception as e:
+            return None, f"Failed to get order detail: {str(e)}"
+
+    @staticmethod
+    def get_admin_order_detail(roid: str, latitude: str = None, longitude: str = None) -> Tuple[Optional[Dict], str]:
+        """
+        Get order detail for admin users
+        Allows admin to query any user's order without user permission restriction
+        """
+        try:
+            order = Order.objects.select_related('uid').prefetch_related('items', 'discounts').get(roid=roid)
+
+            # Calculate total quantity
+            total_quantity = sum(item.quantity for item in order.items.all())
+
+            # Build order data with camelCase field names
+            def to_timestamp(dt):
+                """Convert datetime to timestamp in milliseconds"""
+                if dt:
+                    return int(dt.timestamp() * 1000)
+                return None
+
+            order_data = {
+                'roid': order.roid,
+                'orderNo': order.roid,
+                'uid': order.uid.id,
+                'createTime': to_timestamp(order.create_time),
+                'payTime': to_timestamp(order.pay_time),
+                'sendTime': to_timestamp(order.send_time),
+                'amount': float(order.amount),
+                'status': order.status,
+                'refundInfo': order.refund_info,
+                'type': order.type,
+                'logistics': order.logistics,
+                'remark': order.remark,
+                'address': order.address,
+                'lockTimeout': to_timestamp(order.lock_timeout),
+                'cancelText': order.cancel_text,
+                'lid': order.lid,
+                'qrcode': '',
+                'verifyTime': to_timestamp(order.verify_time),
+                'verifyStatus': order.verify_status,
+                'value': total_quantity,
+                'goods': [],
+                'storeInfo': {}
+            }
+
+            # Add store information if lid exists
+            if order.lid:
+                try:
+                    from apps.common.models import Store
+                    store = Store.objects.filter(id=order.lid, status=1).first()
+                    if store:
+                        img_url = store.img
+                        if img_url and not (img_url.startswith('http://') or img_url.startswith('https://')):
+                            from django.conf import settings
+                            if hasattr(settings, 'MEDIA_URL') and img_url.startswith(settings.MEDIA_URL):
+                                base_url = getattr(settings, 'BASE_URL', '')
+                                if base_url:
+                                    img_url = f"{base_url.rstrip('/')}{img_url}"
+
+                        store_info = {
+                            'id': store.id,
+                            'name': store.name,
+                            'address': store.address,
+                            'detail': store.detail,
+                            'phone': store.phone,
+                            'startTime': store.start_time,
+                            'endTime': store.end_time,
+                            'distance': 0,
+                            'status': store.status,
+                            'img': img_url,
+                            'location': store.location,
+                            'createTime': store.create_time.isoformat() if store.create_time else '',
+                        }
+
+                        # Calculate distance if coordinates provided
+                        if latitude and longitude:
+                            try:
+                                lat = float(latitude)
+                                lon = float(longitude)
+                                distance = store.calculate_distance(lat, lon)
+                                if distance is not None:
+                                    store_info['distance'] = distance
+                            except (ValueError, TypeError) as e:
+                                import logging
+                                logger = logging.getLogger(__name__)
+                                logger.warning(f"Failed to calculate distance: {e}")
+
+                        order_data['storeInfo'] = store_info
+                except Exception as e:
+                    import logging
+                    logger = logging.getLogger(__name__)
+                    logger.warning(f"Failed to fetch store info for id {order.lid}: {e}")
+
+            # Add goods/items
+            from django.conf import settings
+            for item in order.items.all():
+                product_info = item.product_info or {}
+                goods_item = {
+                    'rrid': item.rrid,
+                    'gid': item.gid,
+                    'id': item.gid,
+                    'quantity': item.quantity,
+                    'price': float(item.price),
+                    'amount': float(item.amount),
+                    'isReturn': item.is_return,
+                    **product_info
+                }
+
+                # Ensure image is a full URL
+                if 'image' in goods_item and goods_item['image']:
+                    image_url = goods_item['image']
+                    if not image_url.startswith('http'):
+                        if image_url.startswith('/'):
+                            goods_item['image'] = f"{settings.BACKEND_URL}{image_url}"
+                        else:
+                            goods_item['image'] = f"{settings.BACKEND_URL}/{image_url}"
+                elif 'image' not in goods_item or not goods_item['image']:
+                    try:
+                        from apps.products.models import Product, ProductImage
+                        try:
+                            gid_int = int(item.gid) if isinstance(item.gid, str) and item.gid.isdigit() else item.gid
+                            product = Product.objects.filter(id=gid_int).prefetch_related('images').first()
+                        except (ValueError, TypeError):
+                            product = None
+
+                        if product:
+                            primary_image = product.images.filter(is_primary=True).first()
+                            if primary_image:
+                                if primary_image.image_url:
+                                    goods_item['image'] = primary_image.image_url if primary_image.image_url.startswith('http') else f"{settings.BACKEND_URL}{primary_image.image_url}"
+                                elif primary_image.image:
+                                    image_url = primary_image.image.url if hasattr(primary_image.image, 'url') else ''
+                                    if image_url and not image_url.startswith('http'):
+                                        goods_item['image'] = f"{settings.BACKEND_URL}{image_url}"
+                                    else:
+                                        goods_item['image'] = image_url
+                            else:
+                                first_image = product.images.first()
+                                if first_image:
+                                    if first_image.image_url:
+                                        goods_item['image'] = first_image.image_url if first_image.image_url.startswith('http') else f"{settings.BACKEND_URL}{first_image.image_url}"
+                                    elif first_image.image:
+                                        image_url = first_image.image.url if hasattr(first_image.image, 'url') else ''
+                                        if image_url and not image_url.startswith('http'):
+                                            goods_item['image'] = f"{settings.BACKEND_URL}{image_url}"
+                                        else:
+                                            goods_item['image'] = image_url
+                    except Exception as e:
+                        import logging
+                        logger = logging.getLogger(__name__)
+                        logger.warning(f"Failed to get product image for gid {item.gid}: {e}")
+
+                # Ensure required fields exist
+                if 'image' not in goods_item or not goods_item['image']:
+                    goods_item['image'] = ''
+                if 'name' not in goods_item:
+                    goods_item['name'] = '商品'
+                if 'inventory' not in goods_item:
+                    goods_item['inventory'] = 0
+
+                order_data['goods'].append(goods_item)
+
+            return order_data, ""
+
         except Order.DoesNotExist:
             return None, "Order not found"
         except Exception as e:
