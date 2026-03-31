@@ -16,6 +16,10 @@ RUN apt-get update \
         pkg-config \
         curl \
         git \
+    && apt upgrade -y \
+    && apt autoremove -y \
+    && pip install --upgrade certifi \
+    && apt install -y ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
