@@ -36,3 +36,7 @@ class PaymentMethod(models.Model):
 
 
 
+
+
+
+

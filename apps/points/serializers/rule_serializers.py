@@ -25,3 +25,7 @@ class PointsRuleSerializer(serializers.ModelSerializer):
 
 
 
+
+
+
+
